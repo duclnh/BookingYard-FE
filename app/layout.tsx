@@ -12,7 +12,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body suppressHydrationWarning={true}>
         <ToastProvider />
         <SessionWrapper>

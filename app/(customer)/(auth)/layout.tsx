@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import React from 'react'
 
-export default function AuthLayout({
+export default function Layout({
     children,
-}: {
-    children: React.ReactNode
-}) {
+  }: Readonly<{
+    children: React.ReactNode;
+  }>) {
     return (
         <div className='flex flex-col justify-center items-center min-h-screen py-5 bg-slate-100'>
             <div className='w-[90%] max-w-[1300px] h-auto rounded-lg shadow-[0_0_5px_rgba(0,0,0,0.3)] bg-white'>
@@ -19,3 +19,5 @@ export default function AuthLayout({
         </div>
     )
 }
+
+

@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
 import flowbite from "flowbite-react/tailwind";
 
+//const defaultTheme = require('tailwindcss/defaultTheme')
+
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,12 +11,19 @@ const config: Config = {
     flowbite.content(),
   ],
   theme: {
-    extend: {
+    boxShadow:{
+      '3xl': '0 0px 5px 1px rgba(0, 0, 0, 0.15)',
+    },
+    extend:
+    {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors:{
+        'title'  : '#062160'
+      }
     },
   },
   plugins: [
