@@ -63,31 +63,35 @@ export default function VerifyForm() {
         }
     }
     return (
-        <form method='POST' className='flex flex-col justify-center h-[100%] p-5' onSubmit={handleSubmit(handleVerifyForm)}>
-            <div className='w-full mb-8'>
-                <Heading title='Xác nhận tài khoản' center />
+        <>
+            <div className='w-full md:w-[45%] h-auto px-5 py-9'>
+                <form method='POST' className='flex flex-col justify-center h-[100%] p-5' onSubmit={handleSubmit(handleVerifyForm)}>
+                    <div className='w-full mb-8'>
+                        <Heading title='Xác nhận tài khoản' center />
+                    </div>
+                    <NotificationCustom error={error} success={success} />
+                    <Input
+                        label='Mã xác nhận'
+                        type='text'
+                        control={control}
+                        name='verifyCode'
+                        rules={{
+                            required: "Vui nhập mã xác nhận",
+                            pattern: {
+                                value: /^[0-9]\d*$/,
+                                message: "Vui lòng nhập số "
+                            },
+                        }}
+                    />
+                    <div onClick={() => sendCodeVerify()} className={`mt-3 font-light text-[14px] ${countDown === 0
+                        && ("hover:text-green-500 hover:cursor-pointer")} ${isLoading ? 'hover:cursor-wait' : ''}`}>
+                        Gửi lại mã xác nhận {countDown !== 0 && <>( {convertNumberToTime(countDown)} )</>}
+                    </div>
+                    <Button type='submit' className='mt-5 focus:ring-transparent'>
+                        {isSubmitting ? <Spinner /> : "Xác nhận"}
+                    </Button>
+                </form>
             </div>
-            <NotificationCustom error={error} success={success} />
-            <Input
-                label='Mã xác nhận'
-                type='text'
-                control={control}
-                name='verifyCode'
-                rules={{
-                    required: "Vui nhập mã xác nhận",
-                    pattern: {
-                        value: /^[0-9]\d*$/,
-                        message: "Vui lòng nhập số "
-                    },
-                }}
-            />
-            <div onClick={() => sendCodeVerify()} className={`mt-3 font-light text-[14px] ${countDown === 0
-                && ("hover:text-green-500 hover:cursor-pointer")} ${isLoading ? 'hover:cursor-wait' : ''}`}>
-                Gửi lại mã xác nhận {countDown !== 0 && <>( {convertNumberToTime(countDown)} )</>}
-            </div>
-            <Button type='submit' className='mt-5 focus:ring-transparent'>
-                {isSubmitting ? <Spinner /> : "Xác nhận"}
-            </Button>
-        </form>
+        </>
     )
 }

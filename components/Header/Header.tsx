@@ -17,9 +17,9 @@ function Header() {
         </Navbar.Brand>
         <div className="flex flex-row items-center gap-4 md:order-2">
           <p>{session?.user.name}</p>
-          {true ?
+          {session?.user ?
             <Dropdown
-              label={<Avatar className='cursor-pointer' size="lg" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />}
+              label={<Avatar className='hidden md:block' size="lg" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />}
               arrowIcon={false}
               inline
             >

@@ -5,7 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 export default function Register() {
     return (
         <div id='trial' className='bg-[#afd6ff] py-14'>
-            <div className='mx-20 mb-10'>
+            <div className='mx-5 sm:mx-20 mb-10'>
                 <div className='text-white mb-10'>
                     <div className='lg:text-6xl md:text-4xl text-3xl font-black'>
                         Dùng Thử Trong 30 Ngày
@@ -26,7 +26,7 @@ export default function Register() {
                     <div>
                         <Textarea placeholder="Nội dung..." required rows={3} />
                     </div>
-                    <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} />
+                    <ReCAPTCHA className="captcha" style={{ transform: "scale(0.85)", transformOrigin: "0 0" }} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} />
                     <Button className='w-40 bg-blue-500 hover:!bg-blue-400' type="submit">ĐĂNG KÍ</Button>
                 </form>
             </div>
