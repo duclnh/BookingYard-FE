@@ -13,7 +13,7 @@ export default function Partner() {
       <div className='py-20 mx-5 md:mx-24'>
         <div className='lg:flex lg:flex-row-reverse lg:items-center'>
           <div>
-            <img src="assets/images/partner1.png" alt="partner" className="h-96 mb-10 w-full" />
+            <img src="assets/images/partner1.png" alt="partner" className="h-72 sm:h-96 mb-10 w-full" />
           </div>
           <div className='md:w-[800px]'>
             <div className='lg:text-6xl md:text-4xl text-3xl font-black'>

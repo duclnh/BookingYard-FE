@@ -22,7 +22,7 @@ function Header() {
               label={
                 <>
                   <Avatar className='hidden md:block' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
-                  <p className='mx-3'>dsadsdadsadasdsaasddadsadsa</p>
+                  <p className='md:mx-3 w-[145px] text-nowrap overflow-hidden'>Le Ngoc Huynh Duc mđâsdasdsadaainh</p>
                 </>
               }
               arrowIcon={true}
