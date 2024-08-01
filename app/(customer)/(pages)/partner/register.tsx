@@ -4,7 +4,7 @@ import React from 'react'
 import ReCAPTCHA from "react-google-recaptcha";
 export default function Register() {
     return (
-        <div id='trial' className='bg-[#afd6ff] py-14'>
+        <div id='trial' className="bg-[url('/assets/images/background-register.png')] py-14">
             <div className='mx-5 sm:mx-20 mb-10'>
                 <div className='text-white mb-10'>
                     <div className='lg:text-6xl md:text-4xl text-3xl font-black'>

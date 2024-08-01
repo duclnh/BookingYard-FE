@@ -3,9 +3,9 @@ import React from 'react'
 import { FaArrowRightLong } from 'react-icons/fa6'
 export default function Salient() {
     return (
-        <div className='bg-[#efdfd1] py-14'>
-            <div className='sm:mx-32 mx-10 mb-5'>
-                <div className='mb-24'>
+        <div className='bg-[#efdfd1] pt-14 pb-7'>
+            <div className='sm:mx-32 mx-10'>
+                <div className='mb-20'>
                     <div className='lg:text-6xl md:text-4xl text-3xl font-black'>
                         Tính Năng Tiêu Biểu
                     </div>
@@ -15,7 +15,7 @@ export default function Salient() {
                     </div>
                 </div>
                 <div className='xl:flex xl:flex-row-reverse xl:items-center'>
-                    <img src="assets/images/partner2.png" alt="partner" className="w-full h-96 mb-10" />
+                    <img src="assets/images/salient.png" alt="partner" className="w-full h-full mb-16 md:mb-36" />
                     <div className='xl:w-[1700px] sm:grid sm:grid-cols-2 sm:gap-10'>
                         <SalientFeature
                             key={1}
@@ -54,7 +54,7 @@ export default function Salient() {
                             dotColor='bg-[#2d5582]'
                         />
                         <a href='#trial' className='rounded-lg px-2 py-1 border border-black font-bold flex items-center justify-center'>
-                            Đăng Kí Dùng Thử Miễn Phí <FaArrowRightLong className='mx-2' />
+                            Đăng Kí Dùng Thử <FaArrowRightLong className='mx-2' />
                         </a>
                     </div>
                 </div>
