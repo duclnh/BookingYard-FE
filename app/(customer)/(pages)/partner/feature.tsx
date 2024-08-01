@@ -12,7 +12,7 @@ import { TbHandClick } from 'react-icons/tb'
 export default function Feature() {
     return (
         <div className='bg-[#eff1f7] py-14'>
-            <div className='mx-20'>
+            <div className='mx-5 md:mx-20'>
                 <div className='text-center mb-24'>
                     <div className='lg:text-6xl md:text-4xl text-3xl font-black'>
                         <p>Điểm Khác Biệt Phần Mềm</p>
