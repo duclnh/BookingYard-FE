@@ -13,14 +13,19 @@ function Header() {
     <header id='top' className='pt-8 px-5 top-0 z-50 items-center'>
       <Navbar className='lg:mx-14 fluid rounded'>
         <Navbar.Brand href="/">
-          <img className='h-20 mr-20' src={"assets/images/logo.png"} alt='logo' />
+          <img className='h-20 mr-5 sm:mr-20' src={"assets/images/logo.png"} alt='logo' />
         </Navbar.Brand>
         <div className="flex flex-row items-center gap-4 md:order-2">
           <p>{session?.user.name}</p>
-          {session?.user ?
+          {true ?
             <Dropdown
-              label={<Avatar className='hidden md:block' size="lg" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />}
-              arrowIcon={false}
+              label={
+                <>
+                  <Avatar className='hidden md:block' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
+                  <p className='mx-3'>dsadsdadsadasdsaasddadsadsa</p>
+                </>
+              }
+              arrowIcon={true}
               inline
             >
               <Dropdown.Header>
@@ -31,11 +36,11 @@ function Header() {
               <Dropdown.Item>Settings</Dropdown.Item>
               <Dropdown.Item>Earnings</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item>Sign out</Dropdown.Item>
+              <Dropdown.Item href='/signin'>Đăng xuất</Dropdown.Item>
             </Dropdown>
             :
             <Link href="/signin" className='lg:visible md:visible invisible'>
-              <Button className='text-lg font-semiBold h-10 w-[164px] bg-blue-600 hover:!bg-blue-400 focus:ring-transparent'>ĐĂNG NHẬP</Button>
+              <Button className='text-lg font-semiBold h-10 w-[164px] focus:ring-transparent'>ĐĂNG NHẬP</Button>
             </Link>}
           <Navbar.Toggle />
         </div>
