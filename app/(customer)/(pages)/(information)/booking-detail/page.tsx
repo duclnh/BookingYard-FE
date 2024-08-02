@@ -12,7 +12,7 @@ import { MdOutlineDateRange } from 'react-icons/md'
 import { RiDiscountPercentLine } from 'react-icons/ri'
 import { TiDownloadOutline } from 'react-icons/ti'
 
-export default function page() {
+export default function Page() {
   const [openModal, setOpenModal] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const downloadImage = () => {

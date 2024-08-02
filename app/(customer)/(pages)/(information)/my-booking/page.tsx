@@ -8,7 +8,7 @@ import { MdOutlineEditCalendar } from 'react-icons/md'
 import { TiThSmall } from 'react-icons/ti'
 import { VscFeedback } from 'react-icons/vsc'
 
-export default function page() {
+export default function Page() {
   const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
   return (
