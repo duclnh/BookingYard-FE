@@ -3,7 +3,7 @@ import { Input } from '@components/index';
 import React from 'react'
 import { useForm } from 'react-hook-form';
 
-export default function page() {
+export default function ChangePassword() {
   const { control, getValues, handleSubmit, reset, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   return (
     <div className='col-span-3 rounded-2xl border'>
