@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@egjs/react-view360": "^4.0.0-beta.7",
     "@microsoft/signalr": "^8.0.0",
     "bookingyard": "file:",
     "flowbite-react": "^0.10.1",
