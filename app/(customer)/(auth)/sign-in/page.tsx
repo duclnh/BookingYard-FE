@@ -72,7 +72,7 @@ export default function LoginPage() {
               rules={{ required: "Vui lòng nhập mật khẩu" }}
             />
             <div className='flex justify-end'>
-              <Link href="/forget" className='font-sans text-sm text-neutral-500 hover:cursor-pointer hover:text-blue-500'>
+              <Link href="/forget-password" className='font-sans text-sm text-neutral-500 hover:cursor-pointer hover:text-blue-500'>
                 Quên mật khẩu
               </Link>
             </div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
               {isSubmitting ? <Spinner /> : "Đăng nhập"}
             </Button>
             <div className='font-sans text-sm text-neutral-500 text-center'>
-              Bạn chưa có tài khoản? <Link href="/signup" className='hover:cursor-pointer hover:text-blue-500'>Đăng kí</Link>
+              Bạn chưa có tài khoản? <Link href="/sign-up" className='hover:cursor-pointer hover:text-blue-500'>Đăng kí</Link>
             </div>
             <div className="flex flex-row justify-between items-center p-5">
               <div className="bg-slate-300 h-px w-full"></div>

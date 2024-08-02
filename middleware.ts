@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     return Response.redirect(new URL('/verify', request.url))
   }
   if (currentUser == null && request.nextUrl.pathname.startsWith('/verify')) {
-    return Response.redirect(new URL('/signin', request.url))
+    return Response.redirect(new URL('/sign-in', request.url))
   }
 }
 

@@ -4,6 +4,10 @@ import { Avatar, Button, Dropdown, MegaMenu, Navbar } from "flowbite-react";
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
+import { FaRegUser } from 'react-icons/fa';
+import { TiTicket } from 'react-icons/ti';
+import { CiLock } from 'react-icons/ci';
+import { MdLogout } from 'react-icons/md';
 
 
 function Header() {
@@ -13,7 +17,7 @@ function Header() {
     <header id='top' className='pt-8 px-5 top-0 z-50 items-center'>
       <Navbar className='lg:mx-14 fluid rounded'>
         <Navbar.Brand href="/">
-          <img className='h-20 mr-5 sm:mr-20' src={"assets/images/logo.png"} alt='logo' />
+          <img height={60} width={60} className='mr-5 sm:mr-20' src={"assets/images/logo.png"} alt='logo' />
         </Navbar.Brand>
         <div className="flex flex-row items-center gap-4 md:order-2">
           <p>{session?.user.name}</p>
@@ -22,24 +26,32 @@ function Header() {
               label={
                 <>
                   <Avatar className='hidden md:block' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
-                  <p className='md:mx-3 w-[145px] text-nowrap overflow-hidden'>Le Ngoc Huynh Duc mđâsdasdsadaainh</p>
+                  <p className='md:ml-1 lg:ml-2 w-[60px] sm:w-[110px] md:w-[142px] text-nowrap overflow-hidden'>Le Ngoc Huynh Duc mđâsdasdsadaainh</p>
                 </>
               }
               arrowIcon={true}
               inline
             >
-              <Dropdown.Header>
-                <span className="block text-sm">Bonnie Green</span>
-                <span className="block truncate text-sm font-medium">name@flowbite.com</span>
-              </Dropdown.Header>
-              <Dropdown.Item>Dashboard</Dropdown.Item>
-              <Dropdown.Item>Settings</Dropdown.Item>
-              <Dropdown.Item>Earnings</Dropdown.Item>
+              <Dropdown.Item href='/profile'>
+                <FaRegUser className='mr-2' />
+                Hồ sơ
+              </Dropdown.Item>
+              <Dropdown.Item href='/my-booking'>
+                <TiTicket className='mr-2' />
+                Đặt lịch của tôi
+              </Dropdown.Item>
+              <Dropdown.Item href='change-password'>
+                <CiLock className='mr-2' />
+                Đổi mật khẩu
+              </Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item href='/signin'>Đăng xuất</Dropdown.Item>
+              <Dropdown.Item href='/sign-in'>
+                <MdLogout className='mr-2' />
+                Đăng xuất
+              </Dropdown.Item>
             </Dropdown>
             :
-            <Link href="/signin" className='lg:visible md:visible invisible'>
+            <Link href="/sign-in" className='lg:visible md:visible invisible'>
               <Button className='text-lg font-semiBold h-10 w-[164px] focus:ring-transparent'>ĐĂNG NHẬP</Button>
             </Link>}
           <Navbar.Toggle />
@@ -48,6 +60,7 @@ function Header() {
           <Navbar.Link className='text-lg font-semibold navbar-link' href="/" active={pathname == "/"}>
             TRANG CHỦ
           </Navbar.Link>
+          <Navbar.Link className='text-lg font-semibold navbar-link' href="/booking" active={pathname == "/booking"}>ĐẶT LỊCH</Navbar.Link>
           <Navbar.Link className='text-lg font-semibold navbar-link' href="/partner" active={pathname == "/partner"}>ĐỐI TÁC</Navbar.Link>
           <Navbar.Link className='text-lg font-semibold navbar-link' href="/contact" active={pathname == "/contact"}>LIÊN HỆ</Navbar.Link>
           {/* <Navbar.Link className='mt-1'>

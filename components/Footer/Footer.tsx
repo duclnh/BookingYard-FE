@@ -2,9 +2,8 @@ import React from 'react'
 import { Footer } from "flowbite-react";
 import { FaApple, FaGooglePlay, FaLocationDot } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
-import { FaFacebookSquare, FaInstagramSquare } from 'react-icons/fa';
-import { IoLogoYoutube } from 'react-icons/io';
 import { BsFillTelephoneOutboundFill } from 'react-icons/bs';
+import Link from 'next/link';
 
 export default function FooterComponent() {
   return (
@@ -12,12 +11,21 @@ export default function FooterComponent() {
       <div className="w-full">
         <div className="lg:flex justify-between sm:mx-12">
           <div className='w-80'>
-            <img className='h-28 mb-5' src={"assets/images/logo.png"} alt='logo' />
+            <img height={100} width={100} className='mb-5' src={"assets/images/logo.png"} alt='logo' />
             <p className='font-bold'>Quản lí lịch hẹn - giải pháp số dành cho cơ sở tập luyện và sân thể thao</p>
-            <div className="flex space-x-6 mb-10 sm:mt-3 sm:justify-start">
-              <Footer.Icon href="#" className='text-black h-50' icon={FaFacebookSquare} />
-              <Footer.Icon href="#" className='text-black h-50' icon={FaInstagramSquare} />
-              <Footer.Icon href="#" className='text-black h-50' icon={IoLogoYoutube} />
+            <div className="flex space-x-6 mb-10 mt-4 sm:justify-start">
+              <Link href="#">
+                <img className='mx-auto' height={30} width={30} src="assets/images/facebook.png" alt="facebook" />
+              </Link>
+              <Link href="#">
+                <img className='mx-auto' height={30} width={30} src="assets/images/youtube.png" alt="youtube" />
+              </Link>
+              <Link href="#">
+                <img className='mx-auto' height={30} width={30} src="assets/images/instagram.png" alt="instagram" />
+              </Link>
+              <Link href="#">
+                <img className='mx-auto' height={30} width={30} src="assets/images/tiktok.png" alt="tiktok" />
+              </Link>
             </div>
             <div className='w-full mt-4 '>
               <a href='#' className='flex items-center rounded-lg border border-black p-1 w-4/5'>

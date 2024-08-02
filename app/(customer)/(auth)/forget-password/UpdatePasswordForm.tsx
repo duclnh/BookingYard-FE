@@ -15,7 +15,7 @@ export default function UpdatePasswordForm({ email, verifyCode }: { email: strin
             var res = await updateResetPassword(email, verifyCode, data.password)
             if (res.status === 200) {
                 toast("Cập nhật mật khẩu thành công", {duration: 120})
-                router.push("/signin")
+                router.push("/sign-in")
             } else {
                 setError("Cập nhật mật khẩu mới thất bại")
             }

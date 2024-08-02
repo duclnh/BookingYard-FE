@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     pages: {
-        signIn: '/signin'
+        signIn: '/sign-in'
     },
     callbacks: {
         async jwt({ token, user, account }) {
@@ -62,7 +62,7 @@ export const authOptions: NextAuthOptions = {
                     profile?.picture,
                     profile?.email);
                 if (res.status !== 200) {
-                    return '/signin';
+                    return '/sign-in';
                 }
                 user.userID = res.data.userID
                 user.token = res.data.token
@@ -70,7 +70,7 @@ export const authOptions: NextAuthOptions = {
                 user.isVerification = res.data.isVerification
             }
             if (!user) {
-                return '/signin';
+                return '/sign-in';
             }
             return true;
         },

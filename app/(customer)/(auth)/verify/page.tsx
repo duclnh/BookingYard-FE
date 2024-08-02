@@ -23,7 +23,7 @@ export default function VerifyForm() {
             if (res.status === 200) {
                 toast.success("Xác nhận tài khoản thành công")
                 await signOut();
-                router.push("/signin")
+                router.push("/sign-in")
             } else {
                 setError("Xác nhận tài khoản thất bạn")
             }

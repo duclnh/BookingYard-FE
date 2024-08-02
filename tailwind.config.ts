@@ -11,7 +11,7 @@ const config: Config = {
     flowbite.content(),
   ],
   theme: {
-    boxShadow:{
+    boxShadow: {
       '3xl': '0 0px 5px 1px rgba(0, 0, 0, 0.15)',
     },
     extend:
@@ -21,13 +21,14 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      colors:{
-        'title'  : '#062160'
+      colors: {
+        'title': '#062160'
       }
     },
   },
   plugins: [
     flowbite.plugin(),
+    require('tailwindcss-animated')
   ],
 };
 export default config;

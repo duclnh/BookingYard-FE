@@ -24,7 +24,7 @@ export default function ForgetForm({onEmailSubmit}:{onEmailSubmit: Function}) {
     return (
         <form method='POST' className='flex flex-col justify-center h-[100%] p-5' onSubmit={handleSubmit(handleForgetForm)}>
             <div className='flex flex-row items-center mb-8'>
-                <Link href="/signin" className='h-5 w-5'>
+                <Link href="/sign-in" className='h-5 w-5'>
                     <IoArrowBackOutline className='font-bold text-2xl' />
                 </Link>
                 <div className='w-full'>
