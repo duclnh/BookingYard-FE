@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
           <Link href="/my-booking" className='flex items-center'>
             <TiTicket className='mr-2' />
-            Đặt lịch của tôi
+            Đặt lịch hẹn của tôi
           </Link>
           <Link href="/change-password" className='flex items-center'>
             <CiLock className='mr-2' />

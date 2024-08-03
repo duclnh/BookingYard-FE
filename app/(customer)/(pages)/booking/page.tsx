@@ -10,6 +10,7 @@ export default function Booking() {
   const router = useRouter();
   return (
     <div className='mt-10 mx-5 md:mx-20 mb-20'>
+      {/* Start Search */}
       <div className='bg-search-background p-24 rounded-xl xl:bg-[length:1400px_400px] lg:bg-[length:1400px_500px] md:bg-[length:1400px_600px] bg-[length:1400px_1000px] bg-center bg-no-repeat'>
         <div className='text-center md:text-left'>
           <h2 className='text-title font-extrabold text-3xl'>Đặt sân thể thao ngay</h2>
@@ -55,6 +56,8 @@ export default function Booking() {
           </Button>
         </div>
       </div>
+       {/* End Search */}
+      {/* Start Filter */}
       <div className='mt-24 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-16'>
         <Select className='w-full sm:w-72 xl:col-start-4 lg:col-start-3 sm:col-start-2 col-start-1'>
           <option value="">Sắp xếp</option>
@@ -66,105 +69,37 @@ export default function Booking() {
           <option value="">Sắp xếp theo khoảng cách giảm dần</option>
         </Select>
       </div>
-
+      {/* End Filter */}
+      {/* Start View List */}
       <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
-        <div className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
-          <img className='rounded-lg' height={500} width={500} src="assets/images/contact.png" alt="img" />
-          <div className='mx-2'>
-            <div className='flex justify-between items-center py-4'>
-              <Rating>
-                <Rating.Star />
-                <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
-              </Rating>
-              <div>12km</div>
-            </div>
-            <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
-            <div className='flex text-sm'>
-              <TiLocation size={25} className='mr-2' />
-              146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
-            </div>
-            <div className='py-5 flex justify-between items-center'>
-              <div className='text-green-500 font-bold'>60.000d</div>
-              <button onClick={() => router.push("/facility")} className='flex items-center bg-black rounded-lg text-white text-sm px-3 py-1'>
-                Chi tiết
-                <FaArrowRight className='ml-2' size={12} />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
-          <img className='rounded-lg' height={400} width={400} src="assets/images/contact.png" alt="img" />
-          <div className='mx-2'>
-            <div className='flex justify-between items-center py-4'>
-              <Rating>
-                <Rating.Star />
-                <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
-              </Rating>
-              <div>12km</div>
-            </div>
-            <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
-            <div className='flex text-sm'>
-              <TiLocation size={25} className='mr-2' />
-              146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
-            </div>
-            <div className='py-5 flex justify-between items-center'>
-              <div className='text-green-500 font-bold'>60.000d</div>
-              <button className='flex items-center bg-black rounded-lg text-white text-sm px-3 py-1'>
-                Chi tiết
-                <FaArrowRight className='ml-2' size={12} />
-              </button>
+        {[...Array(8)].map((_, index) => (
+          <div key={index} className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
+            <img className='rounded-lg' height={500} width={500} src="assets/images/contact.png" alt="img" />
+            <div className='mx-2'>
+              <div className='flex justify-between items-center py-4'>
+                <Rating>
+                  <Rating.Star />
+                  <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
+                </Rating>
+                <div>12km</div>
+              </div>
+              <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
+              <div className='flex text-sm'>
+                <TiLocation size={25} className='mr-2' />
+                146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
+              </div>
+              <div className='py-5 flex justify-between items-center'>
+                <div className='text-green-500 font-bold'>60.000d</div>
+                <button onClick={() => router.push("/facility")} className='flex items-center bg-black rounded-lg text-white text-sm px-3 py-1'>
+                  Chi tiết
+                  <FaArrowRight className='ml-2' size={12} />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
-          <img className='rounded-lg' height={400} width={400} src="assets/images/contact.png" alt="img" />
-          <div className='mx-2'>
-            <div className='flex justify-between items-center py-4'>
-              <Rating>
-                <Rating.Star />
-                <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
-              </Rating>
-              <div>12km</div>
-            </div>
-            <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
-            <div className='flex text-sm'>
-              <TiLocation size={25} className='mr-2' />
-              146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
-            </div>
-            <div className='py-5 flex justify-between items-center'>
-              <div className='text-green-500 font-bold'>60.000d</div>
-              <button className='flex items-center bg-black rounded-lg text-white text-sm px-3 py-1'>
-                Chi tiết
-                <FaArrowRight className='ml-2' size={12} />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
-          <img className='rounded-lg' height={400} width={400} src="assets/images/contact.png" alt="img" />
-          <div className='mx-2'>
-            <div className='flex justify-between items-center py-4'>
-              <Rating>
-                <Rating.Star />
-                <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
-              </Rating>
-              <div>12km</div>
-            </div>
-            <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
-            <div className='flex text-sm'>
-              <TiLocation size={25} className='mr-2' />
-              146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
-            </div>
-            <div className='py-5 flex justify-between items-center'>
-              <div className='text-green-500 font-bold'>60.000d</div>
-              <button className='flex items-center bg-black rounded-lg text-white text-sm px-3 py-1'>
-                Chi tiết
-                <FaArrowRight className='ml-2' size={12} />
-              </button>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
+       {/* End View List */}
     </div>
   )
 }

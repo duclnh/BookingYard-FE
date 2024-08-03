@@ -1,4 +1,5 @@
 "use client"
+import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 import { CgScan } from 'react-icons/cg'
 import { FaRegMoneyBillAlt, FaRegUser } from 'react-icons/fa'
@@ -10,7 +11,7 @@ import { IoPhonePortraitOutline, IoWalletOutline } from 'react-icons/io5'
 import { LuClipboardEdit } from 'react-icons/lu'
 import { MdOutlineDateRange } from 'react-icons/md'
 import { RiDiscountPercentLine } from 'react-icons/ri'
-import { TiDownloadOutline } from 'react-icons/ti'
+import { TiDownloadOutline, TiLocation } from 'react-icons/ti'
 
 export default function BookingDetail() {
   const [openModal, setOpenModal] = useState(false);
@@ -51,19 +52,21 @@ export default function BookingDetail() {
     <>
       <div className='col-span-3 rounded-2xl border'>
         <div className='text-2xl font-bold border-b-2 px-5 py-3'>
-          Chi tiết đặt lịch
+          Chi tiết đặt lịch hẹn
         </div>
-        <div className='p-20'>
-          <div className='flex justify-between'>
-            <div className='flex'>
-              <img  height={80} width={80} src="assets/images/logo.png" alt="nam thien" />
-              <div className='ml-3 text-2xl font-medium'>
-                Cong ty ha thien nam
+        <div className='p-10'>
+          <Link href={"/facility"} className='flex justify-between items-center'>
+            <img height={80} width={80} src="assets/images/logo.png" alt="nam thien" />
+            <div className='ml-5 text-2xl font-medium'>
+              <div className='text-center'>Cong ty ha thien nam</div>
+              <div className='flex text-sm mt-3'>
+                <TiLocation size={20} className='mr-1' />
+                146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
               </div>
             </div>
             <img onClick={() => setOpenModal(true)} ref={imgRef} className='hover:cursor-pointer' height={120} width={120} src="assets/images/QR_Code.svg" alt="qrcode" />
-          </div>
-          <div className='mt-16 grid grid-cols-2 gap-32'>
+          </Link>
+          <div className='mt-10 grid grid-cols-2 gap-16'>
             <div>
               <div className='flex items-center mt-4'>
                 <CgScan size={30} className='mr-2' />
@@ -148,12 +151,12 @@ export default function BookingDetail() {
           </div>
         </div>
       </div>
-      <div className={`${openModal ? '':'hidden'} fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full bg-gray-900 bg-opacity-50 dark:bg-opacity-80`}>
+      <div className={`${openModal ? '' : 'hidden'} fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full bg-gray-900 bg-opacity-50 dark:bg-opacity-80`}>
         <div className='h-full w-full relative'>
           <button className='absolute right-4 top-3 p-3 rounded-lg bg-white text-xl font-medium' onClick={() => setOpenModal(false)}>X</button>
           <div className='h-full flex flex-col items-center justify-center'>
             <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center'>
-              <img className='p-5' height={450} width={450} src={imgRef.current? imgRef.current.src : ''} alt="qrcode" />
+              <img className='p-5' height={450} width={450} src={imgRef.current ? imgRef.current.src : ''} alt="qrcode" />
               <div className="flex justify-center background-danger pb-5">
                 <div className="mx-2 flex items-center text-xl mr-5 hover:cursor-pointer" onClick={() => downloadImage()}>
                   <TiDownloadOutline size={25} className='mr-2' /> Tải xuống

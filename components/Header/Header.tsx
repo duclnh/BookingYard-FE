@@ -25,11 +25,10 @@ function Header() {
             <Dropdown
               label={
                 <>
-                  <Avatar className='hidden md:block' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
-                  <p className='md:ml-1 lg:ml-2 w-[60px] sm:w-[110px] md:w-[142px] text-nowrap overflow-hidden'>Le Ngoc Huynh Duc mđâsdasdsadaainh</p>
+                  <Avatar id='avatar' className='hidden md:block' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded /> 
                 </>
               }
-              arrowIcon={true}
+              arrowIcon={false}
               inline
             >
               <Dropdown.Item href='/profile'>
@@ -60,27 +59,9 @@ function Header() {
           <Navbar.Link className='text-lg font-semibold navbar-link' href="/" active={pathname == "/"}>
             TRANG CHỦ
           </Navbar.Link>
-          <Navbar.Link className='text-lg font-semibold navbar-link' href="/booking" active={pathname == "/booking"}>ĐẶT LỊCH</Navbar.Link>
+          <Navbar.Link className='text-lg font-semibold navbar-link' href="/booking" active={pathname == "/booking"}>ĐẶT LỊCH HẸN</Navbar.Link>
           <Navbar.Link className='text-lg font-semibold navbar-link' href="/partner" active={pathname == "/partner"}>ĐỐI TÁC</Navbar.Link>
           <Navbar.Link className='text-lg font-semibold navbar-link' href="/contact" active={pathname == "/contact"}>LIÊN HỆ</Navbar.Link>
-          {/* <Navbar.Link className='mt-1'>
-            <MegaMenu.Dropdown toggle={<></>}>
-              <ul className="grid grid-cols-2">
-                <div className="space-y-4 p-4">
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      About Us
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary-600 dark:hover:text-primary-500">
-                      Library
-                    </a>
-                  </li>
-                </div>
-              </ul>
-            </MegaMenu.Dropdown>
-          </Navbar.Link> */}
         </Navbar.Collapse>
       </Navbar>
     </header>

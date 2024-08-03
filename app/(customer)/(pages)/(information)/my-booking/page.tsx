@@ -15,7 +15,7 @@ export default function MyBooking() {
     <>
       <div className='col-span-3'>
         <div className='text-2xl font-bold px-5 py-3 border rounded-t-2xl'>
-          Đặt lịch của tôi
+          Đặt lịch hẹn của tôi
         </div>
         <div className="grid grid-cols-4 py-2 border">
           <div className='mx-auto flex items-center'>
@@ -35,117 +35,45 @@ export default function MyBooking() {
           </div>
         </div>
         <div className='py-3'>
-          <div className='w-full shadow-3xl mb-4'>
-            <div className='flex justify-between items-center p-4'>
-              <div className='flex'>
-                <img height={50} width={50} src="assets/images/logo.png" alt="dá" />
-                <div className='ml-4'>
-                  <div className='font-bold text-lg'>San bong da ha nam</div>
-                  <div className='font-normal text-sm'>Mã đặt lịch: DASDFGFDHDA</div>
+          {[...Array(5)].map((_, index) => (
+            <div key={index} className='w-full shadow-3xl mb-4'>
+              <div className='flex justify-between items-center p-4'>
+                <div className='flex'>
+                  <img height={50} width={50} src="assets/images/logo.png" alt="dá" />
+                  <div className='ml-4'>
+                    <div className='font-bold text-lg'>San bong da ha nam</div>
+                    <div className='font-normal text-sm'>Mã đặt lịch hẹn: DASDFGFDHDA</div>
+                  </div>
+                </div>
+                <div className='font-bold'>Đã xác nhận</div>
+                <div className='md:flex md:justify-end'>
+                  <button onClick={() => router.push("/booking-detail")} className='bg-blue-500 h-7 text-white rounded-md px-2 mr-2'>Chi tiết</button>
+                  <button className='bg-red-600 h-7 text-white rounded-md px-2 mt-2 sm:mt-0' onClick={() => setOpenModal(true)}>Hủy</button>
                 </div>
               </div>
-              <div className='font-bold'>Đã xác nhận</div>
-              <div className='md:flex md:justify-end'>
-                <button onClick={() => router.push("/booking-detail")} className='bg-blue-500 h-7 text-white rounded-md px-2 mr-2'>Chi tiết</button>
-                <button className='bg-red-600 h-7 text-white rounded-md px-2 mt-2 sm:mt-0' onClick={() => setOpenModal(true)}>Hủy</button>
-              </div>
-            </div>
-            <div className="border-t-2">
-              <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <div className="font-bold">Thời gian chơi</div>
-                  <div className='text-sm'>Ngày: Tue 06 Aug</div>
-                  <div className='text-sm'>Giờ: 3:00AM - 4:00AM</div>
-                </div>
-                <div>
-                  <div className="font-bold">Trạng thái thanh toán</div>
-                  Đã thanh toán
-                </div>
-                <div className='mx-auto'>
-                  <div className="font-bold">Ngày đặt lịch</div>
-                  <div>Tue 06 Aug 4:00 PM</div>
-                </div>
-                <div className='md:text-center'>
-                  <div className="font-bold">Giá tiền</div>
-                  <div>$100</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='w-full shadow-3xl mb-4'>
-            <div className='flex justify-between items-center p-4'>
-              <div className='flex'>
-                <img height={50} width={50} src="assets/images/logo.png" alt="dá" />
-                <div className='ml-4'>
-                  <div className='font-bold text-lg'>San bong da ha nam</div>
-                  <div className='font-normal text-sm'>Mã đặt lịch: DASDFGFDHDA</div>
-                </div>
-              </div>
-              <div className='font-bold'>Đã xác nhận</div>
-              <div className='md:flex md:justify-end'>
-                <button className='bg-blue-500 h-7 text-white rounded-md px-2 mr-2'>Chi tiết</button>
-                <button className='bg-red-600 h-7 text-white rounded-md px-2 mt-2 sm:mt-0'>Hủy</button>
-              </div>
-            </div>
-            <div className="border-t-2">
-              <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <div className="font-bold">Thời gian chơi</div>
-                  <div className='text-sm'>Ngày: Tue 06 Aug</div>
-                  <div className='text-sm'>Giờ: 3:00AM - 4:00AM</div>
-                </div>
-                <div>
-                  <div className="font-bold">Trạng thái thanh toán</div>
-                  Đã thanh toán
-                </div>
-                <div className='mx-auto'>
-                  <div className="font-bold">Ngày đặt lịch</div>
-                  <div>Tue 06 Aug 4:00 PM</div>
-                </div>
-                <div className='md:text-center'>
-                  <div className="font-bold">Giá tiền</div>
-                  <div>$100</div>
+              <div className="border-t-2">
+                <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <div className="font-bold">Thời gian chơi</div>
+                    <div className='text-sm'>Ngày: Tue 06 Aug</div>
+                    <div className='text-sm'>Giờ: 3:00AM - 4:00AM</div>
+                  </div>
+                  <div>
+                    <div className="font-bold">Trạng thái thanh toán</div>
+                    Đã thanh toán
+                  </div>
+                  <div className='mx-auto'>
+                    <div className="font-bold">Ngày đặt lịch hẹn</div>
+                    <div>Tue 06 Aug 4:00 PM</div>
+                  </div>
+                  <div className='md:text-center'>
+                    <div className="font-bold">Giá tiền</div>
+                    <div>$100</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className='w-full shadow-3xl mb-4'>
-            <div className='flex justify-between items-center p-4'>
-              <div className='flex'>
-                <img height={50} width={50} src="assets/images/logo.png" alt="dá" />
-                <div className='ml-4'>
-                  <div className='font-bold text-lg'>San bong da ha nam</div>
-                  <div className='font-normal text-sm'>Mã đặt lịch: DASDFGFDHDA</div>
-                </div>
-              </div>
-              <div className='font-bold'>Đã xác nhận</div>
-              <div className='md:flex md:justify-end'>
-                <button className='bg-blue-500 h-7 text-white rounded-md px-2 mr-2'>Chi tiết</button>
-                <button className='bg-red-600 h-7 text-white rounded-md px-2 mt-2 sm:mt-0'>Hủy</button>
-              </div>
-            </div>
-            <div className="border-t-2">
-              <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <div className="font-bold">Thời gian chơi</div>
-                  <div className='text-sm'>Ngày: Tue 06 Aug</div>
-                  <div className='text-sm'>Giờ: 3:00AM - 4:00AM</div>
-                </div>
-                <div>
-                  <div className="font-bold">Trạng thái thanh toán</div>
-                  Đã thanh toán
-                </div>
-                <div className='mx-auto'>
-                  <div className="font-bold">Ngày đặt lịch</div>
-                  <div>Tue 06 Aug 4:00 PM</div>
-                </div>
-                <div className='md:text-center'>
-                  <div className="font-bold">Giá tiền</div>
-                  <div>$100</div> {/* Thêm giá tiền ở đây */}
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
