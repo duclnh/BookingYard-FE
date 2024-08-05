@@ -522,6 +522,8 @@ export default function Facility() {
         </div>
 
       </div>
+
+      {/*Start view 360 */}
       <ModalView key={'View 360'} toggle={modal360} setToggle={setModal360}>
         <div className='rounded-lg shadow dark:bg-gray-700 flex items-center justify-between w-[100%] h-[100%]'>
           <SlArrowLeftCircle className={`${currentIndex360 == 0 ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={prevImage360} />
@@ -529,6 +531,9 @@ export default function Facility() {
           <SlArrowRightCircle className={`${currentIndex360 == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage360} />
         </div>
       </ModalView>
+      {/*End view 360 */}
+
+      {/*Start view Image */}
       <ModalView key={'View Images'} toggle={modalImage} setToggle={setModalImage}>
         <div className='rounded-lg shadow flex items-center justify-between w-[100%] h-[100%]'>
           <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={prevImage} />
@@ -546,6 +551,7 @@ export default function Facility() {
               {[...Array(images.length)].map((_, index) => (
                 <div key={index} className='mx-2 mb-2'>
                   <Image
+                    key={index}
                     height={90}
                     width={90}
                     className='select-none rounded-md hover:scale-105 hover:cursor-pointer'
@@ -560,6 +566,9 @@ export default function Facility() {
           <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage} />
         </div>
       </ModalView>
+      {/*End view Image */}
+
+      {/*Start view Map */}
       <ModalView key={'View Map'} toggle={modalMap} setToggle={setModalMap}>
         <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center w-[100%] h-[100%]'>
           <iframe
@@ -570,6 +579,9 @@ export default function Facility() {
           />
         </div>
       </ModalView>
+      {/*End view Map */}
+
+      {/* Start Report */}
       <Modal show={openModalReport} size="md" onClose={() => setOpenModalReport(false)} popup>
         <Modal.Header>
           <p className='text-lg ml-4'>Báo cáo</p>
@@ -598,6 +610,7 @@ export default function Facility() {
           </form>
         </Modal.Body>
       </Modal>
+      {/* End Report */}
     </>
   )
 }
