@@ -437,17 +437,17 @@ export default function Facility() {
                     placeholder='Chọn ngày'
                     calendarPosition='bottom-right'
                     render={<InputIcon />}
-                    plugins={[
-                      <Toolbar
-                        position="bottom"
-                        names={{
-                          today: "Hôm nay",
-                          deselect: "Bỏ chọn",
-                          close: "Xong",
-                        }}
+                    // plugins={[
+                    //   <Toolbar
+                    //     position="bottom"
+                    //     names={{
+                    //       today: "Hôm nay",
+                    //       deselect: "Bỏ chọn",
+                    //       close: "Xong",
+                    //     }}
 
-                      />,
-                    ]}
+                    //   />,
+                    // ]}
                   />
 
                   {/* 
