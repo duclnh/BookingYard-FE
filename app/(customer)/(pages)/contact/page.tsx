@@ -1,11 +1,11 @@
 "use client"
-import MapEmbed from '@components/MapEmbed/MapEmbed '
-import { Button, Textarea, TextInput } from 'flowbite-react'
+import { Textarea, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import React from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { BsGlobe } from 'react-icons/bs'
 import { FiPhone } from 'react-icons/fi'
+import { GoPaperAirplane } from 'react-icons/go'
 import { HiMiniInboxStack } from 'react-icons/hi2'
 import { IoIosPhonePortrait } from 'react-icons/io'
 import { MdHeadsetMic, MdOutlineEmail } from 'react-icons/md'
@@ -100,14 +100,19 @@ export default function Contact() {
                 <Textarea placeholder="Nội dung..." required rows={3} />
               </div>
               <ReCAPTCHA className="captcha" style={{ transform: "scale(0.85)", transformOrigin: "0 0" }} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} />
-              <Button className='w-40 bg-black hover:!bg-[#302f2f]' type="submit">Gửi</Button>
+              <button className='w-40 bg-black hover:bg-[#302f2f] text-white px-5 py-2 rounded-xl flex items-center' type="submit">
+                Gửi tin nhắn
+                <GoPaperAirplane className='ml-2 -rotate-45' />
+              </button>
             </form>
           </div>
         </div>
-        <MapEmbed 
+        <iframe
           src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15674.345653387507!2d106.8053171!3d10.8429291!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752731176b07b1%3A0xb752b24b379bae5e!2sFPT%20University%20HCMC!5e0!3m2!1sen!2s!4v1722531503452!5m2!1sen!2s'
           className='w-full'
           height="550"
+          loading="lazy"
+          allowFullScreen
         />
       </div>
     </div>

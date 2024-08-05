@@ -11,20 +11,20 @@ export default function FooterComponent() {
       <div className="w-full">
         <div className="lg:flex justify-between sm:mx-12">
           <div className='w-80'>
-            <img height={100} width={100} className='mb-5' src={"assets/images/logo.png"} alt='logo' />
+            <img height={100} width={100} className='mb-5 select-none' src={"assets/images/logo.png"} alt='logo' />
             <p className='font-bold'>Quản lí lịch hẹn - giải pháp số dành cho cơ sở tập luyện và sân thể thao</p>
             <div className="flex space-x-6 mb-10 mt-4 sm:justify-start">
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/facebook.png" alt="facebook" />
+                <img className='mx-auto select-none' height={30} width={30} src="assets/images/facebook.png" alt="facebook" />
               </Link>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/youtube.png" alt="youtube" />
+                <img className='mx-auto select-none' height={30} width={30} src="assets/images/youtube.png" alt="youtube" />
               </Link>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/instagram.png" alt="instagram" />
+                <img className='mx-auto select-none' height={30} width={30} src="assets/images/instagram.png" alt="instagram" />
               </Link>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/tiktok.png" alt="tiktok" />
+                <img className='mx-auto select-none' height={30} width={30} src="assets/images/tiktok.png" alt="tiktok" />
               </Link>
             </div>
             <div className='w-full mt-4 '>

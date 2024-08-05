@@ -67,7 +67,7 @@ export default function Home() {
               <option value="Germany">Germany</option>
             </Select>
           </div>
-          <Button className='h-10 my-auto bg-orange-500 mx-auto hover:!bg-orange-400 focus:ring-transparent'>
+          <Button color='' className='h-10 my-auto bg-orange-500 mx-auto hover:!bg-orange-400 focus:ring-transparent'>
             <IoMdSearch className='font-bold mr-2' size={18} />
             <span>Tìm kiếm</span>
           </Button>

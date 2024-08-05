@@ -8,6 +8,24 @@
   box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #dedede;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #afaeae;
+}
+
 body {
   text-rendering: optimizeSpeed;
   color: black;
@@ -42,6 +60,22 @@ body {
   border-top: 15px solid black;
 }
 
+.rmdp-week {
+  width: 400px;
+}
+
+.rmdp-week .rmdp-week-day {
+  height: 50px;
+  width: 54px;
+}
+.rmdp-shadow{
+  /* box-shadow: none !important; */
+  border-radius: 8px !important;
+}
+.rmdp-input{
+  height: 28px !important;
+  width: 100%;
+}
 @layer components {
   @media screen and (min-width: 767px) {
     .navbar-link::after {

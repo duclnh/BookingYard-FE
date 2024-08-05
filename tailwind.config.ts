@@ -17,13 +17,17 @@ const config: Config = {
     extend:
     {
       backgroundImage: {
+        "search-background": "url('/assets/images/search.jpg')",
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
         'title': '#062160'
-      }
+      },
+      width: {
+        '100': '25rem'
+      },
     },
   },
   plugins: [
