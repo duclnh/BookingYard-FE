@@ -1,4 +1,5 @@
 "use client"
+import { ModalView } from '@components/index'
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 import { CgScan } from 'react-icons/cg'
@@ -10,6 +11,7 @@ import { IoIosTimer } from 'react-icons/io'
 import { IoPhonePortraitOutline, IoWalletOutline } from 'react-icons/io5'
 import { LuClipboardEdit } from 'react-icons/lu'
 import { MdOutlineDateRange } from 'react-icons/md'
+import { PiCourtBasketballLight } from 'react-icons/pi'
 import { RiDiscountPercentLine } from 'react-icons/ri'
 import { TiDownloadOutline, TiLocation } from 'react-icons/ti'
 
@@ -55,24 +57,31 @@ export default function BookingDetail() {
           Chi tiết đặt lịch hẹn
         </div>
         <div className='p-10'>
-          <Link href={"/facility"} className='flex justify-between items-center'>
+          <div className='flex justify-between items-center'>
             <img height={80} width={80} src="assets/images/logo.png" alt="nam thien" />
-            <div className='ml-5 text-2xl font-medium'>
+            <Link href={"/facility"} className='ml-5 text-2xl font-medium'>
               <div className='text-center'>Cong ty ha thien nam</div>
               <div className='flex text-sm mt-3'>
                 <TiLocation size={20} className='mr-1' />
                 146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
               </div>
-            </div>
+            </Link>
             <img onClick={() => setOpenModal(true)} ref={imgRef} className='hover:cursor-pointer' height={120} width={120} src="assets/images/QR_Code.svg" alt="qrcode" />
-          </Link>
-          <div className='mt-10 grid grid-cols-2 gap-16'>
+          </div>
+          <div className='mt-10 grid lg:grid-cols-2 lg:gap-16'>
             <div>
               <div className='flex items-center mt-4'>
                 <CgScan size={30} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Mã đặt lịch:</div>
                   <div className='float-end font-medium'>312312342142</div>
+                </div>
+              </div>
+              <div className='flex items-center mt-4'>
+                <PiCourtBasketballLight size={30} className='mr-2' />
+                <div className='w-full'>
+                  <div className='float-start'>Sân:</div>
+                  <div className='float-end font-medium'>Sấn số 3</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
@@ -151,24 +160,19 @@ export default function BookingDetail() {
           </div>
         </div>
       </div>
-      <div className={`${openModal ? '' : 'hidden'} fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full bg-gray-900 bg-opacity-50 dark:bg-opacity-80`}>
-        <div className='h-full w-full relative'>
-          <button className='absolute right-4 top-3 p-3 rounded-lg bg-white text-xl font-medium' onClick={() => setOpenModal(false)}>X</button>
-          <div className='h-full flex flex-col items-center justify-center'>
-            <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center'>
-              <img className='p-5' height={450} width={450} src={imgRef.current ? imgRef.current.src : ''} alt="qrcode" />
-              <div className="flex justify-center background-danger pb-5">
-                <div className="mx-2 flex items-center text-xl mr-5 hover:cursor-pointer" onClick={() => downloadImage()}>
-                  <TiDownloadOutline size={25} className='mr-2' /> Tải xuống
-                </div>
-                <div className="relative mx-2 flex items-center text-xl ml-5 hover:cursor-pointer" onClick={(event) => copyImage(event)}>
-                  <LuClipboardEdit size={25} className='mr-2' /> Sao chép
-                </div>
-              </div>
+      <ModalView toggle={openModal} setToggle={setOpenModal}>
+        <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center'>
+          <img className='p-5' height={450} width={450} src={imgRef.current ? imgRef.current.src : ''} alt="qrcode" />
+          <div className="flex justify-center background-danger pb-5">
+            <div className="mx-2 flex items-center text-xl mr-5 hover:cursor-pointer" onClick={() => downloadImage()}>
+              <TiDownloadOutline size={25} className='mr-2' /> Tải xuống
+            </div>
+            <div className="relative mx-2 flex items-center text-xl ml-5 hover:cursor-pointer" onClick={(event) => copyImage(event)}>
+              <LuClipboardEdit size={25} className='mr-2' /> Sao chép
             </div>
           </div>
         </div>
-      </div>
+      </ModalView>
     </>
   )
 }

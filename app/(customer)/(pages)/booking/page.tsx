@@ -56,7 +56,7 @@ export default function Booking() {
           </Button>
         </div>
       </div>
-       {/* End Search */}
+      {/* End Search */}
       {/* Start Filter */}
       <div className='mt-24 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-16'>
         <Select className='w-full sm:w-72 xl:col-start-4 lg:col-start-3 sm:col-start-2 col-start-1'>
@@ -90,16 +90,16 @@ export default function Booking() {
               </div>
               <div className='py-5 flex justify-between items-center'>
                 <div className='text-green-500 font-bold'>60.000d</div>
-                <button onClick={() => router.push("/facility")} className='flex items-center bg-black rounded-lg text-white text-sm px-3 py-1'>
-                  Chi tiết
-                  <FaArrowRight className='ml-2' size={12} />
-                </button>
+                <Button size='xs' color='dark' href='/facility' className='flex items-center text-sm px-3'>
+                   Chi tiết
+                  <FaArrowRight className='ml-2 mt-0.5' size={12} />
+                </Button>
               </div>
             </div>
           </div>
         ))}
       </div>
-       {/* End View List */}
+      {/* End View List */}
     </div>
   )
 }

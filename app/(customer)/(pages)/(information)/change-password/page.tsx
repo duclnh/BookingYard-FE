@@ -1,5 +1,6 @@
 "use client"
 import { Input } from '@components/index';
+import { Button } from 'flowbite-react';
 import React from 'react'
 import { useForm } from 'react-hook-form';
 
@@ -51,7 +52,7 @@ export default function ChangePassword() {
             }}
           />
         </div>
-        <button className='float-end bg-blue-700 text-white px-4 leading-8 my-10 rounded-lg' type='submit'>Cập nhật</button>
+        <Button size='sm' color='blue' className='float-end px-4 leading-8 my-10 rounded-lg' type='submit'>Cập nhật</Button>
       </form>
     </div>
   )
