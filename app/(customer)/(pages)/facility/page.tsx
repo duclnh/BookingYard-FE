@@ -551,7 +551,6 @@ export default function Facility() {
               {[...Array(images.length)].map((_, index) => (
                 <div key={index} className='mx-2 mb-2'>
                   <Image
-                    key={index}
                     height={90}
                     width={90}
                     className='select-none rounded-md hover:scale-105 hover:cursor-pointer'

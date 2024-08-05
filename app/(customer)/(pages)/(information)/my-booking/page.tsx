@@ -110,7 +110,7 @@ export default function MyBooking() {
           </div>
         </div>
       </div>
-      <Modal show={openModalCancel} size="md" onClose={() => setOpenModalCancel(false)} popup>
+      <Modal key={"cancel"} show={openModalCancel} size="md" onClose={() => setOpenModalCancel(false)} popup>
         <Modal.Header>
           <p className='text-lg'>Bạn có muốn xóa lịch này không ?</p>
         </Modal.Header>
@@ -150,7 +150,7 @@ export default function MyBooking() {
           </form>
         </Modal.Body>
       </Modal>
-      <Modal show={openModalFeedback} size="md" onClose={() => setOpenModalFeedback(false)} popup>
+      <Modal key={"feedback"} show={openModalFeedback} size="md" onClose={() => setOpenModalFeedback(false)} popup>
         <Modal.Header>
           <p className='text-lg ml-4'>Đánh giá</p>
         </Modal.Header>
