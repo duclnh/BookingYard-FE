@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { Avatar, Button, Dropdown, MegaMenu, Navbar, Popover } from "flowbite-react";
+import { Avatar, Button, Dropdown, Navbar, Popover } from "flowbite-react";
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
@@ -9,7 +9,7 @@ import { TiTicket } from 'react-icons/ti';
 import { CiLock } from 'react-icons/ci';
 import { MdLogout } from 'react-icons/md';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-
+import Image from 'next/image'
 
 function Header() {
   const { data: session } = useSession();
@@ -18,7 +18,7 @@ function Header() {
     <header id='top' className='pt-8 px-5 top-0 z-50 items-center'>
       <Navbar className='lg:mx-14 fluid rounded'>
         <Navbar.Brand href="/">
-          <img height={60} width={60} className='mr-5 sm:mr-20' src={"assets/images/logo.png"} alt='logo' />
+          <Image src="/assets/images/logo.png" alt="logo" height="60" width="60" className="sm:mr-2 lg:mr-5" />
         </Navbar.Brand>
         <div className="flex flex-row items-center gap-4 md:order-2">
           <p>{session?.user.name}</p>
@@ -79,39 +79,39 @@ function Header() {
                   </div>
                 }
               >
-                <div className='relative hover:cursor-pointer'>
-                  <IoMdNotificationsOutline className='mx-5' size={25} />
-                  <div className='absolute -top-1 right-4 text-xs w-5 leading-5 text-center text-white bg-red-600 rounded-full'>5</div>
+                <div role="button" className='relative lg:mx-5 hover:cursor-pointer'>
+                  <IoMdNotificationsOutline size={25} />
+                  <div className='absolute -top-1 -right-1.5 text-xs w-5 leading-5 text-center text-white bg-red-600 rounded-full'>5</div>
                 </div>
               </Popover>
               <Dropdown
+                aria-haspopup="menu"
                 trigger='hover'
                 label={
-                  <>
-                    <Avatar id='avatar' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
-                  </>
+                  <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
                 }
                 arrowIcon={false}
                 inline
               >
-                <Dropdown.Item href='/profile'>
+                <Dropdown.Item href='/profile' aria-label="Profile">
                   <FaRegUser className='mr-2' />
                   Hồ sơ
                 </Dropdown.Item>
-                <Dropdown.Item href='/my-booking'>
+                <Dropdown.Item href='/my-booking' aria-label="My Booking">
                   <TiTicket className='mr-2' />
                   Đặt lịch của tôi
                 </Dropdown.Item>
-                <Dropdown.Item href='change-password'>
+                <Dropdown.Item href='change-password' aria-label="Change Password">
                   <CiLock className='mr-2' />
                   Đổi mật khẩu
                 </Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item href='/sign-in'>
+                <Dropdown.Item href='/sign-in' aria-label="Sign Out">
                   <MdLogout className='mr-2' />
                   Đăng xuất
                 </Dropdown.Item>
               </Dropdown>
+
             </>
             :
             <Link href="/sign-in" className='lg:visible md:visible invisible'>

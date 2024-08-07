@@ -29,7 +29,7 @@ export default function Partner() {
                 <FaPen className='mx-2' />
                 Đăng Kí Dùng Thử
               </Button>
-              <Button href="tel:0766 860 068" className='ml-10 bg-[#65db52] hover:!bg-[#81ef70] uppercase *:flex *:items-center'>
+              <Button color='success' href="tel:0766 860 068" className='ml-10 uppercase *:flex *:items-center'>
                 <FaPhoneAlt className='mx-2' />
                 Liên Hệ Tư Vấn Ngay
               </Button>

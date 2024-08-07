@@ -15,9 +15,18 @@ export default function Service() {
                         Bảng Giá Dịch Vụ
                     </div>
                     <div className='mt-3 font-medium lg:text-2xl'>Nhận tư vấn miễn phí!</div>
-                    <div className='mt-10 flex items-center font-bold justify-center'>
+                    <div className="mt-10 flex items-center font-bold justify-center">
                         Tháng
-                        <ToggleSwitch checked={toggle} className='mx-5 *:focus:!ring-transparent' onChange={setToggle} />
+                        <ToggleSwitch
+                            aria-checked={toggle}
+                            aria-label="Chuyển đổi giữa Tháng và Năm"
+                            id="toggleSwitch"
+                            role="switch"
+                            type="button"
+                            checked={toggle}
+                            className="mx-5"
+                            onChange={setToggle}
+                        />
                         Năm
                     </div>
                 </div>
@@ -38,7 +47,7 @@ export default function Service() {
                         </div>
                         <div className='my-8 px-10'>
                             <div className='flex mb-5'>
-                                <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20}/>
+                                <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20} />
                                 <div className='ml-3'>Nhận tư vấn miễn phí</div>
                             </div>
                             <div className='flex mb-5'>
@@ -82,12 +91,12 @@ export default function Service() {
                                 </div>
                             </div>
                             <div className='h-14 w-14 rounded-full bg-[#f5f5f6] flex items-center justify-center'>
-                                <IoRocket  size={25}/>
+                                <IoRocket size={25} />
                             </div>
                         </div>
                         <div className='my-8 px-10'>
                             <div className='flex mb-5'>
-                                <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20}/>
+                                <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20} />
                                 <div className='ml-3'>Nhận tư vấn miễn phí</div>
                             </div>
                             <div className='flex mb-5'>
@@ -131,12 +140,12 @@ export default function Service() {
                                 </div>
                             </div>
                             <div className='h-14 w-14 rounded-full bg-[#f5f5f6] flex items-center justify-center'>
-                                <IoGlobeSharp  size={25}/>
+                                <IoGlobeSharp size={25} />
                             </div>
                         </div>
                         <div className='my-8 px-10'>
                             <div className='flex mb-5'>
-                                <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20}/>
+                                <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20} />
                                 <div className='ml-3'>Nhận tư vấn miễn phí</div>
                             </div>
                             <div className='flex mb-5'>

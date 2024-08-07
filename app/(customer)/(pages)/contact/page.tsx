@@ -9,6 +9,7 @@ import { GoPaperAirplane } from 'react-icons/go'
 import { HiMiniInboxStack } from 'react-icons/hi2'
 import { IoIosPhonePortrait } from 'react-icons/io'
 import { MdHeadsetMic, MdOutlineEmail } from 'react-icons/md'
+import Image from 'next/image'
 
 export default function Contact() {
   return (
@@ -68,22 +69,22 @@ export default function Contact() {
             <div className='text-sm'></div>
             <div className='mt-3 grid grid-cols-4 mx-auto'>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/facebook.png" alt="facebook" />
+                <Image className='mx-auto' height={30} width={30} src="/assets/images/facebook.png" alt="facebook" />
               </Link>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/youtube.png" alt="youtube" />
+                <Image className='mx-auto' height={30} width={30} src="/assets/images/youtube.png" alt="youtube" />
               </Link>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/instagram.png" alt="instagram" />
+                <Image className='mx-auto' height={30} width={30} src="/assets/images/instagram.png" alt="instagram" />
               </Link>
               <Link href="#">
-                <img className='mx-auto' height={30} width={30} src="assets/images/tiktok.png" alt="tiktok" />
+                <Image className='mx-auto' height={30} width={30} src="/assets/images/tiktok.png" alt="tiktok" />
               </Link>
             </div>
           </div>
         </div>
         <div className='mt-10 py-10 sm:py-20 grid md:grid-cols-2 gap-16 sm:gap-32'>
-          <img width={1000} src='assets/images/contact.png' alt='contact' />
+          <Image width={1000} height={1000} src='/assets/images/contact.png' alt='contact' />
           <div className='rounded-lg bg-[#f5f5f6] p-8'>
             <div className='text-2xl font-bold'>
               Gửi đến chúng tôi
@@ -108,6 +109,7 @@ export default function Contact() {
           </div>
         </div>
         <iframe
+          title='fieldy'
           src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15674.345653387507!2d106.8053171!3d10.8429291!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752731176b07b1%3A0xb752b24b379bae5e!2sFPT%20University%20HCMC!5e0!3m2!1sen!2s!4v1722531503452!5m2!1sen!2s'
           className='w-full'
           height="550"

@@ -4,6 +4,7 @@ import { FaApple, FaGooglePlay, FaLocationDot } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
 import { BsFillTelephoneOutboundFill } from 'react-icons/bs';
 import Link from 'next/link';
+import Image from 'next/image'
 
 export default function FooterComponent() {
   return (
@@ -11,7 +12,7 @@ export default function FooterComponent() {
       <div className="w-full">
         <div className="lg:flex justify-between sm:mx-12">
           <div className='w-80'>
-            <img height={100} width={100} className='mb-5 select-none' src={"assets/images/logo.png"} alt='logo' />
+            <Image height={100} width={100} className='mb-5 select-none' src={"/assets/images/logo.png"} alt='logo' />
             <p className='font-bold'>Quản lí lịch hẹn - giải pháp số dành cho cơ sở tập luyện và sân thể thao</p>
             <div className="flex space-x-6 mb-10 mt-4 sm:justify-start">
               <Link href="#">
