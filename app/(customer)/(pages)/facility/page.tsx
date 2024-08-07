@@ -289,7 +289,7 @@ export default function Facility() {
                 <div className='col-span-1'>
                   <div className='text-center'>
                     <p className='text-6xl font-bold'>4.5</p>
-                    <p className='mt-2'>Dựa trên 120 lươt đánh giá</p>
+                    <p className='mt-2'>Dựa trên 120 lượt đánh giá</p>
                   </div>
                 </div>
                 <div className='col-span-2 w-full'>
@@ -384,7 +384,7 @@ export default function Facility() {
             {/* End feedback */}
           </div>
           <div className='col-span-2'>
-            <div className='border rounded-l'>
+            <div className='border rounded-l py-5'>
               <div className='text-center text-xl font-bold p-5'>Đặt lịch hẹn</div>
               <div className='p-3'>
                 <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
@@ -437,17 +437,17 @@ export default function Facility() {
                     placeholder='Chọn ngày'
                     calendarPosition='bottom-right'
                     render={<InputIcon />}
-                    // plugins={[
-                    //   <Toolbar
-                    //     position="bottom"
-                    //     names={{
-                    //       today: "Hôm nay",
-                    //       deselect: "Bỏ chọn",
-                    //       close: "Xong",
-                    //     }}
+                  // plugins={[
+                  //   <Toolbar
+                  //     position="bottom"
+                  //     names={{
+                  //       today: "Hôm nay",
+                  //       deselect: "Bỏ chọn",
+                  //       close: "Xong",
+                  //     }}
 
-                    //   />,
-                    // ]}
+                  //   />,
+                  // ]}
                   />
 
                   {/* 
@@ -513,9 +513,7 @@ export default function Facility() {
                   <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Giá  tiền:</label>
                   <div className='text-lg font-bold'>31312</div>
                 </div>
-                <div className='block text-center'>
-                  <button onClick={() => router.push("/payment")} className='mx-auto bg-black text-white py-1 px-4 rounded-md hover:bg-slate-800'>Đặt lịch</button>
-                </div>
+                <Button size='sm' href='/payment' className='mx-auto py-1 w-32 px-4 rounded-md'>Đặt lịch</Button>
               </div>
             </div>
           </div>

@@ -2,6 +2,8 @@
 import { ModalView } from '@components/index'
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
+import { BiSolidDiscount } from 'react-icons/bi'
+import { BsPeople } from 'react-icons/bs'
 import { CgScan } from 'react-icons/cg'
 import { FaRegMoneyBillAlt, FaRegUser } from 'react-icons/fa'
 import { FaPeopleRobbery } from 'react-icons/fa6'
@@ -10,9 +12,8 @@ import { GiReceiveMoney } from 'react-icons/gi'
 import { IoIosTimer } from 'react-icons/io'
 import { IoPhonePortraitOutline, IoWalletOutline } from 'react-icons/io5'
 import { LuClipboardEdit } from 'react-icons/lu'
-import { MdOutlineDateRange } from 'react-icons/md'
+import { MdOutlineDateRange, MdOutlinePriceCheck } from 'react-icons/md'
 import { PiCourtBasketballLight } from 'react-icons/pi'
-import { RiDiscountPercentLine } from 'react-icons/ri'
 import { TiDownloadOutline, TiLocation } from 'react-icons/ti'
 
 export default function BookingDetail() {
@@ -71,17 +72,24 @@ export default function BookingDetail() {
           <div className='mt-10 grid lg:grid-cols-2 lg:gap-16'>
             <div>
               <div className='flex items-center mt-4'>
-                <CgScan size={30} className='mr-2' />
+                <CgScan size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Mã đặt lịch:</div>
                   <div className='float-end font-medium'>312312342142</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
-                <PiCourtBasketballLight size={30} className='mr-2' />
+                <PiCourtBasketballLight size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Sân:</div>
                   <div className='float-end font-medium'>Sấn số 3</div>
+                </div>
+              </div>
+              <div className='flex items-center mt-4'>
+                <BsPeople size={25} className='mr-2' />
+                <div className='w-full'>
+                  <div className='float-start'>Loại sân:</div>
+                  <div className='float-end font-medium'>Sân 7 người</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
@@ -143,17 +151,27 @@ export default function BookingDetail() {
                 </div>
               </div>
               <div className='flex items-center mt-4'>
-                <RiDiscountPercentLine size={25} className='mr-2' />
+                <MdOutlinePriceCheck  size={25} className='mr-2' />
                 <div className='w-full'>
-                  <div className='float-start'>Giảm giá:</div>
-                  <div className='float-end font-medium'>20 %</div>
+                  <div className='float-start'>Giá:</div>
+                  <div className='flex justify-end'>
+                    <p className='line-through mr-2'>{'30.000 VND'}</p>
+                    <p className='float-end font-medium'>{'25.000 VND / h'}</p>
+                  </div>
+                </div>
+              </div>
+              <div className='flex items-center mt-4'>
+                <BiSolidDiscount size={25} className='mr-2' />
+                <div className='w-full'>
+                  <div className='float-start'>Mã giảm giá:</div>
+                  <div className='float-end font-medium'>{'ABSADAS- DASDAS (30%)'}</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
                 <FaRegMoneyBillAlt size={25} className='mr-2' />
                 <div className='w-full'>
-                  <div className='float-start'>Tổng tiền:</div>
-                  <div className='float-end font-medium'>123123414</div>
+                  <div className='float-start'>Số tiền thanh toán:</div>
+                  <div className='float-end font-medium'>{'20.000 VND'}</div>
                 </div>
               </div>
             </div>

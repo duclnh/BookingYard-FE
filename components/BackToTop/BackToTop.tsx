@@ -23,7 +23,7 @@ export default function BackToTop() {
         isVisible ?
             (<Button
                 onClick={() => window.scroll({top: 0})}
-                className='fixed animate-fade-up bottom-5 w-10 h-10 right-5 rounded-full focus:ring-transparent'
+                className='fixed animate-fade-up bottom-5 w-10 h-10 right-3 rounded-full focus:ring-transparent'
             >
                 <FaLongArrowAltUp size={17} />
             </Button>) 

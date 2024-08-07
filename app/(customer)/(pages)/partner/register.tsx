@@ -27,7 +27,7 @@ export default function Register() {
                         <Textarea placeholder="Nội dung..." required rows={3} />
                     </div>
                     <ReCAPTCHA className="captcha" style={{ transform: "scale(0.85)", transformOrigin: "0 0" }} sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!} />
-                    <Button className='w-40 bg-blue-500 hover:!bg-blue-400' type="submit">ĐĂNG KÍ</Button>
+                    <Button color='blue' className='w-40' type="submit">ĐĂNG KÍ</Button>
                 </form>
             </div>
         </div>
