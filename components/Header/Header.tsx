@@ -10,6 +10,8 @@ import { CiLock } from 'react-icons/ci';
 import { MdLogout } from 'react-icons/md';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image'
+import { TbBasketDiscount } from 'react-icons/tb';
+import { FiUserCheck } from 'react-icons/fi';
 
 function Header() {
   const { data: session } = useSession();
@@ -29,53 +31,24 @@ function Header() {
                 aria-labelledby="profile-popover"
                 trigger='hover'
                 content={
-                  <div className="w-64 p-3 z-20">
-                    <div className="mb-2 flex items-center justify-between">
-                      <a href="#">
-                        <img
-                          className="h-10 w-10 rounded-full"
-                          src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-                          alt="Jese Leos"
-                        />
-                      </a>
-                      <div>
-                        <button
-                          type="button"
-                          className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        >
-                          Follow
-                        </button>
-                      </div>
+                  <div className="w-80 z-20">
+                    <p className='text-xl font-bold p-2'>Thông báo</p>
+                    <div className='border-t-2 pt-3 max-h-96 overflow-y-scroll p-2'>
+                      {[...Array(10)].map((_, index) => (
+                        <div key={index} className='flex justify-between items-center mb-3'>
+                          <div className='flex'>
+                            <Image height={100} width={100} className='rounded-full h-10 w-10' src='/assets/images/slide2.png' alt='img' />
+                            <div className='ml-2 text-sm'>
+                              <div className='max-h-10 max-w-60 text-wrap overflow-hidden'>
+                                Demesne far-hearted suppose venture excited see had ... Dependent on so extremely delivered by. Yet no jokes worse her why
+                              </div>
+                              <p className='text-xs'>1 ngày</p>
+                            </div>
+                          </div>
+                          <div className='h-3 w-3 rounded-full bg-cyan-800 mr-2'></div>
+                        </div>
+                      ))}
                     </div>
-                    <p id="profile-popover" className="text-base font-semibold leading-none text-gray-900 dark:text-white">
-                      <a href="#">Jese Leos</a>
-                    </p>
-                    <p className="mb-3 text-sm font-normal">
-                      <a href="#" className="hover:underline">
-                        @jeseleos
-                      </a>
-                    </p>
-                    <p className="mb-4 text-sm">
-                      Open-source contributor. Building{' '}
-                      <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">
-                        flowbite.com
-                      </a>
-                      .
-                    </p>
-                    <ul className="flex text-sm">
-                      <li className="me-2">
-                        <a href="#" className="hover:underline">
-                          <span className="font-semibold text-gray-900 dark:text-white">799</span>
-                          <span>Following</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" className="hover:underline">
-                          <span className="font-semibold text-gray-900 dark:text-white">3,758</span>
-                          <span>Followers</span>
-                        </a>
-                      </li>
-                    </ul>
                   </div>
                 }
               >
@@ -99,7 +72,15 @@ function Header() {
                 </Dropdown.Item>
                 <Dropdown.Item href='/my-booking' aria-label="My Booking">
                   <TiTicket className='mr-2' />
-                  Đặt lịch của tôi
+                  Đặt lịch
+                </Dropdown.Item>
+                <Dropdown.Item href='/my-booking' aria-label="My Booking">
+                  <TbBasketDiscount className='mr-2' />
+                  Mã giảm giá
+                </Dropdown.Item>
+                <Dropdown.Item href='/history-score' aria-label="My Booking">
+                  <FiUserCheck className='mr-2' />
+                  Lịch sử tích điểm
                 </Dropdown.Item>
                 <Dropdown.Item href='change-password' aria-label="Change Password">
                   <CiLock className='mr-2' />

@@ -28,16 +28,16 @@ export default function MyBooking() {
   };
 
   const handlerCloseFeedback = () => {
-     setOpenModalFeedback(false)
-     setSelectedStar(0)
-     setHoveredStar(null)
+    setOpenModalFeedback(false)
+    setSelectedStar(0)
+    setHoveredStar(null)
   }
 
   return (
     <>
       <div className='col-span-3'>
         <div className='text-2xl font-bold px-5 py-3 border rounded-t-2xl'>
-          Đặt lịch hẹn của tôi
+          Đặt lịch hẹn
         </div>
         <div className="grid grid-cols-4 border">
           <div onClick={() => setSelect(1)} className={`mx-auto p-2 flex items-center justify-center hover:cursor-pointer ${currentSelect == 1 ? 'text-blue-700 w-full border-b-2 border-b-blue-700' : ''}`}>
@@ -152,7 +152,7 @@ export default function MyBooking() {
       </Modal>
       <Modal key={"feedback"} show={openModalFeedback} size="md" onClose={() => setOpenModalFeedback(false)} popup>
         <Modal.Header>
-          <p className='text-lg ml-4'>Đánh giá</p>
+          Đánh giá
         </Modal.Header>
         <Modal.Body>
           <form className="mt-5">
