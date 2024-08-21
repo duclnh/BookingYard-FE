@@ -61,7 +61,7 @@ export default function Booking() {
       <div className='grid xl:grid-cols-6 lg:grid-cols-5 grid-cols-2 sm:gap-20 gap-5'>
         <div className='hidden lg:block xl:col-span-5 lg:col-span-4'>
           <div className='grid xl:grid-cols-6 lg:grid-cols-6 sm:grid-cols-2 xl:gap-5 lg:gap-1'>
-            <Select className='[&>select]:focus:ring-transparent' id="type" required>
+            <Select className='focus:ring-transparent' id="type" required>
               <option value=''>Môn thể thao</option>
               <option value="Canada">Canada</option>
               <option value="France">France</option>
@@ -192,7 +192,7 @@ export default function Booking() {
                   <div className="mb-1 block">
                     <Label htmlFor="type" value="Môn thể thao" />
                   </div>
-                  <Select className='[&>select]:focus:ring-transparent' id="type" required>
+                  <Select className='focus:ring-transparent' id="type" required>
                     <option value=''>Môn thể thao</option>
                     <option value="Canada">Canada</option>
                     <option value="France">France</option>

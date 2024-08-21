@@ -39,7 +39,7 @@ export default function RegisterPage() {
     }
     return (
         <>
-            <img className='w-full md:w-[55%] md:min-w-[65%] h-auto rounded-md object-fill object-left' src="/assets/images/register.png" alt="register" />
+            <img className='hidden md:block w-full md:w-[55%] md:min-w-[65%] h-auto rounded-md object-fill object-left' src="/assets/images/register.png" alt="register" />
             <div className='w-full md:w-[45%] h-auto px-5 py-9'>
                 <div className='flex flex-col p-5'>
                     <Link href="/" className='mx-auto mb-3'>
