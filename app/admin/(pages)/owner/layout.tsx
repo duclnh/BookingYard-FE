@@ -26,7 +26,7 @@ export default function ManagementLayout({
 
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
-      inner:  `h-full overflow-y-auto overflow-x-hidden rounded px-2 bg-gray-50 py-4 dark:bg-gray-800`
+      inner:  `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
     }
   }
 
@@ -46,7 +46,7 @@ export default function ManagementLayout({
             <FaList onClick={() => setCollapse(false)} size={18} className='mx-auto  mb-4 hover:cursor-pointer hover:scale-110' />
           </Sidebar.Items>
         )}
-        <Sidebar.Items className={`${!collapse ? 'min-h-[542px] max-h-[543px]' : 'min-h-[660px] max-h-[661px]'} overflow-y-auto overflow-x-hidden`}>
+        <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} overflow-y-auto overflow-x-hidden`}>
           <Sidebar.ItemGroup>
             <Sidebar.Item href="#" icon={RiDashboard2Line}>
               Dashboard
@@ -97,8 +97,6 @@ export default function ManagementLayout({
                 <Breadcrumb.Item href="#" icon={HiHome}>
                   Home
                 </Breadcrumb.Item>
-                <Breadcrumb.Item href="#">Projects</Breadcrumb.Item>
-                <Breadcrumb.Item>Flowbite React</Breadcrumb.Item>
               </Breadcrumb>
             </div>
             <Navbar className=''>
@@ -164,7 +162,7 @@ export default function ManagementLayout({
             </Navbar>
           </div>
         </header>
-        <div className='p-5'>
+        <div className='p-5 h-full overflow-x-auto'>
           {children}
         </div>
       </div>
