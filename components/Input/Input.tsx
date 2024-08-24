@@ -5,7 +5,7 @@ import { UseControllerProps, useController } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 type Props = {
-    label: string,
+    label?: string,
     type?: string,
     showLabel?: boolean,
     onChange?: Function

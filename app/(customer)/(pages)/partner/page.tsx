@@ -5,7 +5,7 @@ import Feature from './feature'
 import Salient from './salient'
 import Service from './service'
 import Register from './register'
-
+import Image from 'next/image'
 
 export default function Partner() {
   return (
@@ -13,7 +13,7 @@ export default function Partner() {
       <div className='py-20 mx-5 md:mx-24'>
         <div className='lg:flex lg:flex-row-reverse lg:items-center'>
           <div>
-            <img src="assets/images/partner1.png" alt="partner" height={100} width={1000} className="mb-10" />
+            <Image src="/assets/images/partner1.png" alt="partner" height={100} width={1000} className="mb-10" />
           </div>
           <div className='md:w-[800px]'>
             <div className='lg:text-6xl md:text-4xl text-3xl font-black'>

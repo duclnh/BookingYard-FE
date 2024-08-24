@@ -1,6 +1,7 @@
 import { SalientFeature } from '@components/index'
 import React from 'react'
 import { FaArrowRightLong } from 'react-icons/fa6'
+import Image from 'next/image'
 export default function Salient() {
     return (
         <div className='bg-[#efdfd1] pt-14 pb-7'>
@@ -15,7 +16,7 @@ export default function Salient() {
                     </div>
                 </div>
                 <div className='xl:flex xl:flex-row-reverse xl:items-center'>
-                    <img src="assets/images/salient.png" alt="partner" className="w-full h-full mb-16 md:mb-36" />
+                    <Image height={1000} width={1000} src="/assets/images/salient.png" alt="partner" className="w-full h-full mb-16 md:mb-36" />
                     <div className='xl:w-[1700px] sm:grid sm:grid-cols-2 sm:gap-10'>
                         <SalientFeature
                             key={1}

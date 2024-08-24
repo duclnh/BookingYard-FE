@@ -5,6 +5,7 @@ import { FaRegCalendarXmark } from 'react-icons/fa6'
 import { MdOutlineEditCalendar } from 'react-icons/md'
 import { TiThSmall } from 'react-icons/ti'
 import { VscFeedback } from 'react-icons/vsc'
+import Image from 'next/image'
 
 export default function MyBooking() {
   const [openModalCancel, setOpenModalCancel] = useState(false);
@@ -61,7 +62,7 @@ export default function MyBooking() {
             <div key={index} className='w-full shadow-3xl mb-4'>
               <div className='flex justify-between items-center p-4'>
                 <div className='flex'>
-                  <img height={50} width={50} src="assets/images/logo.png" alt="dá" />
+                  <Image height={50} width={50} src="/assets/images/logo.png" alt="dá" />
                   <div className='ml-4'>
                     <div className='font-bold text-lg'>San bong da ha nam</div>
                     <div className='font-normal text-sm'>Mã đặt lịch hẹn: DASDFGFDHDA</div>

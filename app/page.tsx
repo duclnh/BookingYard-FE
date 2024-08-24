@@ -53,14 +53,14 @@ export default function Home() {
         </h4>
         <div className="my-10 h-56 sm:h-[400px] xl:h-[500px] 2xl:h-[500px]">
           <Carousel pauseOnHover>
-            <img src="assets/images/slide.png" alt="slide" />
-            <img src="assets/images/slide1.png" alt="slide1" />
-            <img src="assets/images/slide2.png" alt="slide2" />
-            <img src="assets/images/slide3.png" alt="slide3" />
-            <img src="assets/images/slide4.png" alt="slide4" />
-            <img src="assets/images/slide5.png" alt="slide5" />
-            <img src="assets/images/slide6.png" alt="slide6" />
-            <img src="assets/images/slide7.png" alt="slide7" />
+            <Image height={1000} width={1000} src="/assets/images/slide.png" alt="slide" />
+            <Image height={1000} width={1000} src="/assets/images/slide1.png" alt="slide1" />
+            <Image height={1000} width={1000} src="/assets/images/slide2.png" alt="slide2" />
+            <Image height={1000} width={1000} src="/assets/images/slide3.png" alt="slide3" />
+            <Image height={1000} width={1000} src="/assets/images/slide4.png" alt="slide4" />
+            <Image height={1000} width={1000} src="/assets/images/slide5.png" alt="slide5" />
+            <Image height={1000} width={1000} src="/assets/images/slide6.png" alt="slide6" />
+            <Image height={1000} width={1000} src="/assets/images/slide7.png" alt="slide7" />
           </Carousel>
         </div>
       </div>

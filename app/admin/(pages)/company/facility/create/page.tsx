@@ -1,11 +1,20 @@
 "use client"
-import { Heading, Input, MapCustom, ModalView, TextEditor } from '@components/index'
+import { Heading, Input, ModalView } from '@components/index'
 import { Button, FileInput, Label, Select } from 'flowbite-react';
 import React, { useState } from 'react'
-import { FieldValues, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
+import dynamic from 'next/dynamic';
+
+const TextEditor = dynamic(() => import('@components/TextEditor/TextEditor'), {
+    ssr: false,
+});
+const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
+    ssr: false,
+});
+
 
 export default function CreatePage() {
-    const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState } = useForm({ mode: "onTouched", });
+    const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
     const handleFileChange = (event: any) => {
@@ -19,13 +28,18 @@ export default function CreatePage() {
         }
     };
 
+    const handlerSetValuePosition = (position: [number, number]) => {
+        setValue('location', position)
+    }
+
     const handlerSubmitCreateFacility = (data: FieldValues) => {
         console.log(data)
     }
 
     return (
         <>
-            <form className='py-5 w-full' onSubmit={handleSubmit(handlerSubmitCreateFacility)}>
+            <button onClick={() => console.log(getValues())}>check</button>
+            <form method='POST' className='py-5 w-full' onSubmit={handleSubmit(handlerSubmitCreateFacility)}>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo cơ sở mới' center />
                 <div className='mt-10 grid grid-cols-2 gap-10'>
                     <div>
@@ -43,15 +57,13 @@ export default function CreatePage() {
                         <div>
                             <TextEditor
                                 label='Mô tả cơ sở (*)'
-                                type='text'
                                 name='description'
                                 control={control}
-                                className='min-h-40 max-h-64 overflow-y-auto'
+                                className='min-h-40 max-h-64 overflow-y-auto z-10'
                                 rules={{
                                     required: "Vui lòng nhập mô tả sân",
                                 }}
                             />
-
                         </div>
                     </div>
                     <div>
@@ -112,20 +124,34 @@ export default function CreatePage() {
                         </div>
                         <div className='mt-3'>
                             <Label htmlFor='package' value='Gói sân (*)' />
-                            <Select
-                                className='focus:ring-transparent'
-                                id="package"
-                                {...register('package', { required: true })}
-                                helperText={`${getFieldState('package')?.error ? 'Vui chọn gói sân' : ''}`}
-                                color={
-                                    getFieldState('package')?.error ? "failure" : !getFieldState('package').isDirty ? "" : "success"
-                                }
-                            >
-                                <option value=''>Gói sân</option>
-                                <option value="Canada">Miễn phí</option>
-                                <option value="France">Tháng</option>
-                                <option value="Germany">Năm</option>
-                            </Select>
+                            <Controller
+                                name='package'
+                                control={control}
+                                rules={{ required: 'Vui lòng chọn gói sân' }}
+                                render={({ field, fieldState }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            className='focus:ring-transparent'
+                                            id="package"
+                                            color={
+                                                fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                            }
+                                        >
+                                            <option value=''>Gói sân</option>
+                                            <option value="Canada">Miễn phí</option>
+                                            <option value="France">Tháng</option>
+                                            <option value="Germany">Năm</option>
+                                        </Select>
+                                        {fieldState.error && (
+                                            <div className="text-red-500 text-sm">
+                                                {fieldState.error.message}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            />
+
                         </div>
                     </div>
                     <div>
@@ -165,17 +191,37 @@ export default function CreatePage() {
                     </div>
                 </div>
                 <div className='my-10'>
-                    <Label className='mb-2' htmlFor="file-upload" value="Chọn vị trí trên google map (*)" />
+                    <Label className='mb-2' htmlFor="file-upload" value="Chọn vị trí trên bản đồ (*)" />
                     {!modalMap && (
-                        <MapCustom expandMap={setModalMap}  className='min-h-[600px] max-w-[1220px] !z-10'/>
+                        <MapCustom
+                            placePosition={getValues("location")}
+                            setPlacePosition={handlerSetValuePosition}
+                            handlerExpand={setModalMap}
+                            className='min-h-[600px] max-w-[1220px] !z-10'
+                        />
                     )}
+                    <Input
+                        type='hidden'
+                        name='location'
+                        control={control}
+                        rules={{
+                            required: "Vui lòng chọn vị trí điểm trên bản đồ",
+                        }}
+                    />
                 </div>
                 <Button type='submit'>Tạo mới</Button>
             </form>
             {/*Start view Map */}
             <ModalView key={'View Map'} toggle={modalMap} setToggle={setModalMap}>
                 <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center w-[100%] h-[100%]'>
-                    <MapCustom className='w-full h-full !z-10' />
+                    {modalMap && (
+                        <MapCustom
+                            placePosition={getValues("location")}
+                            setPlacePosition={handlerSetValuePosition}
+                            handlerExpand={setModalMap}
+                            className='w-full h-full !z-10'
+                        />
+                    )}
                 </div>
             </ModalView>
             {/*End view Map */}
