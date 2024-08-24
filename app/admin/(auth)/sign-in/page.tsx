@@ -7,6 +7,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -46,13 +47,34 @@ export default function LoginPage() {
   }
   return (
     <>
-      <img className='hidden md:block w-full md:w-[55%] md:min-w-[65%] h-auto rounded-md object-fill object-left' src="assets/images/login.png" alt="login" />
-      <div className='w-full md:w-[45%] h-auto px-5 py-9'>
+      <div className='w-full h-auto bg-cyan-900 rounded-l-lg py-8'>
+        <Image height={1000} width={1000} className='object-fill object-left' src="/assets/images/manage-court.png" alt="login" />
+        <div className='mt-7 flex justify-center'>
+          <div className='space-y-3 w-60'>
+            <div className='flex'>
+              <Image height={24} width={24} src="/assets/images/star.png" alt="login" />
+              <p className='text-white ml-6'>Quản lí đa dạng sân</p>
+            </div>
+            <div className='flex'>
+              <Image height={24} width={24} src="/assets/images/star.png" alt="login" />
+              <p className='text-white ml-6'>Xem lịch trình dễ dàng</p>
+            </div>
+            <div className='flex'>
+              <Image height={24} width={24} src="/assets/images/star.png" alt="login" />
+              <p className='text-white ml-6'>Nâng cao doanh thu</p>
+            </div>
+            <div className='flex'>
+              <Image height={24} width={24} src="/assets/images/star.png" alt="login" />
+              <p className='text-white ml-6'>Tối ưu sân</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='w-full h-auto px-5 py-9'>
         <div className='flex flex-col p-4'>
           <Link href="/" className='mx-auto mb-3'>
-            <img height={27} width={100} src='assets/images/logo.png' alt='logo' />
+            <Image height={27} width={100} src='/assets/images/logo.png' alt='logo' />
           </Link>
-          <Heading title='Đăng nhập' center />
           <NotificationCustom error={error} />
           <form method='POST' className='flex flex-col mt-4 gap-2' onSubmit={handleSubmit(onSubmit)}>
             <Input
@@ -80,17 +102,6 @@ export default function LoginPage() {
               type='submit'
               className='mt-1 focus:ring-transparent'>
               {isSubmitting ? <Spinner /> : "Đăng nhập"}
-            </Button>
-            <div className='font-sans text-sm text-neutral-500 text-center'>
-              Bạn chưa có tài khoản? <Link href="/sign-up" className='hover:cursor-pointer hover:text-blue-500'>Đăng kí</Link>
-            </div>
-            <div className="flex flex-row justify-between items-center p-5">
-              <div className="bg-slate-300 h-px w-full"></div>
-              <div className='mx-5 font-bold text-sm text-neutral-500'>Hoặc</div>
-              <div className="bg-slate-300 h-px w-full"></div>
-            </div>
-            <Button onClick={() => loginGoogle()} className='bg-transparent text-black shadow-[0_0_5px_rgba(0,0,0,0.1)] hover:enabled:bg-slate-50  focus:ring-transparent'>
-              <img className='mr-2' src='assets/images/google.png' height={4} width={25} /> Đăng nhập bằng Google
             </Button>
           </form>
         </div>

@@ -5,9 +5,10 @@ import { UseControllerProps, useController } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 type Props = {
-    label: string,
+    label?: string,
     type?: string,
     showLabel?: boolean,
+    onChange?: Function
 } & UseControllerProps
 
 export default function Input(props: Props) {
@@ -17,7 +18,7 @@ export default function Input(props: Props) {
         <div>
             {props.label && (
                 <div className='mb-0.5'>
-                    <Label htmlFor={field.name} value={props.label} />
+                    <Label className='hover:cursor-pointer' htmlFor={field.name} value={props.label} />
                 </div>
             )}
 
@@ -35,13 +36,18 @@ export default function Input(props: Props) {
                         }
                     />
                     <div onClick={() => setShow(!show)} className='absolute top-3.5 right-2 hover:cursor-pointer'>
-                       {show ? <FaRegEyeSlash /> : <FaRegEye/> }
+                        {show ? <FaRegEyeSlash /> : <FaRegEye />}
                     </div>
                 </div>
             ) : (
                 <TextInput
                     {...props}
                     {...field}
+                    onInput={() => {
+                        if(props.onChange){
+                            props.onChange()
+                        }
+                    }}
                     id={field.name}
                     type={props.type || ''}
                     placeholder={props.label}

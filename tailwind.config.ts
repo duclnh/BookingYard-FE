@@ -18,6 +18,7 @@ const config: Config = {
     {
       backgroundImage: {
         "search-background": "url('/assets/images/search.jpg')",
+        "admin-login-background" : "url('/assets/images/admin-login.jpg')",
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
