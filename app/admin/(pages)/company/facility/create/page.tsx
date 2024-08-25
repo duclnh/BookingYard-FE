@@ -17,6 +17,7 @@ export default function CreatePage() {
     const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
+    
     const handleFileChange = (event: any) => {
         const file = event.target.files[0];
         if (file) {
@@ -38,7 +39,6 @@ export default function CreatePage() {
 
     return (
         <>
-            <button onClick={() => console.log(getValues())}>check</button>
             <form method='POST' className='py-5 w-full' onSubmit={handleSubmit(handlerSubmitCreateFacility)}>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo cơ sở mới' center />
                 <div className='mt-10 grid grid-cols-2 gap-10'>
@@ -197,7 +197,7 @@ export default function CreatePage() {
                             placePosition={getValues("location")}
                             setPlacePosition={handlerSetValuePosition}
                             handlerExpand={setModalMap}
-                            className='min-h-[600px] max-w-[1220px] !z-10'
+                            className='min-h-[600px] w-full !z-10'
                         />
                     )}
                     <Input

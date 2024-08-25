@@ -38,11 +38,11 @@ export default function Booking() {
       {/* Start Search */}
       <Image height={1000} width={1000} className='h-[500px] w-full rounded-2xl' src='/assets/images/slide2.png' alt='banner' />
       <div className='mt-10 flex justify-center'>
-        <input className='border rounded-md px-3 xl:w-[600px] sm:w-96 w-80' name='search' placeholder={searchPlaceholder} />
-        <Button className='h-10 bg-orange-500 hover:!bg-orange-400 focus:ring-transparent'>
+        <input className='border rounded-s-lg px-3 xl:w-[600px] sm:w-96 w-80' name='search' placeholder={searchPlaceholder} />
+        <button className='h-10 !rounded-e-lg bg-orange-500 hover:!bg-orange-400 focus:ring-transparent flex items-center text-white px-2'>
           <IoMdSearch className='font-bold mr-2' size={18} />
           <span className='w-fit'>Tìm kiếm</span>
-        </Button>
+        </button>
       </div>
       {/* End Search */}
       <div className='mt-20 mb-10'>

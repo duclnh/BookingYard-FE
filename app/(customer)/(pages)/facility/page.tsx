@@ -11,7 +11,6 @@ import { Input, ModalView } from '@components/index'
 import View360, { EquirectProjection } from '@egjs/react-view360'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import DatePicker from 'react-multi-date-picker'
-import Toolbar from "react-multi-date-picker/plugins/toolbar"
 import { useRouter } from 'next/navigation'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import "@egjs/react-view360/css/view360.min.css";
@@ -162,16 +161,15 @@ export default function Facility() {
                 </p>
               </div>
               <div
-                onClick={() => setIsExpanded(true)}
                 className="py-2 font-medium hover:cursor-pointer"
               >
                 {isExpanded ?
-                  <div className='flex items-center'>
+                  <div onClick={() => setIsExpanded(false)} className='flex items-center'>
                     Thu gọn
                     <IoIosArrowUp className='ml-1' />
                   </div>
                   :
-                  <div className='flex items-center'>
+                  <div onClick={() => setIsExpanded(true)} className='flex items-center'>
                     Xêm thêm
                     <IoIosArrowDown className='ml-1' />
                   </div>

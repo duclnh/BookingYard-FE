@@ -68,7 +68,7 @@ export default function ReportPage() {
                         <div className='flex'>
                             <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm kiếm theo email, số điện thoại'} />
                             <Button className='p-1'>
-                                <IoMdSearch className='font-bold mr-2' size={18} />
+                                <IoMdSearch className='font-bold' size={18} />
                             </Button>
                         </div>
                         <Select className=''>
@@ -78,8 +78,8 @@ export default function ReportPage() {
                             <option value="">Chưa xử lý</option>
                         </Select>
                     </div>
-                    <div className={`border overflow-x-scroll max-w-[1120px] pb-3`}>
-                        <Table className='rounded-lg' hoverable>
+                    <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+                        <Table hoverable>
                             <Table.Head>
                                 <Table.HeadCell>STT</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Sân</Table.HeadCell>
@@ -112,13 +112,10 @@ export default function ReportPage() {
                                             </p>
                                         </Table.Cell>
                                         <Table.Cell>
-                                            <div className='flex'>
-                                                <Image height={100} width={100} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer mr-3' onClick={() => setModalImage(true)} alt="das" />
-                                                <div className='hover:cursor-pointer relative'>
-                                                    <Image height={100} width={100} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer' alt="das" />
-                                                    <div className='absolute right-0 top-0 w-full h-full bg-[#302f2f] opacity-70 rounded-lg flex justify-center items-center text-white font-bold'>
-                                                        + 999
-                                                    </div>
+                                            <div className='hover:cursor-pointer relative'>
+                                                <Image onClick={() => setModalImage(true)} height={500} width={500} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer' alt="das" />
+                                                <div className='absolute right-0 top-0 w-full h-full bg-[#302f2f] opacity-70 rounded-lg flex justify-center items-center text-white font-bold'>
+                                                    + 999
                                                 </div>
                                             </div>
                                         </Table.Cell>
@@ -141,17 +138,17 @@ export default function ReportPage() {
                                 ))}
                             </Table.Body>
                         </Table>
-                        <div className="flex justify-end">
-                            <Pagination
-                                layout="pagination"
-                                currentPage={currentPage}
-                                totalPages={1000}
-                                onPageChange={onPageChange}
-                                previousLabel=""
-                                nextLabel=""
-                                showIcons
-                            />
-                        </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <Pagination
+                            layout="pagination"
+                            currentPage={currentPage}
+                            totalPages={1000}
+                            onPageChange={onPageChange}
+                            previousLabel=""
+                            nextLabel=""
+                            showIcons
+                        />
                     </div>
                 </div>
             </div>
