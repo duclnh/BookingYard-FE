@@ -1,8 +1,5 @@
-import React, { Children } from 'react'
-import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
-import Image from 'next/image'
+import React from 'react'
 import { AiOutlineClose } from 'react-icons/ai';
-import { EquirectProjection } from "@egjs/react-view360";
 
 type Props = {
     toggle: boolean, 

@@ -8,8 +8,8 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image';
 import { FaList, FaRegUser } from 'react-icons/fa';
 import { CiLock } from 'react-icons/ci';
-import { MdLogout, MdOutlineFeedback, MdOutlineLocalConvenienceStore, MdOutlineReportGmailerrorred, MdSportsKabaddi } from 'react-icons/md';
-import { TbPackage } from 'react-icons/tb';
+import { MdLogout, MdOutlineFeedback, MdOutlineReportGmailerrorred, MdSportsKabaddi } from 'react-icons/md';
+import { TbBasketDiscount, TbPackage } from 'react-icons/tb';
 import { RiDashboard2Line } from 'react-icons/ri';
 import { PiBuildingOfficeBold, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
@@ -25,7 +25,7 @@ export default function ManagementLayout({
 
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
-      inner:  `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
+      inner: `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
     }
   }
 
@@ -54,26 +54,27 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/company/facility">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/facility/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
+            <Sidebar.Collapse icon={TbBasketDiscount} label="Voucher">
+              <Sidebar.Item href="/admin/company/voucher">Danh sách</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/voucher/create">Tạo mới</Sidebar.Item>
+            </Sidebar.Collapse>
             <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
-              <Sidebar.Item href="#">Danh sách</Sidebar.Item>
-              <Sidebar.Item href="#">Tạo mới</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/staff">Danh sách</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/staff/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
             <Sidebar.Item href="#" icon={GrSchedules}>
               Đặt lịch
             </Sidebar.Item>
             <Sidebar.Collapse icon={TbPackage} label="Gói sân">
-              <Sidebar.Item href="#">Danh sách</Sidebar.Item>
-              <Sidebar.Item href="#">Tạo mới</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/package">Danh sách gói</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/package/register">Danh sách đăng kí</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/package/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
             <Sidebar.Collapse icon={MdSportsKabaddi} label="Thể thao">
-              <Sidebar.Item href="#">Danh sách</Sidebar.Item>
-              <Sidebar.Item href="#">Tạo mới</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/sport">Danh sách</Sidebar.Item>
+              <Sidebar.Item href="/admin/company/sport/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Collapse icon={MdOutlineLocalConvenienceStore} label="Tiện ích">
-              <Sidebar.Item href="#">Danh sách</Sidebar.Item>
-              <Sidebar.Item href="#">Tạo mới</Sidebar.Item>
-            </Sidebar.Collapse>
-            <Sidebar.Item href="#" icon={MdOutlineFeedback}>
+            <Sidebar.Item href="/admin/company/feedback" icon={MdOutlineFeedback}>
               Đánh giá
             </Sidebar.Item>
             <Sidebar.Item href="/admin/company/report" icon={MdOutlineReportGmailerrorred}>
@@ -162,8 +163,8 @@ export default function ManagementLayout({
             </Navbar>
           </div>
         </header>
-        <div className='p-5 h-full overflow-x-auto'>
-          {children}
+        <div className='h-[714px] max-h-[715px] overflow-y-auto'>
+          <div className='py-5 px-12'>{children}</div>
         </div>
       </div>
     </div >

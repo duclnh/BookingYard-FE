@@ -4,7 +4,7 @@ import React from 'react'
 import { BsBuilding, BsBuildingCheck, BsBuildingFillX } from 'react-icons/bs'
 import { IoMdSearch } from 'react-icons/io'
 import Image from 'next/image'
-import { TiLocation } from 'react-icons/ti'
+import { TiLocation, TiUser } from 'react-icons/ti'
 export default function Facility() {
   return (
     <>
@@ -41,7 +41,7 @@ export default function Facility() {
             <div className='md:col-span-2 flex'>
               <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm kiếm theo tên cơ sở, địa chỉ'} />
               <Button className='p-1'>
-                <IoMdSearch className='font-bold mr-2' size={18} />
+                <IoMdSearch className='font-bold' size={18} />
               </Button>
             </div>
             <div className=' grid grid-cols-2 gap-5'>
@@ -77,14 +77,19 @@ export default function Facility() {
         </div>
         <div className='mt-10 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-14'>
           {[...Array(6)].map((_, index) => (
-            <div key={index} className='shadow-sm-light border hover:cursor-pointer rounded-lg p-4'>
+            <div key={index} className='shadow-sm-light border hover:cursor-pointer rounded-lg p-4 relative'>
               <Image className='rounded-lg' height={500} width={500} src="/assets/images/contact.png" alt="img" />
               <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
+              <div className='flex text-sm'>
+                <TiUser  size={18} className='mr-2 mb-1' />
+                Nguyen Van Truong
+              </div>
               <div className='flex text-sm'>
                 <TiLocation size={25} className='mr-2' />
                 146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
               </div>
-              <Button className='mt-5 mx-auto' size='xs'>Xem chi tiết</Button>
+              <div className='absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-700'></div>
+              <Button href='/admin/company/facility/detail' className='mt-5 mx-auto' size='xs'>Xem chi tiết</Button>
             </div>
           ))}
         </div>
