@@ -7,7 +7,7 @@ import { IoMdSearch } from 'react-icons/io'
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md'
 import { PiHeadCircuitBold } from 'react-icons/pi'
 
-export default function advice() {
+export default function Advice() {
     const [currentPage, setCurrentPage] = useState(1);
     const onPageChange = (page: number) => setCurrentPage(page);
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
