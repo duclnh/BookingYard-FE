@@ -7,7 +7,7 @@ import { TbView360Number } from 'react-icons/tb'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FaCheckCircle } from 'react-icons/fa'
 import { IoStorefrontSharp, IoTimeOutline } from 'react-icons/io5'
-import { Input, ModalView } from '@components/index'
+import { Input, InputDate, ModalView } from '@components/index'
 import View360, { EquirectProjection } from '@egjs/react-view360'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import DatePicker from 'react-multi-date-picker'
@@ -45,9 +45,6 @@ export default function Facility() {
   //   },
   // };
 
-
-  const months = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]
-  const weekDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"]
   const times = ["5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00",];
   const images = ['/assets/images/slide1.png', '/assets/images/slide2.png', '/assets/images/slide3.png'];
 
@@ -422,71 +419,7 @@ export default function Facility() {
                     ))}
                   </div>
                 </div>
-                <div className='mb-6 grid lg:grid-cols-3 sm:grid-cols-2'>
-                  <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn ngày:</label>
-                  <DatePicker
-                    className='col-span-2 hover:cursor-pointer'
-                    id='date'
-                    type='button'
-                    format="DD/MM/YYYY"
-                    minDate={new Date()}
-                    months={months}
-                    weekDays={weekDays}
-                    placeholder='Chọn ngày'
-                    calendarPosition='bottom-right'
-                    render={<InputIcon />}
-                  // plugins={[
-                  //   <Toolbar
-                  //     position="bottom"
-                  //     names={{
-                  //       today: "Hôm nay",
-                  //       deselect: "Bỏ chọn",
-                  //       close: "Xong",
-                  //     }}
-
-                  //   />,
-                  // ]}
-                  />
-
-                  {/* 
-                picker multiple date
-                <div className='grid grid-cols-3 sm:grid-cols-4 gap-2'>
-                  {[...Array(1)].map((_, index) => (
-                    <div key={index} className='group/item p-1 text-sm w-full text-center border rounded-md hover:cursor-pointer relative'>
-                      <p>04/08/2024</p>
-                      <MdCancel className='absolute -top-1.5 -right-1.5 invisible group-hover/item:visible' />
-                    </div>
-                  ))}
-                  <Tooltip
-                    theme={customToolTipTheme}
-                    trigger='hover'
-                    placement='auto'
-                    arrow
-                    content={
-                      <Calendar
-                        minDate={new Date()}
-                        months={months}
-                        weekDays={weekDays}
-                        plugins={[
-                          <Toolbar
-                            position="bottom"
-                            names={{
-                              today: "Hôm nay",
-                              deselect: "Bỏ chọn",
-                              close: "Xong",
-                            }}
-                          />,
-                        ]}
-                      />
-                    }
-                    style="light"
-                  >
-                    <div className='p-1.5 w-7 text-sm text-center border rounded-md hover:cursor-pointer'>
-                      <IoAddOutline size={15} />
-                    </div>
-                  </Tooltip>
-                </div> */}
-                </div>
+                <InputDate name='date' multiple={false} dateNow={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
                 <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
                   <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn giờ bắt đầu:</label>
                   <div className='col-span-2 grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 gap-2'>

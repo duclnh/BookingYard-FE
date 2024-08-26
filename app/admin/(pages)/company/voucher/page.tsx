@@ -6,7 +6,7 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoMdSearch } from 'react-icons/io';
 import { TbBasketDiscount, TbRosetteDiscountCheck, TbRosetteDiscountOff } from 'react-icons/tb'
 
-export default function VoucherCompany() {
+export default function Voucher() {
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page: number) => setCurrentPage(page);
   const [openModalCancel, setOpenModalCancel] = useState(false);

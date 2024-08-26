@@ -89,17 +89,17 @@ export default function Sport() {
                                 </Table.Row>
                             </Table.Body>
                         </Table>
-                        <div className="flex justify-end">
-                            <Pagination
-                                layout="pagination"
-                                currentPage={currentPage}
-                                totalPages={1000}
-                                onPageChange={onPageChange}
-                                previousLabel=""
-                                nextLabel=""
-                                showIcons
-                            />
-                        </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <Pagination
+                            layout="pagination"
+                            currentPage={currentPage}
+                            totalPages={1000}
+                            onPageChange={onPageChange}
+                            previousLabel=""
+                            nextLabel=""
+                            showIcons
+                        />
                     </div>
                 </div>
             </div>
