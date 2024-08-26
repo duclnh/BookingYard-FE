@@ -7,7 +7,7 @@ import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import { IoMdSearch } from 'react-icons/io'
 import { FaStar } from 'react-icons/fa'
 
-export default function FeedbackCompany() {
+export default function Feedback() {
     const [modalImage, setModalImage] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const onPageChange = (page: number) => setCurrentPage(page);

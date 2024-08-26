@@ -13,14 +13,14 @@ export default function ChangePassword() {
       </div>
       <form method='POST' className='p-5'>
         <div className='mt-5 grid gap-5'>
-          <Input
+        <Input
             label='Mật khẩu hiện tại'
             type='password'
             name='oldpassword'
             control={control}
             rules={{
-              required: "Vui lòng nhập nhập mật khẩu hiện tại",
-            }}
+                required: "Vui lòng nhập nhập mật khẩu hiện tại",
+              }}
           />
           <Input
             label='Mật khẩu mới'

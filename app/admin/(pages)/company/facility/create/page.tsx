@@ -17,7 +17,7 @@ export default function CreatePage() {
     const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
-    
+
     const handleFileChange = (event: any) => {
         const file = event.target.files[0];
         if (file) {
@@ -41,7 +41,7 @@ export default function CreatePage() {
         <>
             <form method='POST' className='py-5 w-full' onSubmit={handleSubmit(handlerSubmitCreateFacility)}>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo cơ sở mới' center />
-                <div className='mt-10 grid grid-cols-2 gap-10'>
+                <div className='mt-10 grid md:grid-cols-2 gap-10'>
                     <div>
                         <div className='mb-3'>
                             <Input
@@ -89,29 +89,7 @@ export default function CreatePage() {
                 </div>
                 <div className='mt-10 grid sm:grid-cols-2 gap-10'>
                     <div>
-                        <div>
-                            <Input
-                                label='Tỉnh (*)'
-                                type='text'
-                                name='province'
-                                control={control}
-                                rules={{
-                                    required: "Vui lòng nhập tên Tỉnh",
-                                }}
-                            />
-                        </div>
-                        <div className='mt-3'>
-                            <Input
-                                label='Tên Quận / Huyện (*)'
-                                type='text'
-                                name='district'
-                                control={control}
-                                rules={{
-                                    required: "Vui lòng nhập tên Quận / Huyện",
-                                }}
-                            />
-                        </div>
-                        <div className='mt-3'>
+                        <div className='mb-3'>
                             <Input
                                 label='Email (*)'
                                 type='text'
@@ -122,71 +100,211 @@ export default function CreatePage() {
                                 }}
                             />
                         </div>
-                        <div className='mt-3'>
-                            <Label htmlFor='package' value='Gói sân (*)' />
-                            <Controller
-                                name='package'
-                                control={control}
-                                rules={{ required: 'Vui lòng chọn gói sân' }}
-                                render={({ field, fieldState }) => (
-                                    <>
-                                        <Select
-                                            {...field}
-                                            className='focus:ring-transparent'
-                                            id="package"
-                                            color={
-                                                fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                                            }
-                                        >
-                                            <option value=''>Gói sân</option>
-                                            <option value="Canada">Miễn phí</option>
-                                            <option value="France">Tháng</option>
-                                            <option value="Germany">Năm</option>
-                                        </Select>
-                                        {fieldState.error && (
-                                            <div className="text-red-500 text-sm">
-                                                {fieldState.error.message}
-                                            </div>
-                                        )}
-                                    </>
-                                )}
-                            />
-
-                        </div>
+                        <Input
+                            label='Số điện thoại (*)'
+                            type='text'
+                            name='phone'
+                            control={control}
+                            rules={{
+                                required: "Vui lòng nhập số điện thoại",
+                            }}
+                        />
                     </div>
                     <div>
-                        <div>
-                            <Input
-                                label='Tên Phường / Xã (*)'
-                                type='text'
-                                name='ward'
-                                control={control}
-                                rules={{
-                                    required: "Vui lòng nhập tên Phường / Xã (*)",
-                                }}
-                            />
-                        </div>
-                        <div className='mt-3'>
-                            <Input
-                                label='Địa chỉ'
-                                type='text'
-                                name='address'
-                                control={control}
-                                rules={{
-                                    required: "Vui lòng nhập địa chỉ",
-                                }}
-                            />
-                        </div>
-                        <div className='mt-3'>
-                            <Input
-                                label='Số điện thoại (*)'
-                                type='text'
-                                name='phone'
-                                control={control}
-                                rules={{
-                                    required: "Vui lòng nhập số điện thoại",
-                                }}
-                            />
+                        <Label htmlFor='package' value='Gói sân (*)' />
+                        <Controller
+                            name='package'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn gói sân' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="package"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Gói sân</option>
+                                        <option value="Canada">Miễn phí</option>
+                                        <option value="France">Tháng</option>
+                                        <option value="Germany">Năm</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+
+                    </div>
+                </div>
+                <div className='mt-3 grid sm:grid-cols-2'>
+                    <div className='mb-3 sm:mr-5'>
+                        <Label htmlFor='province' value='Tỉnh (*)' />
+                        <Controller
+                            name='province'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn tỉnh' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="province"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Tỉnh</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='mb-3 sm:ml-5'>
+                        <Label htmlFor='province' value='Quận / Huyện (*)' />
+                        <Controller
+                            name='district'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn Quận / Huyện ' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="district"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Quận / Huyện</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='sm:mr-5'>
+                        <Label htmlFor='province' value='Phường / Xã (*)' />
+                        <Controller
+                            name='ward'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn Phường / Xã ' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="ward"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Phường / Xã</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='sm:ml-5'>
+                        <Input
+                            label='Địa chỉ (*)'
+                            type='text'
+                            name='address'
+                            control={control}
+                            rules={{
+                                required: "Vui lòng nhập địa chỉ",
+                            }}
+                        />
+                    </div>
+                </div>
+                <div className='mt-3 grid sm:grid-cols-2'>
+                    <div className='mb-3 sm:mr-5'>
+                        <Label htmlFor='open' value='Thời gian mở cửa (*)' />
+                        <Controller
+                            name='open'
+                            control={control}
+                            rules={{ required: 'Vui lòng nhập thời gian mở cửa' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="open"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Chọn thời gian mở cửa</option>
+                                        {[...Array(24)].map((_, index) => (
+                                            <option key={index} value={`${index + 1}:00`}>{`${index + 1}:00`}</option>
+                                        ))}
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='mb-3 sm:ml-5'>
+                        <Label htmlFor='close' value='Thời gian đóng cửa (*)' />
+                        <Controller
+                            name='close'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn thời gian đóng cửa' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="close"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Chọn thời gian đóng cửa</option>
+                                        {[...Array(24)].map((_, index) => (
+                                            <option key={index} value={`${index + 1}:00`}>{`${index + 1}:00`}</option>
+                                        ))}
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='mr-5'>
+                        <Label htmlFor='time' value='Số buổi trong tuần' />
+                        <div className=' mt-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2'>
+                            {[...Array(5)].map((_, index) => (
+                                <div key={index} className='border p-1 text-center rounded-lg hover:cursor-pointer font-md'>{`Thứ ${index + 2}`}</div>
+                            ))}
+                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md'>Thứ bảy</div>
+                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md bg-black text-white'>Chủ nhật</div>
                         </div>
                     </div>
                 </div>
@@ -210,9 +328,9 @@ export default function CreatePage() {
                     />
                 </div>
                 <Button type='submit'>Tạo mới</Button>
-            </form>
+            </form >
             {/*Start view Map */}
-            <ModalView key={'View Map'} toggle={modalMap} setToggle={setModalMap}>
+            <ModalView key={'View Map'} toggle={modalMap} setToggle={setModalMap} >
                 <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center w-[100%] h-[100%]'>
                     {modalMap && (
                         <MapCustom

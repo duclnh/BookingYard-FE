@@ -11,7 +11,7 @@ import { CiLock } from 'react-icons/ci';
 import { MdLogout, MdOutlineFeedback, MdOutlineReportGmailerrorred, MdSportsKabaddi } from 'react-icons/md';
 import { TbBasketDiscount, TbPackage } from 'react-icons/tb';
 import { RiDashboard2Line } from 'react-icons/ri';
-import { PiBuildingOfficeBold, PiUsersThreeBold } from 'react-icons/pi';
+import { PiBuildingOfficeBold, PiHeadCircuitBold, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
 
 export default function ManagementLayout({
@@ -47,8 +47,11 @@ export default function ManagementLayout({
         )}
         <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} overflow-y-auto overflow-x-hidden`}>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={RiDashboard2Line}>
+            <Sidebar.Item href="/admin/company/dashboard" icon={RiDashboard2Line}>
               Dashboard
+            </Sidebar.Item>
+            <Sidebar.Item href="/admin/company/booking" icon={GrSchedules}>
+              Đặt lịch
             </Sidebar.Item>
             <Sidebar.Collapse icon={PiBuildingOfficeBold} label="Cơ sở">
               <Sidebar.Item href="/admin/company/facility">Danh sách</Sidebar.Item>
@@ -62,9 +65,6 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/company/staff">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/staff/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Item href="#" icon={GrSchedules}>
-              Đặt lịch
-            </Sidebar.Item>
             <Sidebar.Collapse icon={TbPackage} label="Gói sân">
               <Sidebar.Item href="/admin/company/package">Danh sách gói</Sidebar.Item>
               <Sidebar.Item href="/admin/company/package/register">Danh sách đăng kí</Sidebar.Item>
@@ -74,6 +74,9 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/company/sport">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/sport/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
+            <Sidebar.Item href="/admin/company/advise" icon={PiHeadCircuitBold}>
+              Tư vấn
+            </Sidebar.Item>
             <Sidebar.Item href="/admin/company/feedback" icon={MdOutlineFeedback}>
               Đánh giá
             </Sidebar.Item>
@@ -135,6 +138,7 @@ export default function ManagementLayout({
                   </div>
                 </Popover>
                 <Dropdown
+                  className='z-40'
                   aria-haspopup="menu"
                   trigger='hover'
                   label={
@@ -143,12 +147,12 @@ export default function ManagementLayout({
                   arrowIcon={false}
                   inline
                 >
-                  <Dropdown.Item href='/profile' aria-label="Profile">
+                  <Dropdown.Item href='/admin/company/profile' aria-label="Profile">
                     <FaRegUser className='mr-2' />
                     Hồ sơ
                   </Dropdown.Item>
 
-                  <Dropdown.Item href='change-password' aria-label="Change Password">
+                  <Dropdown.Item href='/admin/company/change-password' aria-label="Change Password">
                     <CiLock className='mr-2' />
                     Đổi mật khẩu
                   </Dropdown.Item>
@@ -164,7 +168,7 @@ export default function ManagementLayout({
           </div>
         </header>
         <div className='h-[714px] max-h-[715px] overflow-y-auto'>
-          <div className='py-5 px-12'>{children}</div>
+          <div className='py-5 px-3 md:px-12'>{children}</div>
         </div>
       </div>
     </div >

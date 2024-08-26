@@ -1,6 +1,6 @@
 "use client"
-import { Heading, Input, NewFeature } from '@components/index'
-import { Button, Label, Select } from 'flowbite-react';
+import { Heading, Input } from '@components/index'
+import { Button, Label, Radio, Select } from 'flowbite-react';
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 
@@ -35,34 +35,21 @@ export default function CreateStaff() {
               />
             </div>
             <div className='mt-3'>
-              <Label htmlFor='gender' value='Giới tính (*)' />
-              <Controller
-                name='gender'
-                control={control}
-                rules={{ required: 'Vui lòng chọn giới tính' }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Select
-                      {...field}
-                      className='focus:ring-transparent'
-                      id="gender"
-                      color={
-                        fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                      }
-                    >
-                      <option value=''>Giới tính</option>
-                      <option value="France">Nam</option>
-                      <option value="Germany">Nữ</option>
-                      <option value="Germany">Khác</option>
-                    </Select>
-                    {fieldState.error && (
-                      <div className="text-red-500 text-sm">
-                        {fieldState.error.message}
-                      </div>
-                    )}
-                  </>
-                )}
-              />
+              <Label htmlFor="male" value="Giới tính (*)" />
+              <div className='grid grid-cols-2 gap-2 lg:grid-cols-3 w-44 mt-3 lg:gap-5'>
+                <div className="flex items-center gap-2">
+                  <Radio id="male" name="gender" value="male" defaultChecked />
+                  <Label htmlFor="male">Nam</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Radio id="female" name="gender" value="female" />
+                  <Label htmlFor="female">Nữ</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Radio id="other" name="gender" value="other" />
+                  <Label htmlFor="other">Khác</Label>
+                </div>
+              </div>
             </div>
             <div className='mt-3'>
               <Label htmlFor='role' value='Vai trò (*)' />

@@ -6,7 +6,7 @@ import { BsBuilding } from 'react-icons/bs'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoMdSearch } from 'react-icons/io';
 
-export default function StaffCompany() {
+export default function Staff() {
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page: number) => setCurrentPage(page);
   const [openModalCancel, setOpenModalCancel] = useState(false);

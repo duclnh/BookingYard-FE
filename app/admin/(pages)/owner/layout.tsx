@@ -142,12 +142,12 @@ export default function ManagementLayout({
                   arrowIcon={false}
                   inline
                 >
-                  <Dropdown.Item href='/profile' aria-label="Profile">
+                  <Dropdown.Item href='/admin/profile' aria-label="Profile">
                     <FaRegUser className='mr-2' />
                     Hồ sơ
                   </Dropdown.Item>
 
-                  <Dropdown.Item href='change-password' aria-label="Change Password">
+                  <Dropdown.Item href='/admin/change-password' aria-label="Change Password">
                     <CiLock className='mr-2' />
                     Đổi mật khẩu
                   </Dropdown.Item>
