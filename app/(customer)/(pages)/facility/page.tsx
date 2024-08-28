@@ -10,9 +10,7 @@ import { IoStorefrontSharp, IoTimeOutline } from 'react-icons/io5'
 import { Input, InputDate, ModalView } from '@components/index'
 import View360, { EquirectProjection } from '@egjs/react-view360'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
-import DatePicker from 'react-multi-date-picker'
 import { useRouter } from 'next/navigation'
-import InputIcon from 'react-multi-date-picker/components/input_icon'
 import "@egjs/react-view360/css/view360.min.css";
 import { useForm } from 'react-hook-form'
 
@@ -419,7 +417,7 @@ export default function Facility() {
                     ))}
                   </div>
                 </div>
-                <InputDate name='date' multiple={false} dateNow={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
+                <InputDate name='date' multiple={false} minDate={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
                 <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
                   <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn giờ bắt đầu:</label>
                   <div className='col-span-2 grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 gap-2'>

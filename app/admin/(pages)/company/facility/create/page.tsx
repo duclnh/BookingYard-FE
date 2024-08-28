@@ -301,10 +301,10 @@ export default function CreatePage() {
                         <Label htmlFor='time' value='Số buổi trong tuần' />
                         <div className=' mt-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2'>
                             {[...Array(5)].map((_, index) => (
-                                <div key={index} className='border p-1 text-center rounded-lg hover:cursor-pointer font-md'>{`Thứ ${index + 2}`}</div>
+                                <div key={index} className='border p-1 text-center rounded-lg hover:cursor-pointer hover:bg-black hover:text-white font-md'>{`Thứ ${index + 2}`}</div>
                             ))}
-                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md'>Thứ bảy</div>
-                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md bg-black text-white'>Chủ nhật</div>
+                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md hover:bg-black hover:text-white'>Thứ bảy</div>
+                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md hover:bg-black hover:text-white bg-black text-white'>Chủ nhật</div>
                         </div>
                     </div>
                 </div>

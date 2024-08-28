@@ -37,7 +37,7 @@ export default function Package() {
                     ))}
                 </div>
                 <div className='mt-36 bg-white'>
-                    <div className='mt-10 flex justify-between mb-3'>
+                    <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
                             <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên gói, loại gói, nội dung'} />
                             <Button className='p-1'>

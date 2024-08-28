@@ -6,10 +6,11 @@ import InputIcon from 'react-multi-date-picker/components/input_icon'
 type Props = {
   label?: string;
   name: string;
-  dateNow?: Date
+  minDate?: Date
   row?: string;
   labelClassName?: string;
   multiple: boolean;
+  handlerChange?: Function;
 }
 
 export default function InputDate(props: Props) {
@@ -18,14 +19,15 @@ export default function InputDate(props: Props) {
   return (
     <div className={props.row}>
       {props.label && (
-        <Label className={`hover:cursor-pointer ${props.labelClassName ? props.labelClassName: '' }`} htmlFor={props.name} value={props.label} />
+        <Label className={`hover:cursor-pointer ${props.labelClassName ? props.labelClassName : ''}`} htmlFor={props.name} value={props.label} />
       )}
       <DatePicker
         className='col-span-2 hover:cursor-pointer'
         id={props.name}
         type='button'
         format="DD/MM/YYYY"
-        minDate={props.dateNow}
+        value={new Date()}
+        minDate={props.minDate}
         multiple={props.multiple}
         months={months}
         weekDays={weekDays}

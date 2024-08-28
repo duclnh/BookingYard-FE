@@ -145,9 +145,13 @@ export default function Booking() {
                                 <Table.HeadCell className='min-w-32'>Sân</Table.HeadCell>
                                 <Table.HeadCell className='min-w-40'>Môn thể thao</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Giờ chơi</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Số giờ</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Mã giảm giá</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Số điểm</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Ngày chơi</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Giá tiền</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Thanh toán</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Lý do hủy</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Ngày đặt</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>
@@ -163,9 +167,13 @@ export default function Booking() {
                                         <Table.Cell>{item.court}</Table.Cell>
                                         <Table.Cell>{item.sport}</Table.Cell>
                                         <Table.Cell>{item.time}</Table.Cell>
+                                        <Table.Cell>4</Table.Cell>
                                         <Table.Cell>{item.discountCode}</Table.Cell>
                                         <Table.Cell>{item.points}</Table.Cell>
                                         <Table.Cell>{item.playDate}</Table.Cell>
+                                        <Table.Cell>40.000</Table.Cell>
+                                        <Table.Cell>Đã thanh toán</Table.Cell>
+                                        <Table.Cell>VNPAY</Table.Cell>
                                         <Table.Cell>{item.reason}</Table.Cell>
                                         <Table.Cell>{item.bookingDate}</Table.Cell>
                                         <Table.Cell>
