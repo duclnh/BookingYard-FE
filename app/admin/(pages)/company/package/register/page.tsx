@@ -3,15 +3,18 @@ import { Heading } from '@components/index'
 import { Button, Label, Modal, Pagination, Select, Table } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
+import { GiCardExchange } from 'react-icons/gi';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { IoMdSearch } from 'react-icons/io';
+import { MdOutlineChangeCircle } from 'react-icons/md';
+import { RiDeleteBinLine } from 'react-icons/ri';
 
 export default function RegisterPackage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [openModalCancel, setOpenModalCancel] = useState(false);
     const [openModalExtend, setOpenModalExtend] = useState(false);
     const { control, handleSubmit, formState: { isSubmitting, isValid } } = useForm({ mode: "onTouched", });
-    
+
     const onPageChange = (page: number) => setCurrentPage(page);
     const handlerSubmitExtend = () => {
         setOpenModalExtend(false)
@@ -21,7 +24,7 @@ export default function RegisterPackage() {
             <div className='py-5 w-full'>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Thông tin đăng kí gói' center />
                 <div className='mt-36 bg-white'>
-                    <div className='mt-10 flex justify-between mb-3'>
+                    <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
                             <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên gói, loại gói, nội dung'} />
                             <Button className='p-1'>
@@ -55,8 +58,12 @@ export default function RegisterPackage() {
                                     <Table.Cell>Đã gia hạn</Table.Cell>
                                     <Table.Cell>2024-08-25</Table.Cell>
                                     <Table.Cell className='flex space-x-2'>
-                                        <Button onClick={() => setOpenModalExtend(true)} color='warning' className='mt-4' type='submit' size='xs'>Gia hạn</Button>
-                                        <Button onClick={() => setOpenModalCancel(true)} color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                        <Button onClick={() => setOpenModalExtend(true)} color='warning' className='mt-4' type='submit' size='xs'>
+                                            <GiCardExchange  size={16} />
+                                        </Button>
+                                        <Button onClick={() => setOpenModalCancel(true)} color='failure' className='mt-4' type='submit' size='xs'>
+                                            <RiDeleteBinLine size={16}/>
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
@@ -67,8 +74,12 @@ export default function RegisterPackage() {
                                     <Table.Cell>Đã hết hạn</Table.Cell>
                                     <Table.Cell>2024-08-26</Table.Cell>
                                     <Table.Cell className='flex space-x-2'>
-                                        <Button color='warning' className='mt-4' type='submit' size='xs'>Gia hạn</Button>
-                                        <Button color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                        <Button color='warning' className='mt-4' type='submit' size='xs'>
+                                            <GiCardExchange  size={16} />
+                                        </Button>
+                                        <Button color='failure' className='mt-4' type='submit' size='xs'>
+                                            <RiDeleteBinLine size={16}/>
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
@@ -79,8 +90,12 @@ export default function RegisterPackage() {
                                     <Table.Cell>Đang hoạt động</Table.Cell>
                                     <Table.Cell>2024-08-27</Table.Cell>
                                     <Table.Cell className='flex space-x-2'>
-                                        <Button color='warning' className='mt-4' type='submit' size='xs'>Gia hạn</Button>
-                                        <Button color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                        <Button color='warning' className='mt-4' type='submit' size='xs'>
+                                            <GiCardExchange  size={16} />
+                                        </Button>
+                                        <Button color='failure' className='mt-4' type='submit' size='xs'>
+                                            <RiDeleteBinLine size={16}/>
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
@@ -91,8 +106,12 @@ export default function RegisterPackage() {
                                     <Table.Cell>Active</Table.Cell>
                                     <Table.Cell>2024-08-28</Table.Cell>
                                     <Table.Cell className='flex space-x-2'>
-                                        <Button color='warning' className='mt-4' type='submit' size='xs'>Gia hạn</Button>
-                                        <Button color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                        <Button color='warning' className='mt-4' type='submit' size='xs'>
+                                            <GiCardExchange  size={16} />
+                                        </Button>
+                                        <Button color='failure' className='mt-4' type='submit' size='xs'>
+                                            <RiDeleteBinLine size={16}/>
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
@@ -103,8 +122,12 @@ export default function RegisterPackage() {
                                     <Table.Cell>Active</Table.Cell>
                                     <Table.Cell>2024-08-29</Table.Cell>
                                     <Table.Cell className='flex space-x-2'>
-                                        <Button color='warning' className='mt-4' type='submit' size='xs'>Gia hạn</Button>
-                                        <Button color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                        <Button color='warning' className='mt-4' type='submit' size='xs'>
+                                            <GiCardExchange  size={16} />
+                                        </Button>
+                                        <Button color='failure' className='mt-4' type='submit' size='xs'>
+                                            <RiDeleteBinLine size={16}/>
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
                             </Table.Body>
@@ -149,7 +172,7 @@ export default function RegisterPackage() {
                 </Modal.Header>
                 <Modal.Body>
                     <form className="mt-5" method='POST' onSubmit={handleSubmit(handlerSubmitExtend)}>
-                        <Label htmlFor='' value='Chọn gói gói sân' />
+                        <Label htmlFor='' value='Chọn gói sân' />
                         <Controller
                             name='package'
                             control={control}
@@ -165,9 +188,9 @@ export default function RegisterPackage() {
                                         }
                                     >
                                         <option value=''>Gói sân</option>
-                                        <option value="Canada">Miễn phí</option>
-                                        <option value="France">Tháng</option>
-                                        <option value="Germany">Năm</option>
+                                        <option value="Canada">Gói 1</option>
+                                        <option value="France">Gói 2</option>
+                                        <option value="Germany">Gói 3</option>
                                     </Select>
                                     {fieldState.error && (
                                         <div className="text-red-500 text-sm">

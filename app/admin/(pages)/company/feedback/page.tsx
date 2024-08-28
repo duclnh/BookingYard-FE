@@ -72,7 +72,7 @@ export default function Feedback() {
                     />
                 </div>
                 <div className='mt-36 bg-white'>
-                    <div className='mt-10 flex justify-between mb-3'>
+                    <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
                             <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm kiếm theo tên sân'} />
                             <Button className='p-1'>
@@ -80,10 +80,10 @@ export default function Feedback() {
                             </Button>
                         </div>
                         <Select className=''>
-                            <option value="">Trạng thái</option>
-                            <option value="">Đã xử lý</option>
-                            <option value="">Đang xử lý</option>
-                            <option value="">Chưa xử lý</option>
+                            <option value="">Tất cả</option>
+                            {[...Array(5)].map((_,index) => (
+                                <option key={index} value={index + 1}>{index + 1} sao</option>
+                            ))}
                         </Select>
                     </div>
                     <div className="border min-w-full max-w-[1000px] overflow-x-auto">

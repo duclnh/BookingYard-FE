@@ -37,7 +37,7 @@ export default function MapCustom(props: Props) {
         }
     }
 
-    function ZoomControl() {
+    const ZoomControl = () => {
         const map = useMap();
 
         useEffect(() => {
@@ -55,6 +55,7 @@ export default function MapCustom(props: Props) {
 
         useMapEvent('click', (event: LeafletMouseEvent) => {
             props.setPlacePosition([event.latlng.lat, event.latlng.lng]);
+            console.log([event.latlng.lat, event.latlng.lng])
             setPosition([event.latlng.lat, event.latlng.lng])
         });
 

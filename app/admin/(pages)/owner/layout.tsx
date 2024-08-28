@@ -26,7 +26,7 @@ export default function ManagementLayout({
 
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
-      inner:  `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
+      inner: `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
     }
   }
 
@@ -49,7 +49,7 @@ export default function ManagementLayout({
         <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} overflow-y-auto overflow-x-hidden`}>
           <Sidebar.ItemGroup>
             <Sidebar.Item href="#" icon={RiDashboard2Line}>
-              Dashboard
+              Tổng quan
             </Sidebar.Item>
             <Sidebar.Collapse icon={PiBuildingOfficeBold} label="Cơ sở">
               <Sidebar.Item href="#">Danh sách</Sidebar.Item>
