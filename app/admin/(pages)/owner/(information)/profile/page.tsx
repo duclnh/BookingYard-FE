@@ -1,8 +1,8 @@
 "use client"
 import { Input } from '@components/index'
-import { Button, Label, Radio, Textarea } from 'flowbite-react'
+import { Button, Label, Radio, Select } from 'flowbite-react'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 export default function Profile() {
     const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
@@ -18,15 +18,17 @@ export default function Profile() {
                     <label className='inline-block bg-[#edecfb] text-blue-700 font-medium rounded-md p-1 px-3 hover:cursor-pointer' htmlFor="file">Thay đổi ảnh</label>
                     <input id='file' hidden type='file' />
                 </div>
-                <div className='mt-5 grid gap-5'>
-                    <div className='grid grid-cols-2 gap-5'>
-                        <Input label='Họ và tên' name='name' type='text' control={control} />
-                        <Input label='Email' name='email' type='email' control={control} />
+                <div className='mt-5 grid grid-cols-2 gap-10'>
+                    <div>
+                        <Input label='Họ và tên (*)' name='name' type='text' control={control} />
+                        <div className='mt-3'>
+                            <Input label='Số điện thoại (*)' name='phone' type='text' control={control} />
+                        </div>
                     </div>
-                    <div className='grid grid-cols-2 gap-5'>
-                        <Input label='Số điện thoại' name='phone' type='text' control={control} />
-                        <div className='mb-0.5'>
-                            <Label htmlFor="male" value="Giới tính" />
+                    <div>
+                        <Input label='Email (*)' name='email' type='email' control={control} />
+                        <div className='mt-3'>
+                            <Label htmlFor="male" value="Giới tính (*)" />
                             <div className='grid grid-cols-2 gap-2 lg:grid-cols-3 w-44 mt-3 lg:gap-5'>
                                 <div className="flex items-center gap-2">
                                     <Radio id="male" name="gender" value="male" defaultChecked />
@@ -42,16 +44,104 @@ export default function Profile() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-2">
-                            <div className="mb-2 block">
-                                <Label htmlFor="address" value="Địa chỉ" />
-                            </div>
-                            <Textarea id="address" placeholder="" required rows={4} />
-                        </div>
                     </div>
                 </div>
-                <Button size='sm' color='blue' className='float-end px-4 leading-8 my-10 rounded-lg' type='submit'>Cập nhật</Button>
+                <div className='mt-3 grid sm:grid-cols-2'>
+                    <div className='mb-3 sm:mr-5'>
+                        <Label htmlFor='province' value='Tỉnh (*)' />
+                        <Controller
+                            name='province'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn tỉnh' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="province"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Tỉnh</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='mb-3 sm:ml-5'>
+                        <Label htmlFor='province' value='Quận / Huyện (*)' />
+                        <Controller
+                            name='district'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn Quận / Huyện ' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="district"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Quận / Huyện</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='sm:mr-5'>
+                        <Label htmlFor='province' value='Phường / Xã (*)' />
+                        <Controller
+                            name='ward'
+                            control={control}
+                            rules={{ required: 'Vui lòng chọn Phường / Xã ' }}
+                            render={({ field, fieldState }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        className='focus:ring-transparent'
+                                        id="ward"
+                                        color={
+                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                        }
+                                    >
+                                        <option value=''>Phường / Xã</option>
+                                    </Select>
+                                    {fieldState.error && (
+                                        <div className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        />
+                    </div>
+                    <div className='sm:ml-5'>
+                        <Input
+                            label='Địa chỉ (*)'
+                            type='text'
+                            name='address'
+                            control={control}
+                            rules={{
+                                required: "Vui lòng nhập địa chỉ",
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
+            <Button size='sm' color='blue' className='float-end px-4 leading-8 my-10 rounded-lg' type='submit'>Cập nhật</Button>
         </div>
     )
 }

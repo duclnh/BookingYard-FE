@@ -1,6 +1,6 @@
 "use client"
 import InputDate from '@components/InputDate/InputDate';
-import { CustomFlowbiteTheme, Popover } from 'flowbite-react';
+import { Button, CustomFlowbiteTheme, Popover } from 'flowbite-react';
 import React, { useState } from 'react';
 
 const daysOfWeek = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
@@ -8,6 +8,66 @@ const hoursInDay = Array.from({ length: 24 }, (_, i) => `${i + 1}:00`);
 
 // Example bookings data
 const bookings = [
+    {
+        name: 'Nguyễn Thiên An',
+        day: 27, // Ngày đặt sân
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Lê Văn B',
+        day: 27,
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Nguyễn Thiên An',
+        day: 27, // Ngày đặt sân
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Lê Văn B',
+        day: 27,
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Nguyễn Thiên An',
+        day: 27, // Ngày đặt sân
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Lê Văn B',
+        day: 27,
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Nguyễn Thiên An',
+        day: 27, // Ngày đặt sân
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Lê Văn B',
+        day: 27,
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Nguyễn Thiên An',
+        day: 27, // Ngày đặt sân
+        startTime: '1:00',
+        endTime: '2:00',
+    },
+    {
+        name: 'Lê Văn B',
+        day: 27,
+        startTime: '1:00',
+        endTime: '2:00',
+    },
     {
         name: 'Nguyễn Thiên An',
         day: 27, // Ngày đặt sân
@@ -30,22 +90,10 @@ const bookings = [
     { name: 'Nguyễn Thị I', day: 29, startTime: '8:00', endTime: '9:00' },
     { name: 'Lê Văn J', day: 30, startTime: '9:00', endTime: '10:00' },
 ];
-const colors = [
-    'bg-teal-500',
-    'bg-blue-500',
-    'bg-green-500',
-    'bg-red-500',
-    'bg-yellow-500',
-    'bg-purple-500',
-    'bg-pink-500',
-    'bg-orange-500',
-    'bg-indigo-500',
-    'bg-gray-500',
-];
-const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [isDate, setIsDate] = useState(false);
 
     const handlePrevWeek = () => {
         setCurrentDate(prevDate => {
@@ -63,8 +111,8 @@ const Calendar = () => {
         });
     };
 
-    const handleDateChange = (event: any) => {
-        setCurrentDate(new Date(event.target.value));
+    const handleDateChange = (date: Date) => {
+        setCurrentDate(date);
     };
 
     const getStartOfWeek = (date: Date) => {
@@ -85,7 +133,10 @@ const Calendar = () => {
             dayOfWeek: daysOfWeek[index],
         };
     });
-
+    const getCurrentDateOfWeek = () => {
+        const date = weekDaysWithDates.find(x => x.date == currentDate.getDate());
+        return `${date?.date} ${date?.dayOfWeek}`
+    }
     const customPopover: CustomFlowbiteTheme["popover"] = {
         "arrow": {
             "base": "absolute h-2 w-2 z-0 rotate-45 mix-blend-lighten bg-black border border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:mix-blend-color",
@@ -103,7 +154,7 @@ const Calendar = () => {
 
         if (filteredBookings.length > 0) {
             return (
-                <div className="border border-gray-200 p-2 flex flex-col space-y-1">
+                <div className={`border border-gray-200 p-2 ${isDate ? 'col-span-7 grid grid-cols-8 gap-5' : 'flex flex-col space-y-1'} `}>
                     {filteredBookings.map((booking, index) => (
                         <Popover
                             key={index}
@@ -134,8 +185,9 @@ const Calendar = () => {
                                 </div>
                             }
                         >
-                            <div key={index} className={`text-white p-1 rounded-md hover:cursor-pointer ${getRandomColor()}`}>
-                                {booking.name}
+                            <div key={index} className={`text-white p-1 rounded-md hover:cursor-pointer bg-slate-500`}>
+                                <p>{` ${booking.startTime}-${booking.endTime}`}</p>
+                                <p>{booking.name}</p>
                             </div>
                         </Popover>
                     ))}
@@ -143,30 +195,49 @@ const Calendar = () => {
             );
         }
 
-        return <div className="border border-gray-200 p-2"></div>;
+        return <div className={`border border-gray-200 p-2 ${isDate ? 'col-span-7':''}`}></div>;
     };
 
     return (
         <div className="w-full mx-auto mt-10">
             <div className="flex justify-between items-center mb-4">
-                <button onClick={handlePrevWeek} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">
-                    Tuần trước
-                </button>
+                {!isDate && (
+                    <Button color={"gray"} size={"xs"} onClick={handlePrevWeek} className="px-4 py-2 font-bold">
+                        Tuần trước
+                    </Button>
+                )}
                 <div>
-                    <InputDate name='date' multiple={false}  />
+                    <InputDate date={currentDate} handlerChange={handleDateChange} name='date' multiple={false} />
                 </div>
-                <button onClick={handleNextWeek} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">
-                    Tuần sau
-                </button>
+                {isDate && (
+                    <Button color={"gray"} size={"xs"} onClick={() => setIsDate(false)} className="px-4 py-2 font-bold">
+                        Tháng
+                    </Button>
+                )}
+                {!isDate && (
+                    <div className='flex space-x-3'>
+                        <Button color={"gray"} size={"xs"} onClick={() => setIsDate(true)} className="px-4 py-2 font-bold">
+                            Ngày
+                        </Button>
+                        <Button color={"gray"} size={"xs"} onClick={handleNextWeek} className="px-4 py-2 font-bold">
+                            Tuần sau
+                        </Button>
+                    </div>
+                )}
             </div>
 
             <div className="grid grid-cols-8 text-center font-bold">
-                <div className="p-2 border border-gray-300 bg-gray-200">Time</div>
-                {weekDaysWithDates.map((day, index) => (
-                    <div key={index} className="p-2 border border-gray-300 bg-gray-200">
+                <div className="p-2 border border-gray-300">Thời gian</div>
+                {!isDate && weekDaysWithDates.map((day, index) => (
+                    <div key={index} className="p-2 border border-gray-300">
                         {day.date} {day.dayOfWeek}
                     </div>
                 ))}
+                {isDate && (
+                    <div className="p-2 border col-span-7 border-gray-300">
+                        {getCurrentDateOfWeek()}
+                    </div>
+                )}
             </div>
 
             {hoursInDay.map((hour, hourIndex) => (
@@ -174,11 +245,17 @@ const Calendar = () => {
                     <div className="p-2 border border-gray-200 text-center">
                         {hour}
                     </div>
-                    {weekDaysWithDates.map((day, dayIndex) => (
+                    {isDate && (
+                        <React.Fragment key={`${hourIndex}`}>
+                            {renderBookings(currentDate.getDate(), hour)}
+                        </React.Fragment>
+                    )}
+                    {!isDate && weekDaysWithDates.map((day, dayIndex) => (
                         <React.Fragment key={`${hourIndex}-${dayIndex}`}>
                             {renderBookings(day.date, hour)}
                         </React.Fragment>
-                    ))}
+                    ))
+                    }
                 </div>
             ))}
         </div>
