@@ -2,7 +2,6 @@ import { Label } from 'flowbite-react';
 import React from 'react'
 import DatePicker, { DateObject } from 'react-multi-date-picker'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
-import Toolbar from 'react-multi-date-picker/plugins/toolbar';
 
 type Props = {
   label?: string;
@@ -11,8 +10,8 @@ type Props = {
   row?: string;
   labelClassName?: string;
   multiple: boolean;
-  date?: Date
-  handlerChange: Function;
+  date?: Date[]
+  handlerChange: (dates: Date | Date[]) => void;
 }
 
 export default function InputDate(props: Props) {
@@ -25,9 +24,12 @@ export default function InputDate(props: Props) {
       )}
       <DatePicker
         className='col-span-2 hover:cursor-pointer'
-        onChange={(date: DateObject) => {
-          if (date) {
-            props.handlerChange(new Date(date.format("MM/DD/YYYY")))
+        onChange={(date: any) => {
+          if (!props.multiple && date) {
+            props.handlerChange(new Date(date.format("MM/DD/YYYY")));
+          } else if (props.multiple && date) {
+            const dates = date.map((d: DateObject) => new Date(d.format("MM/DD/YYYY")));
+            props.handlerChange(dates);
           }
         }}
         id={props.name}
@@ -41,17 +43,6 @@ export default function InputDate(props: Props) {
         placeholder='Chọn ngày'
         calendarPosition='bottom-right'
         render={<InputIcon />}
-        plugins={[
-          <Toolbar
-            position="bottom"
-            names={{
-              today: "Hôm nay",
-              deselect: "Bỏ chọn",
-              close: "Xong",
-            }}
-
-          />,
-        ]}
       />
 
       {/* 

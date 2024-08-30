@@ -66,7 +66,7 @@ export default function Profile() {
                     <option value=''>Tỉnh</option>
                   </Select>
                   {fieldState.error && (
-                    <div className="text-red-500 text-sm">
+                    <div className="text-red-500 text-sm mt-2">
                       {fieldState.error.message}
                     </div>
                   )}
@@ -93,7 +93,7 @@ export default function Profile() {
                     <option value=''>Quận / Huyện</option>
                   </Select>
                   {fieldState.error && (
-                    <div className="text-red-500 text-sm">
+                    <div className="text-red-500 text-sm mt-2">
                       {fieldState.error.message}
                     </div>
                   )}
@@ -120,7 +120,7 @@ export default function Profile() {
                     <option value=''>Phường / Xã</option>
                   </Select>
                   {fieldState.error && (
-                    <div className="text-red-500 text-sm">
+                    <div className="text-red-500 text-sm mt-2">
                       {fieldState.error.message}
                     </div>
                   )}

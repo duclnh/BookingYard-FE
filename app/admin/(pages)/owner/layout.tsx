@@ -8,11 +8,12 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image';
 import { FaList, FaRegUser } from 'react-icons/fa';
 import { CiLock } from 'react-icons/ci';
-import { MdLogout, MdOutlineFeedback, MdOutlineLocalConvenienceStore, MdOutlineReportGmailerrorred, MdSportsKabaddi } from 'react-icons/md';
-import { TbBasketDiscount, TbPackage } from 'react-icons/tb';
+import { MdLogout, MdOutlineFeedback } from 'react-icons/md';
+import { TbBasketDiscount } from 'react-icons/tb';
 import { RiCalendarScheduleLine, RiDashboard2Line } from 'react-icons/ri';
-import { PiBuildingOfficeBold, PiUsersThreeBold } from 'react-icons/pi';
+import { PiCourtBasketball, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
+import { BsQrCodeScan } from 'react-icons/bs';
 
 export default function ManagementLayout({
   children,
@@ -57,9 +58,12 @@ export default function ManagementLayout({
             <Sidebar.Item href="/admin/owner/schedule" icon={RiCalendarScheduleLine}>
               Lịch trình
             </Sidebar.Item>
-            <Sidebar.Collapse icon={PiBuildingOfficeBold} label="Sân">
-              <Sidebar.Item href="#">Danh sách</Sidebar.Item>
-              <Sidebar.Item href="#">Tạo mới</Sidebar.Item>
+            <Sidebar.Item href="/admin/owner/check-in" icon={BsQrCodeScan}>
+              Kiểm tra
+            </Sidebar.Item>
+            <Sidebar.Collapse icon={PiCourtBasketball} label="Sân">
+              <Sidebar.Item href="/admin/owner/court">Danh sách</Sidebar.Item>
+              <Sidebar.Item href="/admin/owner/court/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
             <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
               <Sidebar.Item href="/admin/owner/staff">Danh sách</Sidebar.Item>

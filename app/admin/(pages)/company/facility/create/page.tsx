@@ -1,9 +1,12 @@
 "use client"
-import { Heading, Input, ModalView } from '@components/index'
-import { Button, FileInput, Label, Select } from 'flowbite-react';
+import { Heading, Input, InputDate, InputImage, ModalView, NewFeature } from '@components/index'
+import { Button, Label, Select } from 'flowbite-react';
 import React, { useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import dynamic from 'next/dynamic';
+import { MdHealthAndSafety, MdPayments } from 'react-icons/md';
+import { Convenience, Feature } from 'types';
+import { TiDelete } from 'react-icons/ti';
 
 const TextEditor = dynamic(() => import('@components/TextEditor/TextEditor'), {
     ssr: false,
@@ -14,24 +17,66 @@ const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
 
 
 export default function CreatePage() {
-    const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
+    const { control, handleSubmit, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
-    const [imageSrc, setImageSrc] = useState(null);
-
-    const handleFileChange = (event: any) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e: any) => {
-                setImageSrc(e.target?.result || '');
-            };
-            reader.readAsDataURL(file);
+    const [dates, setDates] = useState<Date[]>([])
+    const [conveniences, setConveniences] = useState<Convenience[]>([
+        {
+            title: "payment",
+            content: "Các phương thức thanh toán",
+            icon: "MdPayments",
+            feature: [
+                { title: "Thẻ tín dụng (Visa, Master card)", isEnable: true },
+                { title: "Momo", isEnable: true },
+                { title: "Chuyển khoản", isEnable: true },
+                { title: "Tiền mặt", isEnable: true },
+            ],
+        },
+        {
+            title: "entertainment",
+            content: "Các dịch vụ giải trí",
+            icon: "IoStorefrontSharp",
+            feature: [
+                { title: "Nhà hàng", isEnable: true },
+                { title: "Quán nước", isEnable: true },
+                { title: "Căn tin", isEnable: true },
+                { title: "Karoke", isEnable: true },
+                { title: "Cửa hàng tiện lợi", isEnable: true },
+            ],
+        },
+        {
+            title: "safe",
+            content: "Các dịch vụ an toàn và chăm sóc",
+            icon: "MdHealthAndSafety",
+            feature: [
+                { title: "Bảo vệ", isEnable: true },
+                { title: "Nhà gửi xe", isEnable: true },
+                { title: "Chăm sóc y tế", isEnable: true },
+            ],
+        },
+    ]);
+    const handlerSetFeatures = (title: string, feature: Feature[]) => {
+        const oldConveniences = [...conveniences]
+        const foundItem = conveniences.find(x => x.title === title);
+        if (foundItem) {
+            foundItem.feature = feature;
         }
-    };
+        setConveniences(oldConveniences);
+    }
+
 
     const handlerSetValuePosition = (position: [number, number]) => {
         setValue('location', position)
     }
+
+    const handlerRemoveHoliday = (indexRemove: number) => {
+        setDates(dates.filter((_, index) => index != indexRemove))
+    }
+    const handleDateChange = (dates: Date | Date[]) => {
+        if (Array.isArray(dates)) {
+            setDates(dates); 
+        } 
+    };
 
     const handlerSubmitCreateFacility = (data: FieldValues) => {
         console.log(data)
@@ -66,26 +111,15 @@ export default function CreatePage() {
                             />
                         </div>
                     </div>
-                    <div>
-                        <Label className='hover:cursor-pointer' htmlFor="file-upload" value="Ảnh cơ sở hoặc logo (*)" />
-                        <FileInput
-                            {...register('image', { required: true })}
-                            onInput={handleFileChange}
-                            id="file-upload"
-                            helperText={`${getFieldState('image')?.error ? 'Vui chọn ảnh hoặc logo công ty' : ''}`}
-                            color={
-                                getFieldState('image')?.error ? "failure" : !getFieldState('image').isDirty ? "" : "success"
-                            }
-                        />
-
-                        <div>
-                            {imageSrc && (
-                                <div>
-                                    <img src={imageSrc} alt="ảnh công ty" className="mt-4 h-48 w-auto object-contain" />
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <InputImage
+                        label='Ảnh cơ sở hoặc logo (*)'
+                        name='image'
+                        getState={getFieldState}
+                        control={control}
+                        rules={{
+                            required: "Vui lòng chọn ảnh cơ sở hoặc logo",
+                        }}
+                    />
                 </div>
                 <div className='mt-10 grid sm:grid-cols-2 gap-10'>
                     <div>
@@ -111,36 +145,77 @@ export default function CreatePage() {
                         />
                     </div>
                     <div>
-                        <Label htmlFor='package' value='Gói sân (*)' />
-                        <Controller
-                            name='package'
+                        <div className='mb-3'>
+                            <Label htmlFor='package' value='Gói sân (*)' />
+                            <Controller
+                                name='package'
+                                control={control}
+                                rules={{ required: 'Vui lòng chọn gói sân' }}
+                                render={({ field, fieldState }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            className='focus:ring-transparent'
+                                            id="package"
+                                            color={
+                                                fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                            }
+                                        >
+                                            <option value=''>Gói sân</option>
+                                            <option value="Canada">Miễn phí</option>
+                                            <option value="France">Tháng</option>
+                                            <option value="Germany">Năm</option>
+                                        </Select>
+                                        {fieldState.error && (
+                                            <div className="text-red-500 text-sm mt-2">
+                                                {fieldState.error.message}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            />
+                        </div>
+                        <Input
+                            label='Số tiền cộng thêm ngày lễ (*)'
+                            type='text'
+                            name='phone'
                             control={control}
-                            rules={{ required: 'Vui lòng chọn gói sân' }}
-                            render={({ field, fieldState }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        className='focus:ring-transparent'
-                                        id="package"
-                                        color={
-                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                                        }
-                                    >
-                                        <option value=''>Gói sân</option>
-                                        <option value="Canada">Miễn phí</option>
-                                        <option value="France">Tháng</option>
-                                        <option value="Germany">Năm</option>
-                                    </Select>
-                                    {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
-                                            {fieldState.error.message}
-                                        </div>
-                                    )}
-                                </>
-                            )}
+                            rules={{
+                                required: "Vui lòng nhập số tiền cộng thêm ngày lễ",
+                            }}
                         />
-
                     </div>
+                </div>
+                <div className='mt-3 grid sm:grid-cols-2 gap-10'>
+                    <Input
+                        label='Số tiền cộng thêm giờ cao điểm (*)'
+                        type='text'
+                        name='phone'
+                        control={control}
+                        rules={{
+                            required: "Vui lòng nhập số tiền cộng thêm giờ cao điểm",
+                        }}
+                    />
+                    <Input
+                        label='Số tiền giảm đăng kí tháng (*)'
+                        type='text'
+                        name='phone'
+                        control={control}
+                        rules={{
+                            required: "Vui lòng nhập số tiền giảm đăng kí tháng",
+                        }}
+                    />
+                </div>
+                <div className='mt-3 grid sm:grid-cols-2 gap-10'>
+                    <Input
+                        label='Số tiền giảm đăng kí năm (*)'
+                        type='text'
+                        name='phone'
+                        control={control}
+                        rules={{
+                            required: "Vui lòng nhập số tiền giảm đăng kí năm",
+                        }}
+                    />
                 </div>
                 <div className='mt-3 grid sm:grid-cols-2'>
                     <div className='mb-3 sm:mr-5'>
@@ -162,7 +237,7 @@ export default function CreatePage() {
                                         <option value=''>Tỉnh</option>
                                     </Select>
                                     {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
+                                        <div className="text-red-500 text-sm mt-2">
                                             {fieldState.error.message}
                                         </div>
                                     )}
@@ -189,7 +264,7 @@ export default function CreatePage() {
                                         <option value=''>Quận / Huyện</option>
                                     </Select>
                                     {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
+                                        <div className="text-red-500 text-sm mt-2">
                                             {fieldState.error.message}
                                         </div>
                                     )}
@@ -216,7 +291,7 @@ export default function CreatePage() {
                                         <option value=''>Phường / Xã</option>
                                     </Select>
                                     {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
+                                        <div className="text-red-500 text-sm mt-2">
                                             {fieldState.error.message}
                                         </div>
                                     )}
@@ -259,7 +334,7 @@ export default function CreatePage() {
                                         ))}
                                     </Select>
                                     {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
+                                        <div className="text-red-500 text-sm mt-2">
                                             {fieldState.error.message}
                                         </div>
                                     )}
@@ -289,7 +364,7 @@ export default function CreatePage() {
                                         ))}
                                     </Select>
                                     {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
+                                        <div className="text-red-500 text-sm mt-2">
                                             {fieldState.error.message}
                                         </div>
                                     )}
@@ -306,6 +381,46 @@ export default function CreatePage() {
                             <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md hover:bg-black hover:text-white'>Thứ bảy</div>
                             <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md hover:bg-black hover:text-white bg-black text-white'>Chủ nhật</div>
                         </div>
+                    </div>
+                </div>
+                <div className='mt-5'>
+                    <div className='flex items-center'>
+                        <Label className='mr-3' value='Ngày lễ' />
+                        <InputDate date={dates} handlerChange={handleDateChange} name='date' multiple={true} />
+                    </div>
+                    <div className='mt-3 grid xl:grid-cols-8 md:grid-cols-5 grid-cols-2 gap-10'>
+                        {dates.map((date: Date, index) => (
+                            <div key={index} className='border w-20 leading-10 text-center rounded-md hover:cursor-pointer relative group'>
+                                <p>{`${date.getDate()} - ${date.getMonth() + 1}`}</p>
+                                <TiDelete size={20} onClick={() => handlerRemoveHoliday(index)} className='text-red-500 absolute -top-2.5 -right-2.5 hidden group-hover:block z-10' />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className='mt-5'>
+                    <Label value='Giờ cao điểm' />
+                    <div className='mt-3 grid xl:grid-cols-8 md:grid-cols-5 grid-cols-2 gap-10'>
+                        {[...Array(24)].map((_, index) => (
+                            <div key={index} className='border w-20 leading-10 text-center rounded-xl hover:cursor-pointer'>
+                                {`${index}:00`}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className='mt-5'>
+                    <Label value='Các tiện ích' />
+                    <div className='grid grid-cols-2 mt-5 gap-10  '>
+                        {conveniences.map((convenience, index) => (
+                            <div key={index}>
+                                <div className='flex items-center'>
+                                    <MdHealthAndSafety size={15} className='mr-2' />
+                                    {convenience.content}
+                                </div>
+                                <div className='mt-3'>
+                                    <NewFeature key={index} name={convenience.title} group features={convenience.feature} handlerSetFeature={handlerSetFeatures} />
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className='my-10'>

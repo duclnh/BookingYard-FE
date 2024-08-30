@@ -193,7 +193,7 @@ export default function RegisterPackage() {
                                         <option value="Germany">Gói 3</option>
                                     </Select>
                                     {fieldState.error && (
-                                        <div className="text-red-500 text-sm">
+                                        <div className="text-red-500 text-sm mt-2">
                                             {fieldState.error.message}
                                         </div>
                                     )}

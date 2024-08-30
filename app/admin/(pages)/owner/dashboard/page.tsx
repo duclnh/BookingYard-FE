@@ -21,7 +21,7 @@ export default function DashBoard() {
   return (
     <div className='py-5 w-full'>
       <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tổng quan hoạt động' center />
-      <div className='my-24 w-full grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-10 place-items-center'>
+      <div className='my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10 place-items-center'>
         <CardStatistic
           title='Doanh thu'
           amount={3000}
@@ -37,14 +37,6 @@ export default function DashBoard() {
           gradientFrom='from-green-700'
           gradientTo='to-green-500'
           iconColor='text-green-700'
-        />
-        <CardStatistic
-          title='Cơ sở'
-          amount={3300}
-          icon={GrSchedules}
-          gradientFrom='from-yellow-700'
-          gradientTo='to-yellow-500'
-          iconColor='text-yellow-700'
         />
         <CardStatistic
           title='Hủy đặt lịch'

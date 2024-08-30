@@ -72,7 +72,7 @@ export default function CreateStaff() {
                       <option value="Germany">Nhân viên</option>
                     </Select>
                     {fieldState.error && (
-                      <div className="text-red-500 text-sm">
+                      <div className="text-red-500 text-sm mt-2">
                         {fieldState.error.message}
                       </div>
                     )}
@@ -124,7 +124,7 @@ export default function CreateStaff() {
                       <option value="Germany">Thời vụ</option>
                     </Select>
                     {fieldState.error && (
-                      <div className="text-red-500 text-sm">
+                      <div className="text-red-500 text-sm mt-2">
                         {fieldState.error.message}
                       </div>
                     )}

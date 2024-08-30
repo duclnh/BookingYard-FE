@@ -8,16 +8,17 @@ type Props = {
     label?: string,
     type?: string,
     showLabel?: boolean,
-    onChange?: Function
+    onChange?: Function,
+    row?: boolean
 } & UseControllerProps
 
 export default function Input(props: Props) {
     const [show, setShow] = useState(false)
     const { fieldState, field } = useController({ ...props, defaultValue: "" });
     return (
-        <div>
+        <div className={`${props.row ? 'flex items-center' : ''}`}>
             {props.label && (
-                <div className='mb-0.5'>
+                <div className={`${props.row ? 'mr-2' : 'mb-0.5'}`}>
                     <Label className='hover:cursor-pointer' htmlFor={field.name} value={props.label} />
                 </div>
             )}
@@ -40,22 +41,24 @@ export default function Input(props: Props) {
                     </div>
                 </div>
             ) : (
-                <TextInput
-                    {...props}
-                    {...field}
-                    onInput={() => {
-                        if(props.onChange){
-                            props.onChange()
+                <div>
+                    <TextInput
+                        {...props}
+                        {...field}
+                        onInput={() => {
+                            if (props.onChange) {
+                                props.onChange()
+                            }
+                        }}
+                        id={field.name}
+                        type={props.type || ''}
+                        placeholder={props.label}
+                        helperText={fieldState.error?.message}
+                        color={
+                            fieldState?.error ? "failure" : !fieldState.isDirty ? "" : "success"
                         }
-                    }}
-                    id={field.name}
-                    type={props.type || ''}
-                    placeholder={props.label}
-                    helperText={fieldState.error?.message}
-                    color={
-                        fieldState?.error ? "failure" : !fieldState.isDirty ? "" : "success"
-                    }
-                />
+                    />
+                </div>
             )}
         </div>
     )

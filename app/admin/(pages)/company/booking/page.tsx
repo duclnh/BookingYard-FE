@@ -96,7 +96,7 @@ export default function Booking() {
                                             <option value="">Bóng chuyền</option>
                                         </Select>
                                         {fieldState.error && (
-                                            <div className="text-red-500 text-sm">
+                                            <div className="text-red-500 text-sm mt-2">
                                                 {fieldState.error.message}
                                             </div>
                                         )}
@@ -121,7 +121,7 @@ export default function Booking() {
 
                                         </Select>
                                         {fieldState.error && (
-                                            <div className="text-red-500 text-sm">
+                                            <div className="text-red-500 text-sm mt-2">
                                                 {fieldState.error.message}
                                             </div>
                                         )}

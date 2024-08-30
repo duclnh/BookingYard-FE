@@ -111,9 +111,12 @@ const Calendar = () => {
         });
     };
 
-    const handleDateChange = (date: Date) => {
-        setCurrentDate(date);
+    const handleDateChange = (dates: Date | Date[]) => {
+        if (!Array.isArray(dates)) {
+            setCurrentDate(dates);
+        }
     };
+
 
     const getStartOfWeek = (date: Date) => {
         const startOfWeek = new Date(date);
@@ -195,7 +198,7 @@ const Calendar = () => {
             );
         }
 
-        return <div className={`border border-gray-200 p-2 ${isDate ? 'col-span-7':''}`}></div>;
+        return <div className={`border border-gray-200 p-2 ${isDate ? 'col-span-7' : ''}`}></div>;
     };
 
     return (
@@ -207,7 +210,7 @@ const Calendar = () => {
                     </Button>
                 )}
                 <div>
-                    <InputDate date={currentDate} handlerChange={handleDateChange} name='date' multiple={false} />
+                    <InputDate date={[currentDate]} handlerChange={handleDateChange} name='date' multiple={false} />
                 </div>
                 {isDate && (
                     <Button color={"gray"} size={"xs"} onClick={() => setIsDate(false)} className="px-4 py-2 font-bold">
