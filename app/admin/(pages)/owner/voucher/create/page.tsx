@@ -99,17 +99,15 @@ export default function CreateStaff() {
                 )}
               />
             </div>
-            <div>
-              <InputImage
-                label='Ảnh mã giảm giá (*)'
-                getState={getFieldState}
-                name='image'
-                control={control}
-                rules={{
-                  required: "Vui lòng chọn ảnh mã giảm giá",
-                }}
-              />
-            </div>
+            <InputImage
+              label='Ảnh mã giảm giá (*)'
+              getState={getFieldState}
+              name='image'
+              control={control}
+              rules={{
+                required: "Vui lòng chọn ảnh mã giảm giá",
+              }}
+            />
           </div>
         </div>
         <Button className='mt-4' type='submit' size='sm'>Tạo mới</Button>

@@ -11,7 +11,7 @@ import { CiLock } from 'react-icons/ci';
 import { MdLogout, MdOutlineFeedback, MdOutlineReportGmailerrorred, MdSportsKabaddi } from 'react-icons/md';
 import { TbBasketDiscount, TbPackage } from 'react-icons/tb';
 import { RiCalendarScheduleLine, RiDashboard2Line } from 'react-icons/ri';
-import { PiBuildingOfficeBold, PiHeadCircuitBold, PiUsersThreeBold } from 'react-icons/pi';
+import { PiBuildingOfficeBold, PiHeadCircuitBold, PiUsersBold, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
 
 export default function ManagementLayout({
@@ -45,7 +45,7 @@ export default function ManagementLayout({
             <FaList onClick={() => setCollapse(false)} size={18} className='mx-auto  mb-4 hover:cursor-pointer hover:scale-110' />
           </Sidebar.Items>
         )}
-        <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} overflow-y-auto overflow-x-hidden`}>
+        <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} hover:overflow-y-auto overflow-y-hidden overflow-x-hidden`}>
           <Sidebar.ItemGroup>
             <Sidebar.Item href="/admin/company/dashboard" icon={RiDashboard2Line}>
               Tổng quan
@@ -53,7 +53,7 @@ export default function ManagementLayout({
             <Sidebar.Item href="/admin/company/booking" icon={GrSchedules}>
               Đặt lịch
             </Sidebar.Item>
-            <Sidebar.Item href="/admin/company/schedule" icon={RiCalendarScheduleLine }>
+            <Sidebar.Item href="/admin/company/schedule" icon={RiCalendarScheduleLine}>
               Lịch trình
             </Sidebar.Item>
             <Sidebar.Collapse icon={PiBuildingOfficeBold} label="Cơ sở">
@@ -64,6 +64,9 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/company/voucher">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/voucher/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
+            <Sidebar.Item href="/admin/company/customer" icon={PiUsersBold }>
+              Khách hàng
+            </Sidebar.Item>
             <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
               <Sidebar.Item href="/admin/company/staff">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/staff/create">Tạo mới</Sidebar.Item>

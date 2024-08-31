@@ -3,8 +3,10 @@ import { CardStatistic, Heading } from '@components/index'
 import { Button, Modal, Pagination, Select, Table } from 'flowbite-react'
 import React, { useState } from 'react'
 import { BsBuilding } from 'react-icons/bs'
+import { FaPencil } from 'react-icons/fa6'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline, IoMdSearch } from 'react-icons/io';
+import { RiDeleteBinLine } from 'react-icons/ri'
 
 export default function Package() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -39,25 +41,25 @@ export default function Package() {
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
-                            <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên gói, loại gói, nội dung'} />
+                            <input className='border rounded-md px-3 sm:w-96 w-full' name='search' placeholder={'Tìm tên gói, loại gói, nội dung'} />
                             <Button className='p-1'>
                                 <IoMdSearch className='font-bold' size={18} />
                             </Button>
                         </div>
-                        <Select className=''>
+                        <Select className='mt-3 md:mt-0'>
                             <option value="">Tất cả</option>
                             <option value="">Đang hoạt động</option>
                             <option value="">Đã ngưng hoạt động</option>
                         </Select>
                     </div>
-                    <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+                    <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
                         <Table hoverable>
-                            <Table.Head>
+                            <Table.Head className='text-center'>
                                 <Table.HeadCell>STT</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Tên gói</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Loại gói</Table.HeadCell>
                                 <Table.HeadCell className='min-w-36'>Giá tiền</Table.HeadCell>
-                                <Table.HeadCell className='min-w-72'>Nội dung</Table.HeadCell>
+                                <Table.HeadCell className='min-w-52'>Nội dung</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Ngày tạo</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>
@@ -66,12 +68,12 @@ export default function Package() {
                             </Table.Head>
                             <Table.Body>
                                 {[...Array(5)].map((_, index) => (
-                                    <Table.Row key={index}>
+                                    <Table.Row className='text-center' key={index}>
                                         <Table.Cell>1</Table.Cell>
-                                        <Table.Cell>Gói {index}</Table.Cell>
+                                        <Table.Cell className='text-left font-bold'>Gói {index}</Table.Cell>
                                         <Table.Cell>Basic</Table.Cell>
                                         <Table.Cell>$10</Table.Cell>
-                                        <Table.Cell>
+                                        <Table.Cell className='text-left'>
                                             <div className='flex mb-5'>
                                                 <IoIosCheckmarkCircleOutline className='text-green-400 mt-0.5' size={20} />
                                                 <div className='ml-3'>Nhận tư vấn miễn phí</div>
@@ -105,11 +107,21 @@ export default function Package() {
                                                 <div className='ml-3'>Nhận tư vấn miễn phí</div>
                                             </div>
                                         </Table.Cell>
-                                        <Table.Cell>Active</Table.Cell>
+                                        <Table.Cell>
+                                            <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                                                Hoạt động
+                                            </p>
+                                        </Table.Cell>
                                         <Table.Cell>2024-08-25</Table.Cell>
                                         <Table.Cell>
-                                            <Button href='/admin/company/package/update' color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                            <Button href='/admin/company/package/update' color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                            <div className='flex space-x-2 justify-center'>
+                                                <Button color='warning' type='submit' size='xs'>
+                                                    <FaPencil size={16} />
+                                                </Button>
+                                                <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                                                    <RiDeleteBinLine size={16} />
+                                                </Button>
+                                            </div>
                                         </Table.Cell>
                                     </Table.Row>
                                 ))}

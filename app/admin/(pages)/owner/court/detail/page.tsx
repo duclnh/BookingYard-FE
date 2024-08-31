@@ -6,7 +6,6 @@ import { MdHealthAndSafety, MdOutlineSportsKabaddi, MdPayments } from 'react-ico
 import { IoStorefrontSharp } from 'react-icons/io5'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FaCheckCircle } from 'react-icons/fa'
-import dynamic from 'next/dynamic'
 import { BsBuilding, BsBuildingCheck, BsBuildingFillX } from 'react-icons/bs'
 import Image from 'next/image'
 

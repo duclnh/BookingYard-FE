@@ -6,9 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Feature } from 'types';
 
 export default function CreatePackage() {
-    const { control, handleSubmit, register, formState: { isSubmitting, isValid }, setValue } = useForm({ mode: "onTouched", });
-    const [error, setError] = useState<string | undefined>()
-    const [textFeature, setTextFeature] = useState<string>('')
+    const { control, handleSubmit, formState: { isSubmitting, isValid } } = useForm({ mode: "onTouched", });
     const [features, setFeatures] = useState<Feature[]>([
         { title: 'Tư vấn miễn phí', isEnable: true },
         { title: 'Đặt sân nhanh', isEnable: true },
@@ -16,35 +14,8 @@ export default function CreatePackage() {
         { title: 'Xem lịch sử đặt sân', isEnable: true }
     ]);
 
-    const handlerAddFeature = () => {
-        let text = textFeature.trim().toLowerCase();
-        if (text) {
-            let exit = features.find(x => x.title.trim().toLowerCase() === text);
-            if (exit) {
-                setError('Tính năng này đã có')
-            } else {
-                setFeatures([...features, { title: textFeature.trim(), isEnable: true }]);
-                setTextFeature('');
-                setError('')
-                console.log('')
-            }
-
-        } else {
-            setError('Vui lòng nhập tính năng')
-        }
-    };
-
-    const handlerRemoveFeature = (index: number) => {
-        setFeatures(features.filter((_, i) => i !== index));
-        setValue('feature', features)
-    };
-
     const handlerSubmitCreatePackage = () => {
-        if (features.length == 0) {
-            setError('Vui lòng nhập tính năng')
-            return;
-        }
-        setValue('feature', features)
+
     }
 
     return (
@@ -83,7 +54,7 @@ export default function CreatePackage() {
                                             <option value="Germany">Năm</option>
                                         </Select>
                                         {fieldState.error && (
-                                            <div className="text-red-500 text-sm">
+                                            <div className="text-red-500 text-sm mt-2">
                                                 {fieldState.error.message}
                                             </div>
                                         )}
@@ -114,21 +85,7 @@ export default function CreatePackage() {
                             />
                         </div>
                     </div>
-                    <div>
-                        <Label htmlFor='package' value='Nội dung gói (*)' />
-                        <div id='content' className='mt-1'>
-                            {features.map((feature, index) => (
-                                <NewFeature key={index} remove={() => handlerRemoveFeature(index)} title={feature.title} check={feature.isEnable} />
-                            ))}
-                        </div>
-                        <div className='mt-2 flex'>
-                            <input value={textFeature} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTextFeature(e?.target.value)} className='border rounded-md px-3' />
-                            <Button onClick={handlerAddFeature} size='sm' type='button'>Thêm</Button>
-                        </div>
-                        {error && (
-                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">{error}</p>
-                        )}
-                    </div>
+                    <NewFeature label='Nội dung gói (*)' name='package' features={features} handlerSetFeature={setFeatures} />
                 </div>
                 <Button className='mt-4' type='submit' size='sm'>Tạo mới</Button>
             </form>

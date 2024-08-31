@@ -417,7 +417,7 @@ export default function Facility() {
                     ))}
                   </div>
                 </div>
-                <InputDate name='date' multiple={false} minDate={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
+                <InputDate handlerChange={() => {}}  name='date' multiple={false} minDate={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
                 <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
                   <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn giờ bắt đầu:</label>
                   <div className='col-span-2 grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 gap-2'>

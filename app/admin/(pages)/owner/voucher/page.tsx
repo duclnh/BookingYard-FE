@@ -73,9 +73,9 @@ export default function Voucher() {
           />
         </div>
         <div className='mt-36 bg-white'>
-          <div className='mt-10 sm:flex justify-between mb-3'>
+          <div className='mt-10 md:flex justify-between mb-3'>
             <div className='flex'>
-              <input className='border rounded-md px-3 sm:w-96 w-full' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
+              <input className='border rounded-md px-3 w-full md:w-96' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
               <Button className='p-1'>
                 <IoMdSearch className='font-bold' size={18} />
               </Button>

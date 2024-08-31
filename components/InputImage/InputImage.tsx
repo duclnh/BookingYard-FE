@@ -5,8 +5,8 @@ import { useController, UseControllerProps } from 'react-hook-form';
 
 type Props = {
     label?: string,
-    multipleFile?: boolean
-    getFieldState: Function
+    multiple?: boolean
+    getState: Function
 } & UseControllerProps
 
 export default function InputImage(props: Props) {
@@ -30,12 +30,12 @@ export default function InputImage(props: Props) {
             )}
             <FileInput
                 {...field}
-                {...props}
+                name={props.name}
                 onInput={handleFileChange}
                 id={props.name}
-                helperText={`${props.getFieldState(props.name)?.error ? fieldState.error?.message : ''}`}
+                helperText={`${props.getState(props.name)?.error ? fieldState.error?.message : ''}`}
                 color={
-                    props.getFieldState(props.name)?.error ? "failure" : !props.getFieldState(props.name).isDirty ? "" : "success"
+                    props.getState(props.name)?.error ? "failure" : !props.getState(props.name).isDirty ? "" : "success"
                 }
             />
             <div>

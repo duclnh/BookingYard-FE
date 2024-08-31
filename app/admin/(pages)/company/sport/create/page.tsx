@@ -1,7 +1,7 @@
 "use client"
 import { Heading, Input, InputImage } from '@components/index'
-import { Button, FileInput, Label } from 'flowbite-react';
-import React, { useState } from 'react'
+import { Button } from 'flowbite-react';
+import React from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 
 export default function CreateSport() {
@@ -29,7 +29,7 @@ export default function CreateSport() {
                         <InputImage
                             label='Icon thể thao (*)'
                             name='icon'
-                            getFieldState={getFieldState}
+                            getState={getFieldState}
                             control={control}
                             rules={{
                                 required: "Vui chọn icon thể thao",
@@ -39,7 +39,7 @@ export default function CreateSport() {
                     <InputImage
                         label='Ảnh môn thể thao (*)'
                         name='image'
-                        getFieldState={getFieldState}
+                        getState={getFieldState}
                         control={control}
                         rules={{
                             required: "Vui chọn ảnh môn thể thao",
