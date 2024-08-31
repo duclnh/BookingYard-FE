@@ -1,13 +1,8 @@
 "use client"
 import { CardStatistic, Heading } from '@components/index'
-import { Label, Table } from 'flowbite-react'
 import React from 'react'
 import { GrSchedules } from 'react-icons/gr'
 import dynamic from 'next/dynamic'
-
-const MapFacility = dynamic(() => import('@components/MapFacility/MapFacility'), {
-  ssr: false,
-});
 
 const PieChart = dynamic(() => import('@components/PieChart/PieChart'), {
   ssr: false,

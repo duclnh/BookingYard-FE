@@ -3,6 +3,7 @@ import { CardStatistic, Heading } from '@components/index'
 import { Button, Label, Modal, Pagination, Select, Table, Textarea } from 'flowbite-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { FaPencil } from 'react-icons/fa6'
 import { IoMdSearch } from 'react-icons/io'
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md'
 import { PiHeadCircuitBold } from 'react-icons/pi'
@@ -45,31 +46,28 @@ export default function Advice() {
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
-                            <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm kiếm theo tên sân'} />
+                            <input className='border rounded-md px-3 sm:w-96 w-full' name='search' placeholder={'Tìm kiếm theo tên sân'} />
                             <Button className='p-1'>
                                 <IoMdSearch className='font-bold' size={18} />
                             </Button>
                         </div>
-                        <Select className=''>
+                        <Select className='mt-3 md:mt-0'>
                             <option value="">Trạng thái</option>
                             <option value="">Đã xử lý</option>
                             <option value="">Chưa xử lý</option>
                         </Select>
                     </div>
-                    <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+                    <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
                         <Table hoverable>
                             <Table.Head>
                                 <Table.HeadCell>STT</Table.HeadCell>
-                                <Table.HeadCell className='min-w-52'>Họ và tên</Table.HeadCell>
-                                <Table.HeadCell className='min-w-72'>Email</Table.HeadCell>
-                                <Table.HeadCell className='min-w-40'>Số điện thoại</Table.HeadCell>
-                                <Table.HeadCell className='min-w-96'>Nội dung</Table.HeadCell>
-                                <Table.HeadCell className='min-w-96'>Loại</Table.HeadCell>
-                                <Table.HeadCell className='min-w-96'>Ghi chú</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>Ngày tạo</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Họ và tên</Table.HeadCell>
+                                {/* <Table.HeadCell className='min-w-72'>Email</Table.HeadCell> */}
+                                <Table.HeadCell className='min-w-32'>Số điện thoại</Table.HeadCell>
+                                <Table.HeadCell className='min-w-48'>Nội dung</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Loại</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
-                                <Table.HeadCell className='min-w-40'>Người cập nhật</Table.HeadCell>
-                                <Table.HeadCell className='min-w-40'>Ngày cập nhật</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>Ngày tạo</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>
                                 </Table.HeadCell>
                             </Table.Head>
@@ -77,86 +75,18 @@ export default function Advice() {
                                 <Table.Row>
                                     <Table.Cell>1</Table.Cell>
                                     <Table.Cell>nguyen van a</Table.Cell>
-                                    <Table.Cell>nguyenvana@gmail.com</Table.Cell>
                                     <Table.Cell>0987654321</Table.Cell>
                                     <Table.Cell>Yêu cầu hỗ trợ đăng nhập</Table.Cell>
                                     <Table.Cell>Hỗ trợ kỹ thuật</Table.Cell>
-                                    <Table.Cell>Đã liên hệ khách hàng</Table.Cell>
-                                    <Table.Cell>25/08/2024</Table.Cell>
                                     <Table.Cell>Đang xử lý</Table.Cell>
-                                    <Table.Cell>Nguyễn Văn B</Table.Cell>
                                     <Table.Cell>26/08/2024</Table.Cell>
                                     <Table.Cell>
-                                        <Button onClick={() => setOpenModalUpdate(true)} color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
+                                        <Button onClick={() => setOpenModalUpdate(true)} color='warning' type='submit' size='xs'>
+                                            <FaPencil size={16} />
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
 
-                                <Table.Row>
-                                    <Table.Cell>2</Table.Cell>
-                                    <Table.Cell>nguyen van a</Table.Cell>
-                                    <Table.Cell>tranthic@gmail.com</Table.Cell>
-                                    <Table.Cell>0978543210</Table.Cell>
-                                    <Table.Cell>Thay đổi mật khẩu tài khoản</Table.Cell>
-                                    <Table.Cell>Dịch vụ khách hàng</Table.Cell>
-                                    <Table.Cell>Chưa phản hồi</Table.Cell>
-                                    <Table.Cell>24/08/2024</Table.Cell>
-                                    <Table.Cell>Đã xử lý</Table.Cell>
-                                    <Table.Cell>Trần Thị D</Table.Cell>
-                                    <Table.Cell>25/08/2024</Table.Cell>
-                                    <Table.Cell>
-                                        <Button onClick={() => setOpenModalUpdate(true)} color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                    </Table.Cell>
-                                </Table.Row>
-
-                                <Table.Row>
-                                    <Table.Cell>3</Table.Cell>
-                                    <Table.Cell>nguyen van a</Table.Cell>
-                                    <Table.Cell>lethanhd@gmail.com</Table.Cell>
-                                    <Table.Cell>0932123456</Table.Cell>
-                                    <Table.Cell>Cập nhật thông tin cá nhân</Table.Cell>
-                                    <Table.Cell>Hỗ trợ tài khoản</Table.Cell>
-                                    <Table.Cell>Đã cập nhật thông tin</Table.Cell>
-                                    <Table.Cell>23/08/2024</Table.Cell>
-                                    <Table.Cell>Đã xử lý</Table.Cell>
-                                    <Table.Cell>Lê Thành E</Table.Cell>
-                                    <Table.Cell>24/08/2024</Table.Cell>
-                                    <Table.Cell>
-                                        <Button onClick={() => setOpenModalUpdate(true)} color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                    </Table.Cell>
-                                </Table.Row>
-                                <Table.Row>
-                                    <Table.Cell>4</Table.Cell>
-                                    <Table.Cell>nguyen van a</Table.Cell>
-                                    <Table.Cell>hoangvanf@gmail.com</Table.Cell>
-                                    <Table.Cell>0909876543</Table.Cell>
-                                    <Table.Cell>Hủy đơn hàng</Table.Cell>
-                                    <Table.Cell>Dịch vụ khách hàng</Table.Cell>
-                                    <Table.Cell>Đang xử lý yêu cầu hủy</Table.Cell>
-                                    <Table.Cell>22/08/2024</Table.Cell>
-                                    <Table.Cell>Đang xử lý</Table.Cell>
-                                    <Table.Cell>Hoàng Văn F</Table.Cell>
-                                    <Table.Cell>23/08/2024</Table.Cell>
-                                    <Table.Cell>
-                                        <Button onClick={() => setOpenModalUpdate(true)} color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                    </Table.Cell>
-                                </Table.Row>
-
-                                <Table.Row>
-                                    <Table.Cell>5</Table.Cell>
-                                    <Table.Cell>nguyen van a</Table.Cell>
-                                    <Table.Cell>phamtanp@gmail.com</Table.Cell>
-                                    <Table.Cell>0912345678</Table.Cell>
-                                    <Table.Cell>Báo cáo sự cố thanh toán</Table.Cell>
-                                    <Table.Cell>Hỗ trợ thanh toán</Table.Cell>
-                                    <Table.Cell>Đang xử lý</Table.Cell>
-                                    <Table.Cell>21/08/2024</Table.Cell>
-                                    <Table.Cell>Đang xử lý</Table.Cell>
-                                    <Table.Cell>Phạm Tấn Q</Table.Cell>
-                                    <Table.Cell>22/08/2024</Table.Cell>
-                                    <Table.Cell>
-                                        <Button onClick={() => setOpenModalUpdate(true)} color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                    </Table.Cell>
-                                </Table.Row>
                             </Table.Body>
                         </Table>
                     </div>

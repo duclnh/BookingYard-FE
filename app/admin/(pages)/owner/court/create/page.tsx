@@ -1,21 +1,12 @@
 "use client"
-import { Heading, Input, InputImage, ModalView } from '@components/index'
-import { Button, FileInput, Label, Select } from 'flowbite-react';
-import React, { useState } from 'react'
+import { Heading, Input, InputImage } from '@components/index'
+import { Button, Label, Select } from 'flowbite-react';
+import React from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
-import dynamic from 'next/dynamic';
-
-const TextEditor = dynamic(() => import('@components/TextEditor/TextEditor'), {
-    ssr: false,
-});
-const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
-    ssr: false,
-});
 
 
 export default function CreatePage() {
     const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
-    const [modalMap, setModalMap] = useState(false);
 
     const handlerSubmitCreateFacility = (data: FieldValues) => {
         console.log(data)

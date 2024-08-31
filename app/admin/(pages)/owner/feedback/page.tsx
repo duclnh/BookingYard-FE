@@ -5,7 +5,9 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import { IoMdSearch } from 'react-icons/io'
-import { FaStar } from 'react-icons/fa'
+import { FaEye, FaStar } from 'react-icons/fa'
+import { FaPencil } from 'react-icons/fa6'
+import { RiDeleteBinLine } from 'react-icons/ri'
 
 export default function Feedback() {
     const [modalImage, setModalImage] = useState(false);
@@ -27,7 +29,7 @@ export default function Feedback() {
         <>
             <div className='py-5 w-full'>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Đánh giá từ chủ sân' center />
-                <div className='my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
+                <div className='sm:my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
                     <CardStatistic
                         title='5 sao'
                         amount={3000}
@@ -53,7 +55,7 @@ export default function Feedback() {
                         iconColor='text-yellow-400'
                     />
                 </div>
-                <div className='my-24 w-full grid sm:grid-cols-2 gap-10  place-items-center'>
+                <div className='mt-10 sm:my-24 w-full grid sm:grid-cols-2 gap-10 place-items-center'>
                     <CardStatistic
                         title='2 sao'
                         amount={3000}
@@ -74,38 +76,38 @@ export default function Feedback() {
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
-                            <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm kiếm theo tên sân'} />
+                            <input className='border rounded-md w-full px-3 sm:w-96' name='search' placeholder={'Tìm kiếm theo tên sân'} />
                             <Button className='p-1'>
                                 <IoMdSearch className='font-bold' size={18} />
                             </Button>
                         </div>
-                        <Select className=''>
+                        <Select className='mt-3 md:mt-0'>
                             <option value="">Tất cả</option>
-                            {[...Array(5)].map((_,index) => (
+                            {[...Array(5)].map((_, index) => (
                                 <option key={index} value={index + 1}>{index + 1} sao</option>
                             ))}
                         </Select>
                     </div>
-                    <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+                    <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
                         <Table hoverable>
-                            <Table.Head>
+                            <Table.Head className='text-center'>
                                 <Table.HeadCell>STT</Table.HeadCell>
-                                <Table.HeadCell className='min-w-72'>Sân</Table.HeadCell>
+                                <Table.HeadCell className='min-w-36'>Họ và tên</Table.HeadCell>
+                                <Table.HeadCell className='min-w-24'>Số điện thoại</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Số sao</Table.HeadCell>
-                                <Table.HeadCell className='min-w-96'>Nội dung</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>Ngày tạo</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>
-                                    <span className="sr-only">Edit</span>
+                                <Table.HeadCell className='min-w-60'>Nội dung</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>                                    
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
                                 {[...Array(5)].map((_, index) => (
-                                    <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                                    <Table.Row key={index} className="text-center">
                                         <Table.Cell>
                                             {index}
                                         </Table.Cell>
-                                        <Table.Cell>Sân bảo an</Table.Cell>
-                                        <Table.Cell>
+                                        <Table.Cell className='text-left font-bold'>Sân bảo an Sân bảo an</Table.Cell>
+                                        <Table.Cell>0914501749</Table.Cell>
+                                        <Table.Cell className='p-1 flex justify-center'>
                                             <Rating>
                                                 <Rating.Star />
                                                 <Rating.Star />
@@ -114,8 +116,15 @@ export default function Feedback() {
                                                 <Rating.Star filled={false} />
                                             </Rating>
                                         </Table.Cell>
-                                        <Table.Cell>0914501749</Table.Cell>
-                                        <Table.Cell>25-08-2024</Table.Cell>
+                                        <Table.Cell className='text-left'>0914501749</Table.Cell>
+                                        <Table.Cell className='flex space-x-2 justify-center'>
+                                            <Button size='xs'>
+                                                <FaEye size={16} />
+                                            </Button>
+                                            <Button color='failure' type='submit' size='xs'>
+                                                <RiDeleteBinLine size={16} />
+                                            </Button>
+                                        </Table.Cell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>

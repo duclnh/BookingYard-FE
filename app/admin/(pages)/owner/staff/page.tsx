@@ -3,8 +3,11 @@ import { CardStatistic, Heading } from '@components/index'
 import { Button, Modal, Pagination, Select, Table } from 'flowbite-react'
 import React, { useState } from 'react'
 import { BsBuilding } from 'react-icons/bs'
+import { FaEye } from 'react-icons/fa'
+import { FaPencil } from 'react-icons/fa6'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoMdSearch } from 'react-icons/io';
+import { RiDeleteBinLine } from 'react-icons/ri'
 
 export default function Staff() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,114 +46,105 @@ export default function Staff() {
         <div className='mt-36 bg-white'>
           <div className='mt-10 sm:flex justify-between mb-3'>
             <div className='flex'>
-              <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
+              <input className='border rounded-md px-3 sm:w-96 w-full' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
               <Button className='p-1'>
                 <IoMdSearch className='font-bold' size={18} />
               </Button>
             </div>
-            <Select className=''>
+            <Select className='mt-3 md:mt-0'>
               <option value="">Tất cả</option>
               <option value="">Đang hoạt động</option>
               <option value="">Đã ngưng hoạt động</option>
             </Select>
           </div>
-          <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+          <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
             <Table hoverable>
-              <Table.Head>
+              <Table.Head className='text-center'>
                 <Table.HeadCell className='w-10'>STT</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Tên nhân viên</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Email</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Số điện thoại</Table.HeadCell>
-                <Table.HeadCell className='min-w-80'>Địa chỉ</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Giới tính</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Chức vụ</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Ảnh</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Hình thức</Table.HeadCell>
+                <Table.HeadCell className='min-w-28'>Tên nhân viên</Table.HeadCell>
+                {/* <Table.HeadCell className='min-w-44'>Email</Table.HeadCell> */}
+                <Table.HeadCell className='min-w-12'>Số điện thoại</Table.HeadCell>
+                {/* <Table.HeadCell className='min-w-80'>Địa chỉ</Table.HeadCell> */}
+                <Table.HeadCell className='min-w-12'>Giới tính</Table.HeadCell>
+                {/* <Table.HeadCell className='min-w-44'>Chức vụ</Table.HeadCell> */}
+                {/* <Table.HeadCell className='min-w-44'>Ảnh</Table.HeadCell> */}
+                <Table.HeadCell className='min-w-16'>Hình thức</Table.HeadCell>
                 <Table.HeadCell className='min-w-44'>Lương</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Ngày tạo</Table.HeadCell>
+                {/* <Table.HeadCell className='min-w-44'>Ngày tạo</Table.HeadCell> */}
                 <Table.HeadCell className='min-w-44'>
-                  <span className="sr-only">Edit</span>
                 </Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                <Table.Row>
+                <Table.Row className='text-center'>
                   <Table.Cell>1</Table.Cell>
-                  <Table.Cell>Nguyen Van A</Table.Cell>
-                  <Table.Cell>a.nguyen@example.com</Table.Cell>
+                  <Table.Cell className='text-left'>Nguyen Van A</Table.Cell>
+                  {/* <Table.Cell>a.nguyen@example.com</Table.Cell> */}
                   <Table.Cell>0912345678</Table.Cell>
-                  <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell>
+                  {/* <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell> */}
                   <Table.Cell>Nam</Table.Cell>
-                  <Table.Cell>Quản lý</Table.Cell>
-                  <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell>
+                  {/* <Table.Cell>Quản lý</Table.Cell> */}
+                  {/* <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell> */}
                   <Table.Cell>Toàn thời gian</Table.Cell>
                   <Table.Cell>20,000,000 VND</Table.Cell>
-                  <Table.Cell>2024-08-25</Table.Cell>
-                  <Table.Cell>
-                    <Button color='primary' className='mt-4' type='submit' size='xs'>Edit</Button>
+                  {/* <Table.Cell>2024-08-25</Table.Cell> */}
+                  <Table.Cell className='flex space-x-2 justify-center'>
+                    <Button size='xs'>
+                      <FaEye size={16} />
+                    </Button>
+                    <Button color='warning' type='submit' size='xs'>
+                      <FaPencil size={16} />
+                    </Button>
+                    <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                      <RiDeleteBinLine size={16} />
+                    </Button>
                   </Table.Cell>
                 </Table.Row>
-                <Table.Row>
-                  <Table.Cell>2</Table.Cell>
-                  <Table.Cell>Tran Thi B</Table.Cell>
-                  <Table.Cell>b.tran@example.com</Table.Cell>
-                  <Table.Cell>0912345679</Table.Cell>
-                  <Table.Cell>456 Đường XYZ, Quận 2, TP.HCM</Table.Cell>
-                  <Table.Cell>Nữ</Table.Cell>
-                  <Table.Cell>Nhân viên</Table.Cell>
-                  <Table.Cell><img src="/images/tran-thi-b.jpg" alt="Tran Thi B" className="w-8 h-8" /></Table.Cell>
-                  <Table.Cell>Bán thời gian</Table.Cell>
-                  <Table.Cell>15,000,000 VND</Table.Cell>
-                  <Table.Cell>2024-08-24</Table.Cell>
-                  <Table.Cell>
-                    <Button color='primary' className='mt-4' type='submit' size='xs'>Edit</Button>
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>3</Table.Cell>
-                  <Table.Cell>Le Van C</Table.Cell>
-                  <Table.Cell>c.le@example.com</Table.Cell>
-                  <Table.Cell>0912345680</Table.Cell>
-                  <Table.Cell>789 Đường DEF, Quận 3, TP.HCM</Table.Cell>
+                <Table.Row className='text-center'>
+                  <Table.Cell>1</Table.Cell>
+                  <Table.Cell className='text-left'>Nguyen Van A</Table.Cell>
+                  {/* <Table.Cell>a.nguyen@example.com</Table.Cell> */}
+                  <Table.Cell>0912345678</Table.Cell>
+                  {/* <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell> */}
                   <Table.Cell>Nam</Table.Cell>
-                  <Table.Cell>Trưởng phòng</Table.Cell>
-                  <Table.Cell><img src="/images/le-van-c.jpg" alt="Le Van C" className="w-8 h-8" /></Table.Cell>
+                  {/* <Table.Cell>Quản lý</Table.Cell> */}
+                  {/* <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell> */}
                   <Table.Cell>Toàn thời gian</Table.Cell>
-                  <Table.Cell>25,000,000 VND</Table.Cell>
-                  <Table.Cell>2024-08-23</Table.Cell>
-                  <Table.Cell>
-                    <Button color='primary' className='mt-4' type='submit' size='xs'>Edit</Button>
+                  <Table.Cell>20,000,000 VND</Table.Cell>
+                  {/* <Table.Cell>2024-08-25</Table.Cell> */}
+                  <Table.Cell className='flex space-x-2 justify-center'>
+                    <Button size='xs'>
+                      <FaEye size={16} />
+                    </Button>
+                    <Button color='warning' type='submit' size='xs'>
+                      <FaPencil size={16} />
+                    </Button>
+                    <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                      <RiDeleteBinLine size={16} />
+                    </Button>
                   </Table.Cell>
                 </Table.Row>
-                <Table.Row>
-                  <Table.Cell>4</Table.Cell>
-                  <Table.Cell>Pham Thi D</Table.Cell>
-                  <Table.Cell>d.pham@example.com</Table.Cell>
-                  <Table.Cell>0912345681</Table.Cell>
-                  <Table.Cell>101 Đường GHI, Quận 4, TP.HCM</Table.Cell>
-                  <Table.Cell>Nữ</Table.Cell>
-                  <Table.Cell>Nhân viên</Table.Cell>
-                  <Table.Cell><img src="/images/pham-thi-d.jpg" alt="Pham Thi D" className="w-8 h-8" /></Table.Cell>
-                  <Table.Cell>Bán thời gian</Table.Cell>
-                  <Table.Cell>17,000,000 VND</Table.Cell>
-                  <Table.Cell>2024-08-22</Table.Cell>
-                  <Table.Cell>
-                    <Button color='primary' className='mt-4' type='submit' size='xs'>Edit</Button>
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>5</Table.Cell>
-                  <Table.Cell>Vo Van E</Table.Cell>
-                  <Table.Cell>e.vo@example.com</Table.Cell>
-                  <Table.Cell>0912345682</Table.Cell>
-                  <Table.Cell>202 Đường JKL, Quận 5, TP.HCM</Table.Cell>
+                <Table.Row className='text-center'>
+                  <Table.Cell>1</Table.Cell>
+                  <Table.Cell className='text-left'>Nguyen Van A</Table.Cell>
+                  {/* <Table.Cell>a.nguyen@example.com</Table.Cell> */}
+                  <Table.Cell>0912345678</Table.Cell>
+                  {/* <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell> */}
                   <Table.Cell>Nam</Table.Cell>
-                  <Table.Cell>Quản lý</Table.Cell>
-                  <Table.Cell><img src="/images/vo-van-e.jpg" alt="Vo Van E" className="w-8 h-8" /></Table.Cell>
+                  {/* <Table.Cell>Quản lý</Table.Cell> */}
+                  {/* <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell> */}
                   <Table.Cell>Toàn thời gian</Table.Cell>
-                  <Table.Cell>22,000,000 VND</Table.Cell>
-                  <Table.Cell>2024-08-21</Table.Cell>
-                  <Table.Cell>
-                    <Button color='primary' className='mt-4' type='submit' size='xs'>Edit</Button>
+                  <Table.Cell>20,000,000 VND</Table.Cell>
+                  {/* <Table.Cell>2024-08-25</Table.Cell> */}
+                  <Table.Cell className='flex space-x-2 justify-center'>
+                    <Button size='xs'>
+                      <FaEye size={16} />
+                    </Button>
+                    <Button color='warning' type='submit' size='xs'>
+                      <FaPencil size={16} />
+                    </Button>
+                    <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                      <RiDeleteBinLine size={16} />
+                    </Button>
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>

@@ -1,11 +1,16 @@
 "use client"
 import { Heading, Input } from '@components/index'
-import { Label } from 'flowbite-react'
+import { Button, Label } from 'flowbite-react'
+import dynamic from 'next/dynamic';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+const QrScanner = dynamic(() => import('@components/QrScanner/QrScanner'), {
+    ssr: false,
+}); 
 
 export default function CheckIn() {
     const { control, handleSubmit, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
+
     return (
         <div className='py-5 w-full'>
             <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Kiểm tra lịch trình' center />
@@ -36,8 +41,9 @@ export default function CheckIn() {
                                 required: "Vui lòng nhập số điện thoại",
                             }}
                         />
+                        <Button size={"sm"} className='mt-3 mx-auto'>Tìm kiếm</Button>
                     </div>
-                    <div>đâs</div>
+                    <QrScanner />
                 </div>
             </div>
         </div>

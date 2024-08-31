@@ -2,17 +2,13 @@
 import { CardStatistic, ModalView } from '@components/index'
 import React, { useState } from 'react'
 import { Rating } from 'flowbite-react'
-import { MdHealthAndSafety, MdOutlineLocationOn, MdOutlineSportsKabaddi, MdPayments } from 'react-icons/md'
-import { IoStorefrontSharp, IoTimeOutline } from 'react-icons/io5'
+import { MdHealthAndSafety, MdOutlineSportsKabaddi, MdPayments } from 'react-icons/md'
+import { IoStorefrontSharp } from 'react-icons/io5'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FaCheckCircle } from 'react-icons/fa'
-import dynamic from 'next/dynamic'
 import { BsBuilding, BsBuildingCheck, BsBuildingFillX } from 'react-icons/bs'
 import Image from 'next/image'
 
-const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
-    ssr: false,
-});
 
 export default function DetailPage() {
     const [modalMap, setModalMap] = useState(false);

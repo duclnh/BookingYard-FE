@@ -2,8 +2,11 @@
 import { CardStatistic, Heading } from '@components/index'
 import { Button, Modal, Pagination, Select, Table } from 'flowbite-react'
 import React, { useState } from 'react'
+import { FaEye } from 'react-icons/fa'
+import { FaPencil } from 'react-icons/fa6'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoMdSearch } from 'react-icons/io';
+import { RiDeleteBinLine } from 'react-icons/ri'
 import { TbBasketDiscount, TbRosetteDiscountCheck, TbRosetteDiscountOff } from 'react-icons/tb'
 
 export default function Voucher() {
@@ -72,43 +75,53 @@ export default function Voucher() {
         <div className='mt-36 bg-white'>
           <div className='mt-10 sm:flex justify-between mb-3'>
             <div className='flex'>
-              <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
+              <input className='border rounded-md px-3 sm:w-96 w-full' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
               <Button className='p-1'>
                 <IoMdSearch className='font-bold' size={18} />
               </Button>
             </div>
-            <Select className=''>
+            <Select className='mt-3 md:mt-0'>
               <option value="">Tất cả</option>
               <option value="">Đang còn</option>
               <option value="">Đã hết</option>
             </Select>
           </div>
-          <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+          <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
             <Table hoverable>
-              <Table.Head>
-                <Table.HeadCell className='w-10'>STT</Table.HeadCell>
+              <Table.Head className='text-center'>
+                <Table.HeadCell>STT</Table.HeadCell>
                 <Table.HeadCell className='min-w-44'>Tên mã giảm giá</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Ảnh</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Phần trăm</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Số lượng</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Ngày bắt đầu</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Ngày hết hạn</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Ngày tạo</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>
-                  <span className="sr-only">Edit</span>
+                {/* <Table.HeadCell className='min-w-44'>Ảnh</Table.HeadCell> */}
+                <Table.HeadCell className='max-w-24'>Phần trăm</Table.HeadCell>
+                <Table.HeadCell className='max-w-24'>Số lượng</Table.HeadCell>
+                <Table.HeadCell className='max-w-24'>Ngày bắt đầu</Table.HeadCell>
+                <Table.HeadCell className='max-w-24'>Ngày hết hạn</Table.HeadCell>
+                {/* <Table.HeadCell className='min-w-44'>Ngày tạo</Table.HeadCell> */}
+                <Table.HeadCell className='max-w-24'>
                 </Table.HeadCell>
               </Table.Head>
               <Table.Body>
                 {sampleData.map((item, index) => (
-                  <Table.Row key={item.id}>
+                  <Table.Row className='text-center' key={item.id}>
                     <Table.Cell>{index + 1}</Table.Cell>
-                    <Table.Cell>{item.name}</Table.Cell>
-                    <Table.Cell><img src={item.image} alt={item.name} className='w-10 h-10' /></Table.Cell>
+                    <Table.Cell className='font-bold text-left'>{item.name}</Table.Cell>
+                    {/* <Table.Cell><img src={item.image} alt={item.name} className='w-10 h-10' /></Table.Cell> */}
                     <Table.Cell>{item.percentage}</Table.Cell>
                     <Table.Cell>{index}</Table.Cell>
                     <Table.Cell>{item.startDate}</Table.Cell>
                     <Table.Cell>{item.endDate}</Table.Cell>
-                    <Table.Cell>{item.createdDate}</Table.Cell>
+                    {/* <Table.Cell>{item.createdDate}</Table.Cell> */}
+                    <Table.Cell className='flex space-x-2 justify-center'>
+                      <Button size='xs'>
+                        <FaEye size={16} />
+                      </Button>
+                      <Button color='warning' type='submit' size='xs'>
+                        <FaPencil size={16} />
+                      </Button>
+                      <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                        <RiDeleteBinLine size={16} />
+                      </Button>
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>

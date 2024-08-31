@@ -4,7 +4,7 @@ import { Button, Label, Select } from 'flowbite-react';
 import React, { useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import dynamic from 'next/dynamic';
-import { MdHealthAndSafety, MdPayments } from 'react-icons/md';
+import { MdHealthAndSafety } from 'react-icons/md';
 import { Convenience, Feature } from 'types';
 import { TiDelete } from 'react-icons/ti';
 

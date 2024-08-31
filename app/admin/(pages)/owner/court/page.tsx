@@ -85,9 +85,23 @@ export default function Facility() {
               <div className='flex justify-center'>
                 <Button color={"gray"} className='mt-5 mx-auto' size='xs'>Bóng đá</Button>
                 <Button color={"gray"} className='mt-5 mx-auto' size='xs'>
-                  <HiOutlineUserGroup   size={17} /> 
+                  <HiOutlineUserGroup size={17} />
                   <p className='ml-3 text-[15px]'>3</p>
                 </Button>
+              </div>
+              <div className='mt-5 flex flex-col gap-3'>
+                <div className='flex justify-between border p-2 rounded-md'>
+                  <p className='font-bold'>Giá lượt:</p>
+                  <p className='font-medium'>30.000 VND</p>
+                </div>
+                <div className='flex justify-between border p-2 rounded-md'>
+                  <p className='font-bold'>Giá tháng:</p>
+                  <p className='font-medium'>900.000 VND</p>
+                </div>
+                <div className='flex justify-between border p-2 rounded-md'>
+                  <p className='font-bold'>Giá năm:</p>
+                  <p className='font-medium'>3.000.000 VND</p>
+                </div>
               </div>
               <Button href='/admin/company/facility/detail' className='mt-5 mx-auto' size='xs'>Xem chi tiết</Button>
             </div>

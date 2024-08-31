@@ -16,10 +16,10 @@ export default function Staff() {
   return (
     <>
       <div className='py-5 w-full'>
-        <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Danh sách nhân viên' center />
+        <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Danh sách khách hàng' center />
         <div className='my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
           <CardStatistic
-            title='Tổng số nhân viên'
+            title='Tổng số khách hàng'
             amount={3000}
             icon={BsBuilding}
             gradientFrom='from-cyan-700'
@@ -61,15 +61,15 @@ export default function Staff() {
             <Table hoverable>
               <Table.Head className='text-center'>
                 <Table.HeadCell className='w-10'>STT</Table.HeadCell>
-                <Table.HeadCell className='min-w-28'>Tên nhân viên</Table.HeadCell>
+                <Table.HeadCell className='min-w-28'>Tên khách hàng</Table.HeadCell>
                 {/* <Table.HeadCell className='min-w-44'>Email</Table.HeadCell> */}
                 <Table.HeadCell className='min-w-12'>Số điện thoại</Table.HeadCell>
                 {/* <Table.HeadCell className='min-w-80'>Địa chỉ</Table.HeadCell> */}
                 <Table.HeadCell className='min-w-12'>Giới tính</Table.HeadCell>
                 {/* <Table.HeadCell className='min-w-44'>Chức vụ</Table.HeadCell> */}
                 {/* <Table.HeadCell className='min-w-44'>Ảnh</Table.HeadCell> */}
-                <Table.HeadCell className='min-w-16'>Hình thức</Table.HeadCell>
-                <Table.HeadCell className='min-w-44'>Lương</Table.HeadCell>
+                <Table.HeadCell className='min-w-44'>Vai trò</Table.HeadCell>
+                <Table.HeadCell className='min-w-16'>Trạng thái</Table.HeadCell>
                 {/* <Table.HeadCell className='min-w-44'>Ngày tạo</Table.HeadCell> */}
                 <Table.HeadCell className='min-w-44'>
                 </Table.HeadCell>
@@ -82,10 +82,14 @@ export default function Staff() {
                   <Table.Cell>0912345678</Table.Cell>
                   {/* <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell> */}
                   <Table.Cell>Nam</Table.Cell>
+                  <Table.Cell>Khách hàng</Table.Cell>
+                  <Table.Cell>
+                    <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                      Hoạt động
+                    </p>
+                  </Table.Cell>
                   {/* <Table.Cell>Quản lý</Table.Cell> */}
                   {/* <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell> */}
-                  <Table.Cell>Toàn thời gian</Table.Cell>
-                  <Table.Cell>20,000,000 VND</Table.Cell>
                   {/* <Table.Cell>2024-08-25</Table.Cell> */}
                   <Table.Cell className='flex space-x-2 justify-center'>
                     <Button size='xs'>
@@ -106,10 +110,14 @@ export default function Staff() {
                   <Table.Cell>0912345678</Table.Cell>
                   {/* <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell> */}
                   <Table.Cell>Nam</Table.Cell>
+                  <Table.Cell>Nhân viên sân</Table.Cell>
+                  <Table.Cell>
+                    <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                      Hoạt động
+                    </p>
+                  </Table.Cell>
                   {/* <Table.Cell>Quản lý</Table.Cell> */}
                   {/* <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell> */}
-                  <Table.Cell>Toàn thời gian</Table.Cell>
-                  <Table.Cell>20,000,000 VND</Table.Cell>
                   {/* <Table.Cell>2024-08-25</Table.Cell> */}
                   <Table.Cell className='flex space-x-2 justify-center'>
                     <Button size='xs'>
@@ -130,10 +138,14 @@ export default function Staff() {
                   <Table.Cell>0912345678</Table.Cell>
                   {/* <Table.Cell>123 Đường ABC, Quận 1, TP.HCM</Table.Cell> */}
                   <Table.Cell>Nam</Table.Cell>
+                  <Table.Cell>Chủ sân</Table.Cell>
+                  <Table.Cell>
+                    <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                      Hoạt động
+                    </p>
+                  </Table.Cell>
                   {/* <Table.Cell>Quản lý</Table.Cell> */}
                   {/* <Table.Cell><img src="/images/nguyen-van-a.jpg" alt="Nguyen Van A" className="w-8 h-8" /></Table.Cell> */}
-                  <Table.Cell>Toàn thời gian</Table.Cell>
-                  <Table.Cell>20,000,000 VND</Table.Cell>
                   {/* <Table.Cell>2024-08-25</Table.Cell> */}
                   <Table.Cell className='flex space-x-2 justify-center'>
                     <Button size='xs'>

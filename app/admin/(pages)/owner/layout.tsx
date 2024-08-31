@@ -52,9 +52,10 @@ export default function ManagementLayout({
             <Sidebar.Item href="/admin/owner/dashboard" icon={RiDashboard2Line}>
               Tổng quan
             </Sidebar.Item>
-            <Sidebar.Item href="/admin/owner/booking" icon={GrSchedules}>
-              Đặt lịch
-            </Sidebar.Item>
+            <Sidebar.Collapse icon={GrSchedules} label="Đặt lịch">
+              <Sidebar.Item href="/admin/owner/booking">Danh sách</Sidebar.Item>
+              <Sidebar.Item href="/admin/owner/booking/create">Tạo mới</Sidebar.Item>
+            </Sidebar.Collapse>
             <Sidebar.Item href="/admin/owner/schedule" icon={RiCalendarScheduleLine}>
               Lịch trình
             </Sidebar.Item>

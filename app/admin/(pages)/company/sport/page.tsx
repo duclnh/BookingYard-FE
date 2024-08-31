@@ -3,8 +3,10 @@ import { CardStatistic, Heading } from '@components/index'
 import { Button, Modal, Pagination, Select, Table } from 'flowbite-react'
 import React, { useState } from 'react'
 import { BsBuilding } from 'react-icons/bs'
+import { FaPencil } from 'react-icons/fa6'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoMdSearch } from 'react-icons/io';
+import { RiDeleteBinLine } from 'react-icons/ri'
 
 export default function Sport() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -30,61 +32,78 @@ export default function Sport() {
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
-                            <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên môn thể thao'} />
+                            <input className='border rounded-md px-3 sm:w-96 w-full' name='search' placeholder={'Tìm tên môn thể thao'} />
                             <Button className='p-1'>
                                 <IoMdSearch className='font-bold' size={18} />
                             </Button>
                         </div>
-                        <Select className=''>
+                        <Select className='mt-3 md:mt-0'>
                             <option value="">Tất cả</option>
                             <option value="">Đang hoạt động</option>
                             <option value="">Đã ngưng hoạt động</option>
                         </Select>
                     </div>
-                    <div className="border min-w-full max-w-[1000px] overflow-x-auto">
+                    <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
                         <Table hoverable>
-                            <Table.Head>
+                            <Table.Head className='text-center'>
                                 <Table.HeadCell>STT</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Tên môn thể thao</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Icon</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Ảnh</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Ngày tạo</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>
-                                    <span className="sr-only">Edit</span>
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body>
-                                <Table.Row>
+                                <Table.Row className='text-center'>
                                     <Table.Cell>1</Table.Cell>
-                                    <Table.Cell>Cầu lông</Table.Cell>
+                                    <Table.Cell className='text-left'>Cầu lông</Table.Cell>
                                     <Table.Cell>🏸</Table.Cell>
                                     <Table.Cell><img src="/images/badminton.jpg" alt="Cầu lông" className="w-8 h-8" /></Table.Cell>
                                     <Table.Cell>2024-08-25</Table.Cell>
-                                    <Table.Cell className='flex space-x-2'>
-                                        <Button href='/admin/company/sport/update' color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                        <Button onClick={() => setOpenModalCancel(true)} color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                    <Table.Cell>
+                                        <div className='flex space-x-2 justify-center'>
+                                            <Button color='warning' type='submit' size='xs'>
+                                                <FaPencil size={16} />
+                                            </Button>
+                                            <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                                                <RiDeleteBinLine size={16} />
+                                            </Button>
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
-                                <Table.Row>
-                                    <Table.Cell>2</Table.Cell>
-                                    <Table.Cell>Bóng đá</Table.Cell>
+                                <Table.Row className='text-center'>
+                                    <Table.Cell>1</Table.Cell>
+                                    <Table.Cell className='text-left'>Cầu lông</Table.Cell>
                                     <Table.Cell>⚽</Table.Cell>
                                     <Table.Cell><img src="/images/soccer.jpg" alt="Bóng đá" className="w-8 h-8" /></Table.Cell>
                                     <Table.Cell>2024-08-24</Table.Cell>
-                                    <Table.Cell className='flex space-x-2'>
-                                        <Button href='/admin/company/sport/update' color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                        <Button color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                    <Table.Cell>
+                                        <div className='flex space-x-2 justify-center'>
+                                            <Button color='warning' type='submit' size='xs'>
+                                                <FaPencil size={16} />
+                                            </Button>
+                                            <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                                                <RiDeleteBinLine size={16} />
+                                            </Button>
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
-                                <Table.Row>
-                                    <Table.Cell>3</Table.Cell>
-                                    <Table.Cell>Bóng rổ</Table.Cell>
+                                <Table.Row className='text-center'>
+                                    <Table.Cell>1</Table.Cell>
+                                    <Table.Cell className='text-left'>Cầu lông</Table.Cell>
                                     <Table.Cell>🏀</Table.Cell>
                                     <Table.Cell><img src="/images/basketball.jpg" alt="Bóng rổ" className="w-8 h-8" /></Table.Cell>
                                     <Table.Cell>2024-08-23</Table.Cell>
-                                    <Table.Cell className='flex space-x-2'>
-                                        <Button href='/admin/company/sport/update' color='warning' className='mt-4' type='submit' size='xs'>Cập nhật</Button>
-                                        <Button color='failure' className='mt-4' type='submit' size='xs'>Xoá</Button>
+                                    <Table.Cell>
+                                        <div className='flex space-x-2 justify-center'>
+                                            <Button color='warning' type='submit' size='xs'>
+                                                <FaPencil size={16} />
+                                            </Button>
+                                            <Button onClick={() => setOpenModalCancel(true)} color='failure' type='submit' size='xs'>
+                                                <RiDeleteBinLine size={16} />
+                                            </Button>
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
                             </Table.Body>
