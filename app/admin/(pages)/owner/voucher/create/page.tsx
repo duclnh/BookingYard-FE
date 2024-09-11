@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 export default function CreateStaff() {
   const { control, handleSubmit, formState: { isSubmitting, isValid }, getFieldState } = useForm({ mode: "onTouched", });
   const [error, setError] = useState<string | undefined>()
-
+  const [image, setImage] = useState<File>()
   return (
     <div className='py-5 w-full'>
       <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo mã giảm giá' center />
@@ -100,14 +100,12 @@ export default function CreateStaff() {
               />
             </div>
             <InputImage
-              label='Ảnh mã giảm giá (*)'
-              getState={getFieldState}
-              name='image'
-              control={control}
-              rules={{
-                required: "Vui lòng chọn ảnh mã giảm giá",
-              }}
-            />
+                label='Ảnh mã giảm giá (*)'
+                name='image'
+                value={image}
+                setFile={setImage}
+                required="Vui lòng chọn ảnh mã giảm giá"
+              />
           </div>
         </div>
         <Button className='mt-4' type='submit' size='sm'>Tạo mới</Button>

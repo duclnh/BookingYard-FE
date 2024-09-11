@@ -1,21 +1,32 @@
 "use client";
 import { Heading, Input, NotificationCustom } from '@components/index'
 import { Button, Spinner } from 'flowbite-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
   const router = useRouter()
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string>('');
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const errorParam = params.get("error");
+
+    if (errorParam === "banned") {
+      setError("Tài khoản đã bị khóa. Vui lòng liên hệ hệ thống để biết thêm chi tiết");
+    } else if (errorParam) {
+      setError("Lỗi hệ thống, vui lòng thử lại");
+    }
+  }, []);
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   async function onSubmit(data: FieldValues) {
     setError('');
     try {
-      var res = await signIn(
+      let res = await signIn(
         "credentials", {
         username: data.username,
         password: data.password,
@@ -26,7 +37,13 @@ export default function LoginPage() {
         toast.success("Đăng nhập thành công")
         router.push("/")
       } else {
-        setError("Tài khoản hoặc mật khẩu không đúng")
+        if (res.error == "fetch failed") {
+          setError("Lỗi hệ thống vui lòng thử lại")
+        } else if (res.error == "User is banned!") {
+          setError("Tài khoản đã bị khóa. Vui lòng liên hệ thống để biết thêm chi tiết")
+        } else {
+          setError("Tài khoản hoặc mật khẩu không đúng")
+        }
       }
     } catch {
       setError("Lỗi hệ thống vui lòng thử lại")
@@ -35,11 +52,9 @@ export default function LoginPage() {
   async function loginGoogle() {
     setError('');
     try {
-      await signIn("google",
-        {
-          callbackUrl: "/"
-        }
-      )
+      await signIn("google", {
+        callbackUrl: "/"
+      })
     } catch {
       setError("Lỗi hệ thống vui lòng thử lại")
     }
@@ -90,7 +105,7 @@ export default function LoginPage() {
               <div className="bg-slate-300 h-px w-full"></div>
             </div>
             <Button onClick={() => loginGoogle()} className='bg-transparent text-black shadow-[0_0_5px_rgba(0,0,0,0.1)] hover:enabled:bg-slate-50  focus:ring-transparent'>
-              <img className='mr-2' src='assets/images/google.png' height={4} width={25} /> Đăng nhập bằng Google
+              <Image className='mr-2' src='/assets/images/google.png' height={25} width={25} alt='google' /> Đăng nhập bằng Google
             </Button>
           </form>
         </div>

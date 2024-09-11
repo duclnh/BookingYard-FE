@@ -5,8 +5,11 @@ import React, { useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import dynamic from 'next/dynamic';
 import { MdHealthAndSafety } from 'react-icons/md';
-import { Convenience, Feature } from 'types';
+import { Convenience, Feature, FacilityTime, PeakHour } from 'types';
 import { TiDelete } from 'react-icons/ti';
+import Address from './address';
+import { checkValidateTime, convertToStartTimeAndEndTime } from '@utils/timeOptions';
+import toast from 'react-hot-toast';
 
 const TextEditor = dynamic(() => import('@components/TextEditor/TextEditor'), {
     ssr: false,
@@ -17,7 +20,7 @@ const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
 
 
 export default function CreatePage() {
-    const { control, handleSubmit, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
+    const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
     const [dates, setDates] = useState<Date[]>([])
     const [conveniences, setConveniences] = useState<Convenience[]>([
@@ -55,6 +58,20 @@ export default function CreatePage() {
             ],
         },
     ]);
+    const [facilityTimes, setFacilityTimes] = useState<FacilityTime[]>(
+        [
+            { value: "Monday", name: "Thứ 2", isChecked: false },
+            { value: "Tuesday", name: "Thứ 3", isChecked: false },
+            { value: "Wednesday", name: "Thứ 4", isChecked: false },
+            { value: "Thursday", name: "Thứ 5", isChecked: false },
+            { value: "Friday", name: "Thứ 6", isChecked: false },
+            { value: "Saturday", name: "Thứ bảy", isChecked: false },
+            { value: "Sunday", name: "Chủ nhật", isChecked: false }
+        ]
+    )
+    const [imageOther, setImageOther] = useState<File[]>([])
+    const [imageLogo, setImageLogo] = useState<File>()
+    const [imageFacility, setImageFacility] = useState<File>()
     const handlerSetFeatures = (title: string, feature: Feature[]) => {
         const oldConveniences = [...conveniences]
         const foundItem = conveniences.find(x => x.title === title);
@@ -62,8 +79,23 @@ export default function CreatePage() {
             foundItem.feature = feature;
         }
         setConveniences(oldConveniences);
+        setValue("convenience", oldConveniences)
     }
 
+    const [peakHours, setPeakHours] = useState<PeakHour[]>([])
+
+    const handlerCheckFacilityTime = (value: string) => {
+        const updatedFacilityTime = facilityTimes.map(item =>
+            item.value === value ? { ...item, isChecked: !item.isChecked } : item
+        );
+        setFacilityTimes(updatedFacilityTime);
+        setValue("facilitytime", facilityTimes.reduce((acc: string[], x: FacilityTime) => {
+            if (x.isChecked && x.value) {
+                acc.push(x.name);
+            }
+            return acc;
+        }, []));
+    }
 
     const handlerSetValuePosition = (position: [number, number]) => {
         setValue('location', position)
@@ -72,14 +104,39 @@ export default function CreatePage() {
     const handlerRemoveHoliday = (indexRemove: number) => {
         setDates(dates.filter((_, index) => index != indexRemove))
     }
+
+    const handlerRemovePeakHour = (indexRemove: number) => {
+        const updatePeakHour = peakHours.map((item, index) =>
+            index === indexRemove ? { ...item, isChecked: !item.isChecked } : item
+        )
+        setPeakHours(updatePeakHour);
+        setValue("peakhour", peakHours.map((x) => x.name));
+    }
+
+    const handlerChangePeakHour = (time: string, openTime: boolean) => {
+        const { startTime, endTime } = openTime ? convertToStartTimeAndEndTime(time, getValues("close"))
+            : convertToStartTimeAndEndTime(getValues("open"), time)
+
+        const newPeakHour = []
+        for (let i = startTime; i < endTime; i++) {
+            newPeakHour.push({ name: `${i}:00`, isChecked: false })
+        }
+        setPeakHours(newPeakHour)
+    }
+
     const handleDateChange = (dates: Date | Date[]) => {
         if (Array.isArray(dates)) {
-            setDates(dates); 
-        } 
+            setDates(dates);
+            setValue('holiday', dates)
+        }
     };
 
     const handlerSubmitCreateFacility = (data: FieldValues) => {
         console.log(data)
+        if (imageFacility) {
+            toast.error("Vui lòng chọn ảnh cơ sở")
+            return;
+        }
     }
 
     return (
@@ -91,8 +148,9 @@ export default function CreatePage() {
                         <div className='mb-3'>
                             <Input
                                 label='Tên cơ sở (*)'
+                                placeholder='Tên cơ sở '
                                 type='text'
-                                name='name'
+                                name='namefacility'
                                 control={control}
                                 rules={{
                                     required: "Vui lòng nhập tên cơ sở",
@@ -111,21 +169,39 @@ export default function CreatePage() {
                             />
                         </div>
                     </div>
-                    <InputImage
-                        label='Ảnh cơ sở hoặc logo (*)'
-                        name='image'
-                        getState={getFieldState}
-                        control={control}
-                        rules={{
-                            required: "Vui lòng chọn ảnh cơ sở hoặc logo",
-                        }}
-                    />
+                    <div>
+                        <div className='mb-3'>
+                            <InputImage
+                                label='Ảnh cơ sở (*)'
+                                name='image'
+                                value={imageFacility}
+                                setFile={setImageFacility}
+                                required="Vui lòng chọn ảnh cơ sở"
+                            />
+                        </div>
+                        <div className='mb-3'>
+                            <InputImage
+                                label='Ảnh logo'
+                                name='logo'
+                                value={imageLogo}
+                                setFile={setImageLogo}
+                            />
+                        </div>
+                        <InputImage
+                            label='Ảnh khác'
+                            name='other'
+                            value={imageOther}
+                            setFile={setImageOther}
+                            multiple
+                        />
+                    </div>
                 </div>
                 <div className='mt-10 grid sm:grid-cols-2 gap-10'>
                     <div>
                         <div className='mb-3'>
                             <Input
                                 label='Email (*)'
+                                placeholder='Email'
                                 type='text'
                                 name='email'
                                 control={control}
@@ -136,6 +212,7 @@ export default function CreatePage() {
                         </div>
                         <Input
                             label='Số điện thoại (*)'
+                            placeholder='Số điện thoại'
                             type='text'
                             name='phone'
                             control={control}
@@ -176,9 +253,10 @@ export default function CreatePage() {
                             />
                         </div>
                         <Input
-                            label='Số tiền cộng thêm ngày lễ (*)'
+                            label='Họ và tên chủ sân (*)'
+                            placeholder='Họ và tên chủ sân'
                             type='text'
-                            name='phone'
+                            name='name'
                             control={control}
                             rules={{
                                 required: "Vui lòng nhập số tiền cộng thêm ngày lễ",
@@ -189,8 +267,9 @@ export default function CreatePage() {
                 <div className='mt-3 grid sm:grid-cols-2 gap-10'>
                     <Input
                         label='Số tiền cộng thêm giờ cao điểm (*)'
+                        placeholder='Số tiền cộng thêm giờ cao điểm'
                         type='text'
-                        name='phone'
+                        name='peakhourprice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền cộng thêm giờ cao điểm",
@@ -198,8 +277,9 @@ export default function CreatePage() {
                     />
                     <Input
                         label='Số tiền giảm đăng kí tháng (*)'
+                        placeholder='Số tiền giảm đăng kí tháng'
                         type='text'
-                        name='phone'
+                        name='monthprice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền giảm đăng kí tháng",
@@ -209,121 +289,52 @@ export default function CreatePage() {
                 <div className='mt-3 grid sm:grid-cols-2 gap-10'>
                     <Input
                         label='Số tiền giảm đăng kí năm (*)'
+                        placeholder='Số tiền giảm đăng kí năm'
                         type='text'
-                        name='phone'
+                        name='yearprice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền giảm đăng kí năm",
                         }}
                     />
+                    <Input
+                        label='Số tiền cộng thêm ngày lễ (*)'
+                        placeholder='Số tiền cộng thêm ngày lễ'
+                        type='text'
+                        name='holidayprice'
+                        control={control}
+                        rules={{
+                            required: "Vui lòng nhập số tiền cộng thêm ngày lễ",
+                        }}
+                    />
                 </div>
-                <div className='mt-3 grid sm:grid-cols-2'>
-                    <div className='mb-3 sm:mr-5'>
-                        <Label htmlFor='province' value='Tỉnh (*)' />
-                        <Controller
-                            name='province'
-                            control={control}
-                            rules={{ required: 'Vui lòng chọn tỉnh' }}
-                            render={({ field, fieldState }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        className='focus:ring-transparent'
-                                        id="province"
-                                        color={
-                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                                        }
-                                    >
-                                        <option value=''>Tỉnh</option>
-                                    </Select>
-                                    {fieldState.error && (
-                                        <div className="text-red-500 text-sm mt-2">
-                                            {fieldState.error.message}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        />
-                    </div>
-                    <div className='mb-3 sm:ml-5'>
-                        <Label htmlFor='province' value='Quận / Huyện (*)' />
-                        <Controller
-                            name='district'
-                            control={control}
-                            rules={{ required: 'Vui lòng chọn Quận / Huyện ' }}
-                            render={({ field, fieldState }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        className='focus:ring-transparent'
-                                        id="district"
-                                        color={
-                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                                        }
-                                    >
-                                        <option value=''>Quận / Huyện</option>
-                                    </Select>
-                                    {fieldState.error && (
-                                        <div className="text-red-500 text-sm mt-2">
-                                            {fieldState.error.message}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        />
-                    </div>
-                    <div className='sm:mr-5'>
-                        <Label htmlFor='province' value='Phường / Xã (*)' />
-                        <Controller
-                            name='ward'
-                            control={control}
-                            rules={{ required: 'Vui lòng chọn Phường / Xã ' }}
-                            render={({ field, fieldState }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        className='focus:ring-transparent'
-                                        id="ward"
-                                        color={
-                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                                        }
-                                    >
-                                        <option value=''>Phường / Xã</option>
-                                    </Select>
-                                    {fieldState.error && (
-                                        <div className="text-red-500 text-sm mt-2">
-                                            {fieldState.error.message}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        />
-                    </div>
-                    <div className='sm:ml-5'>
-                        <Input
-                            label='Địa chỉ (*)'
-                            type='text'
-                            name='address'
-                            control={control}
-                            rules={{
-                                required: "Vui lòng nhập địa chỉ",
-                            }}
-                        />
-                    </div>
-                </div>
+                <Address control={control} setValue={setValue} />
                 <div className='mt-3 grid sm:grid-cols-2'>
                     <div className='mb-3 sm:mr-5'>
                         <Label htmlFor='open' value='Thời gian mở cửa (*)' />
                         <Controller
                             name='open'
                             control={control}
-                            rules={{ required: 'Vui lòng nhập thời gian mở cửa' }}
+                            rules={
+                                {
+                                    required: 'Vui lòng nhập thời gian mở cửa',
+                                    validate: (value) => {
+                                        if (checkValidateTime(value, getValues("close"))) {
+                                            return "Thời gian mở cửa không lớn hơn thời gian đóng cửa"
+                                        }
+                                        return true;
+                                    }
+                                }
+                            }
                             render={({ field, fieldState }) => (
                                 <>
                                     <Select
                                         {...field}
                                         className='focus:ring-transparent'
-                                        id="open"
+                                        onInput={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                            handlerChangePeakHour(e.target.value || "", true)
+                                            setValue("open", e.target.value)
+                                        }}
                                         color={
                                             fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
                                         }
@@ -347,13 +358,25 @@ export default function CreatePage() {
                         <Controller
                             name='close'
                             control={control}
-                            rules={{ required: 'Vui lòng chọn thời gian đóng cửa' }}
+                            rules={{
+                                required: 'Vui lòng chọn thời gian đóng cửa',
+                                validate: (value) => {
+                                    if (checkValidateTime(getValues("open"), value)) {
+                                        return "Thời gian đóng cửa không bé hơn thời gian mở cửa"
+                                    }
+                                    return true;
+                                }
+                            }}
                             render={({ field, fieldState }) => (
                                 <>
                                     <Select
                                         {...field}
                                         className='focus:ring-transparent'
                                         id="close"
+                                        onInput={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                            handlerChangePeakHour(e.target.value || "", false)
+                                            setValue("close", e.target.value)
+                                        }}
                                         color={
                                             fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
                                         }
@@ -375,12 +398,18 @@ export default function CreatePage() {
                     <div className='mr-5'>
                         <Label htmlFor='time' value='Số buổi trong tuần' />
                         <div className=' mt-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2'>
-                            {[...Array(5)].map((_, index) => (
-                                <div key={index} className='border p-1 text-center rounded-lg hover:cursor-pointer hover:bg-black hover:text-white font-md'>{`Thứ ${index + 2}`}</div>
+                            {facilityTimes.map((facilityTime: FacilityTime, index) => (
+                                <div onClick={() => handlerCheckFacilityTime(facilityTime.value)} key={index} className={`border p-1 text-center rounded-lg hover:cursor-pointer hover:bg-black hover:text-white font-md ${facilityTime.isChecked && 'bg-black text-white'}`}>{facilityTime.name}</div>
                             ))}
-                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md hover:bg-black hover:text-white'>Thứ bảy</div>
-                            <div className='border p-1 text-center rounded-lg hover:cursor-pointer font-md hover:bg-black hover:text-white bg-black text-white'>Chủ nhật</div>
                         </div>
+                        <Input
+                            type='hidden'
+                            name='facilitytime'
+                            control={control}
+                            rules={{
+                                required: "Vui lòng chọn thời gian cơ sở",
+                            }}
+                        />
                     </div>
                 </div>
                 <div className='mt-5'>
@@ -397,16 +426,18 @@ export default function CreatePage() {
                         ))}
                     </div>
                 </div>
-                <div className='mt-5'>
-                    <Label value='Giờ cao điểm' />
-                    <div className='mt-3 grid xl:grid-cols-8 md:grid-cols-5 grid-cols-2 gap-10'>
-                        {[...Array(24)].map((_, index) => (
-                            <div key={index} className='border w-20 leading-10 text-center rounded-xl hover:cursor-pointer'>
-                                {`${index}:00`}
-                            </div>
-                        ))}
+                {peakHours.length > 0 && (
+                    <div className='mt-5'>
+                        <Label value='Giờ cao điểm' />
+                        <div className='mt-3 grid xl:grid-cols-8 md:grid-cols-5 grid-cols-2 gap-10'>
+                            {peakHours.map((peakhour: PeakHour, index) => (
+                                <div onClick={() => handlerRemovePeakHour(index)} key={index} className={`border w-20 leading-10 text-center rounded-md hover:cursor-pointer hover:bg-black hover:text-white font-md ${peakhour.isChecked && 'bg-black text-white'}`}>
+                                    {peakhour.name}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className='mt-5'>
                     <Label value='Các tiện ích' />
                     <div className='grid grid-cols-2 mt-5 gap-10  '>

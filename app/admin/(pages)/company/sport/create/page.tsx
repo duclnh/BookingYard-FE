@@ -1,7 +1,7 @@
 "use client"
 import { Heading, Input, InputImage } from '@components/index'
 import { Button } from 'flowbite-react';
-import React from 'react'
+import React, { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 
 export default function CreateSport() {
@@ -10,6 +10,9 @@ export default function CreateSport() {
     const handlerSubmitCreateSport = (data: FieldValues) => {
         console.log(data)
     }
+
+    const [icon, setIcon] = useState<File>()
+    const [image, setImage] = useState<File>()
 
     return (
         <div className='py-5 w-full'>
@@ -29,21 +32,17 @@ export default function CreateSport() {
                         <InputImage
                             label='Icon thể thao (*)'
                             name='icon'
-                            getState={getFieldState}
-                            control={control}
-                            rules={{
-                                required: "Vui chọn icon thể thao",
-                            }}
+                            required="Vui chọn icon thể thao"
+                            value={icon}
+                            setFile={setIcon}
                         />
                     </div>
                     <InputImage
                         label='Ảnh môn thể thao (*)'
                         name='image'
-                        getState={getFieldState}
-                        control={control}
-                        rules={{
-                            required: "Vui chọn ảnh môn thể thao",
-                        }}
+                        value={image}
+                        required="Vui chọn ảnh môn thể thao"
+                        setFile={setImage}
                     />
                 </div>
                 <Button className='mt-4' type='submit' size='sm'>Tạo mới</Button>

@@ -1,6 +1,6 @@
 "use client"
 import { Heading, Input, NotificationCustom } from '@components/index'
-import { Button, Spinner } from 'flowbite-react';
+import { Button, Label, Radio, Spinner } from 'flowbite-react';
 import React, { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
@@ -11,7 +11,7 @@ import { signIn } from 'next-auth/react';
 export default function RegisterPage() {
     const router = useRouter();
     const [error, setError] = useState('');
-    const { control, getValues, handleSubmit, reset, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
+    const { control, getValues, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
     async function handleSubmitForm(data: FieldValues) {
         setError("")
         try {
@@ -39,8 +39,8 @@ export default function RegisterPage() {
     }
     return (
         <>
-            <img className='hidden md:block w-full md:w-[55%] md:min-w-[65%] h-auto rounded-md object-fill object-left' src="/assets/images/register.png" alt="register" />
-            <div className='w-full md:w-[45%] h-auto px-5 py-9'>
+            <img className='hidden md:block w-full md:w-[55%] md:min-w-[60%] h-auto rounded-md object-fill object-left' src="/assets/images/register.png" alt="register" />
+            <div className='w-full md:w-[42%] h-auto px-5 py-9'>
                 <div className='flex flex-col p-5'>
                     <Link href="/" className='mx-auto mb-3'>
                         <img height={27} width={100} src='assets/images/logo.png' alt='logo' />
@@ -60,45 +60,51 @@ export default function RegisterPage() {
                                 }
                             }}
                         />
-                        <Input
-                            label='Email'
-                            type='email'
-                            name='email'
-                            control={control}
-                            rules={{
-                                required: "Vui lòng nhập email",
-                                pattern: {
-                                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                    message: "Email không hợp lệ",
-                                },
-                            }}
-                        />
-                        {/* <Input
-        label='Số điện thoại'
-        type='text'
-        name='phone'
-        control={control}
-        rules={{
-          required: "Vui lòng nhập số điện thoại", pattern: {
-            value: /^0\d{9,11}$/,
-            message: "Số điện thoại không hợp lệ. Bắt đầu số 0 và có 10 hoặc 12 chữ số.",
-          },
-        }}
-      />
+                        <div className='grid sm:grid-cols-2 gap-3'>
+                            <Input
+                                label='Email'
+                                type='email'
+                                name='email'
+                                control={control}
+                                rules={{
+                                    required: "Vui lòng nhập email",
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                        message: "Email không hợp lệ",
+                                    },
+                                }}
+                            />
+                            <Input
+                                label='Số điện thoại'
+                                type='text'
+                                name='phone'
+                                control={control}
+                                rules={{
+                                    required: "Vui lòng nhập số điện thoại", pattern: {
+                                        value: /^0\d{9,11}$/,
+                                        message: "Số điện thoại không hợp lệ. Bắt đầu số 0 và có 10 hoặc 12 chữ số.",
+                                    },
+                                }}
+                            />
+                        </div>
 
-      <div className='mb-0.5'>
-        <Label htmlFor="male" value="Giới tính" />
-      </div>
-      <div className='flex flex-row'>
-        <div>
-          <Radio className='focus:outline-none focus:ring-transparent' id="male" name="gender" value="male" defaultChecked />
-          <Label className='ml-2 hover:cursor-pointer' htmlFor="male">Nam</Label>
-        </div>
-        <div className='ml-4'>
-          <Radio className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="female" />
-          <Label className='ml-2 hover:cursor-pointer' htmlFor="female">Nữ</Label>
-        </div>
-      </div> */}
+                        <div className='mb-0.5'>
+                            <Label htmlFor="male" value="Giới tính" />
+                        </div>
+                        <div className='flex flex-row'>
+                            <div>
+                                <Radio className='focus:outline-none focus:ring-transparent' id="male" name="gender" value="0" defaultChecked />
+                                <Label className='ml-2 hover:cursor-pointer' htmlFor="male">Nam</Label>
+                            </div>
+                            <div className='ml-4'>
+                                <Radio className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="1" />
+                                <Label className='ml-2 hover:cursor-pointer' htmlFor="female">Nữ</Label>
+                            </div>
+                            <div className='ml-4'>
+                                <Radio className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="2" />
+                                <Label className='ml-2 hover:cursor-pointer' htmlFor="female">Khác</Label>
+                            </div>
+                        </div>
                         <Input
                             label='Mật khẩu'
                             type='password'
@@ -137,7 +143,7 @@ export default function RegisterPage() {
                             {isSubmitting ? <Spinner /> : "Đăng kí"}
                         </Button>
                         <div className='font-light text-sm text-neutral-500 text-center'>
-                            Bạn đã có tài khoản? <Link href={"/signin"} className='hover:cursor-pointer hover:text-blue-500'>Đăng nhập</Link>
+                            Bạn đã có tài khoản? <Link href={"/sign-in"} className='hover:cursor-pointer hover:text-blue-500'>Đăng nhập</Link>
                         </div>
                     </form>
                 </div>

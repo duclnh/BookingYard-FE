@@ -17,15 +17,20 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 var res = await authentication(credentials!.username, credentials!.password)
+                console.log(res)
                 if (res.status === 200) {
+                    console.log(res.data)
                     return res.data
+                } else if (res.status === 400) {
+                    throw new Error(res.data.title);
                 }
-                return null
+                throw new Error('Sign-in failed');
             }
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+
         })
     ],
     pages: {
@@ -41,38 +46,38 @@ export const authOptions: NextAuthOptions = {
                 token.email = user.email;
                 token.role = user.role;
                 token.isVerification = user.isVerification;
+                token.expiration = user.expiration
             }
             return token;
         },
         async session({ session, token }) {
             session.user.userID = token.userID;
             session.user.name = token.name;
-            session.user.email = token.email;
             session.user.imageUrl = token.imageUrl
-            session.user.token = token.token
-            session.user.role = token.role;
-            session.user.isVerification = token.isVerification;
             return session;
         },
         async signIn({ user, account, profile, }) {
-            if (account?.provider === 'google') {
-                var res = await authenticationByGoogle(
-                    account.providerAccountId,
-                    profile?.name,
-                    profile?.picture,
-                    profile?.email);
-                if (res.status !== 200) {
-                    return '/sign-in';
+            try {
+                if (account?.provider === 'google') {
+                    var res = await authenticationByGoogle(
+                        account.providerAccountId,
+                        profile?.name,
+                        profile?.picture,
+                        profile?.email);
+                    if (res.status !== 200) {
+                        return '/sign-in?error=banned';
+                    }
+                    user.userID = res.data.userID
+                    user.token = res.data.token
+                    user.name = res.data.name
+                    user.imageUrl = res.data.imageUrl
+                    user.expiration = res.data.expiration
+                    user.isVerification = res.data.isVerification
                 }
-                user.userID = res.data.userID
-                user.token = res.data.token
-                user.imageUrl = res.data.imageUrl
-                user.isVerification = res.data.isVerification
+                return true;
+            } catch (error) {
+                return '/sign-in?error=error system';
             }
-            if (!user) {
-                return '/sign-in';
-            }
-            return true;
         },
     },
 };
