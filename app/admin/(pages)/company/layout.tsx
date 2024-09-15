@@ -1,8 +1,6 @@
 "use client";
 import { Avatar, Breadcrumb, CustomFlowbiteTheme, Dropdown, Navbar, Popover, Sidebar } from 'flowbite-react';
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { HiHome } from 'react-icons/hi';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image';
@@ -13,6 +11,8 @@ import { TbBasketDiscount, TbPackage } from 'react-icons/tb';
 import { RiCalendarScheduleLine, RiDashboard2Line } from 'react-icons/ri';
 import { PiBuildingOfficeBold, PiHeadCircuitBold, PiUsersBold, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
+import { Loading } from '@components/index';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function ManagementLayout({
   children,
@@ -20,9 +20,7 @@ export default function ManagementLayout({
   children: React.ReactNode;
 }>) {
   const [collapse, setCollapse] = useState(false);
-  const { data: session } = useSession();
-  const pathname = usePathname();
-
+  const { data: session, status: status } = useSession()
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
       inner: `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
@@ -34,7 +32,7 @@ export default function ManagementLayout({
       <Sidebar theme={customTheme} className={`${!collapse ? 'w-80' : ''}`} collapseBehavior='collapse' collapsed={collapse} aria-label="Sidebar with multi-level dropdown example">
         {!collapse ? (
           <Sidebar.Items className='p-3 mb-6 relative select-none'>
-            <Image height={60} width={60} className='rounded-[50%] mx-auto' src='/assets/images/avatar-default.png' alt='img' />
+            <Image height={60} width={60} className='rounded-[50%] mx-auto' src={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt='img' />
             <div className='mt-3 text-center'>
               <p className='text-xl font-bold'>Sân Vận động hà nam</p>
             </div>
@@ -64,7 +62,7 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/company/voucher">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/voucher/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Item href="/admin/company/customer" icon={PiUsersBold }>
+            <Sidebar.Item href="/admin/company/customer" icon={PiUsersBold}>
               Khách hàng
             </Sidebar.Item>
             <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
@@ -80,8 +78,8 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/company/sport">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/sport/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Item href="/admin/company/advise" icon={PiHeadCircuitBold}>
-              Tư vấn
+            <Sidebar.Item href="/admin/company/support" icon={PiHeadCircuitBold}>
+              Hỗ trợ
             </Sidebar.Item>
             <Sidebar.Item href="/admin/company/feedback" icon={MdOutlineFeedback}>
               Đánh giá
@@ -93,7 +91,7 @@ export default function ManagementLayout({
         </Sidebar.Items>
         <Sidebar.Items className='border-t-2'>
           <Sidebar.ItemGroup className='!mt-2'>
-            <Sidebar.Item href="#" icon={MdLogout}>
+            <Sidebar.Item onClick={async () => await signOut({ redirect: true, callbackUrl: "/admin/sign-in" })} icon={MdLogout}>
               Đăng xuất
             </Sidebar.Item>
           </Sidebar.ItemGroup>
@@ -111,7 +109,6 @@ export default function ManagementLayout({
             </div>
             <Navbar className=''>
               <div className="flex flex-row items-center gap-4 md:order-2">
-                <p>{session?.user.name}</p>
                 <Popover
                   placement='bottom-start'
                   aria-labelledby="profile-popover"
@@ -157,13 +154,12 @@ export default function ManagementLayout({
                     <FaRegUser className='mr-2' />
                     Hồ sơ
                   </Dropdown.Item>
-
                   <Dropdown.Item href='/admin/company/change-password' aria-label="Change Password">
                     <CiLock className='mr-2' />
                     Đổi mật khẩu
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href='/sign-in' aria-label="Sign Out">
+                  <Dropdown.Item onClick={async () => await signOut({ redirect: true, callbackUrl: "/admin/sign-in" })} aria-label="Sign Out">
                     <MdLogout className='mr-2' />
                     Đăng xuất
                   </Dropdown.Item>
@@ -177,6 +173,7 @@ export default function ManagementLayout({
           <div className='py-5 px-3 md:px-12'>{children}</div>
         </div>
       </div>
+      {status === 'loading' && <Loading />}
     </div >
   )
 }

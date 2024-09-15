@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
 
 export default function VerifyForm() {
     const router = useRouter();
@@ -64,6 +65,7 @@ export default function VerifyForm() {
     }
     return (
         <>
+            <Image height={1000} width={1000} className='hidden md:block w-full md:w-[55%] md:min-w-[60%] h-auto rounded-md object-fill object-left' src="/assets/images/verify.png" alt="register" />
             <div className='w-full md:w-[45%] h-auto px-5 py-9'>
                 <form method='POST' className='flex flex-col justify-center h-[100%] p-5' onSubmit={handleSubmit(handleVerifyForm)}>
                     <div className='w-full mb-8'>

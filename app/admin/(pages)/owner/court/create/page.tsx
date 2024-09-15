@@ -1,12 +1,14 @@
 "use client"
 import { Heading, Input, InputImage } from '@components/index'
 import { Button, Label, Select } from 'flowbite-react';
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 
 
 export default function CreatePage() {
     const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
+    const [imageCourt, setImageCourt] = useState<File>()
+    const [image360, setImage360] = useState<File>()
 
     const handlerSubmitCreateFacility = (data: FieldValues) => {
         console.log(data)
@@ -34,11 +36,9 @@ export default function CreatePage() {
                         <InputImage
                             name='image'
                             label='Ảnh sân (*)'
-                            control={control}
-                            getState={getFieldState}
-                            rules={{
-                                required: "Vui chọn ảnh sân",
-                            }}
+                            value={imageCourt}
+                            setFile={setImageCourt}
+                            required="Vui chọn ảnh sân"
                         />
                     </div>
                 </div>
@@ -76,11 +76,9 @@ export default function CreatePage() {
                     <InputImage
                         name='360'
                         label='Ảnh 360 sân (*)'
-                        control={control}
-                        getState={getFieldState}
-                        rules={{
-                            required: "Vui chọn ảnh 360 sân",
-                        }}
+                        value={image360}
+                        setFile= {setImage360}
+                        required= "Vui chọn ảnh 360 sân"
                     />
                 </div>
                 <div className='mt-3 grid md:grid-cols-2 gap-10'>

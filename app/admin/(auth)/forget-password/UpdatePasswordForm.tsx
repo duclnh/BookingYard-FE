@@ -9,13 +9,13 @@ import toast from 'react-hot-toast';
 export default function UpdatePasswordForm({ email, verifyCode }: { email: string, verifyCode: string }) {
     const router = useRouter();
     const [error, setError] = useState('');
-    const { control, getValues, handleSubmit, reset, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
+    const { control, getValues, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
     async function handleSubmitForm(data: FieldValues) {
         try {
             var res = await updateResetPassword(email, verifyCode, data.password)
             if (res.status === 200) {
                 toast("Cập nhật mật khẩu thành công", {duration: 120})
-                router.push("/sign-in")
+                router.push("/admin/sign-in")
             } else {
                 setError("Cập nhật mật khẩu mới thất bại")
             }
@@ -32,6 +32,7 @@ export default function UpdatePasswordForm({ email, verifyCode }: { email: strin
                     label='Mật khẩu mới'
                     type='password'
                     name='password'
+                    placeholder='Mật khẩu mới'
                     control={control}
                     rules={{
                         required: "Vui lòng nhập nhập mật khẩu",
@@ -49,6 +50,7 @@ export default function UpdatePasswordForm({ email, verifyCode }: { email: strin
                     label='Xác nhận mật khẩu'
                     type='password'
                     name='RePassword'
+                    placeholder='Xác nhận mật khẩu'
                     control={control}
                     rules={{
                         required: "Vui lòng nhập xác nhận mật khẩu",

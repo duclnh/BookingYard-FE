@@ -9,7 +9,8 @@ type Props = {
     type?: string,
     showLabel?: boolean,
     onChange?: Function,
-    row?: boolean
+    row?: boolean,
+    placeholder?: string | "",
 } & UseControllerProps
 
 export default function Input(props: Props) {
@@ -30,7 +31,7 @@ export default function Input(props: Props) {
                         {...field}
                         id={field.name}
                         type={show ? 'text' : 'password'}
-                        placeholder={props.label}
+                        placeholder={props.placeholder}
                         helperText={fieldState.error?.message}
                         color={
                             fieldState?.error ? "failure" : !fieldState.isDirty ? "" : "success"
@@ -52,7 +53,7 @@ export default function Input(props: Props) {
                         }}
                         id={field.name}
                         type={props.type || ''}
-                        placeholder={props.label}
+                        placeholder={props.placeholder}
                         helperText={fieldState.error?.message}
                         color={
                             fieldState?.error ? "failure" : !fieldState.isDirty ? "" : "success"
