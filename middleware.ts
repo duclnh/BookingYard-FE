@@ -42,45 +42,45 @@ export async function middleware(request: NextRequest) {
     token: sessionToken,
   })
 
-  if ((isAdminRoutes || isOwnerRoute) && currentUser == null) {
-    return Response.redirect(new URL('/admin/sign-in', request.url));
-  }
+  // if ((isAdminRoutes || isOwnerRoute) && currentUser == null) {
+  //   return Response.redirect(new URL('/admin/sign-in', request.url));
+  // }
 
-  if (isProtectedRoute && currentUser == null) {
-    return Response.redirect(new URL('/sign-in', request.url));
-  }
+  // if (isProtectedRoute && currentUser == null) {
+  //   return Response.redirect(new URL('/sign-in', request.url));
+  // }
 
-  if (currentUser && isAuthenticationRoutes) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+  // if (currentUser && isAuthenticationRoutes) {
+  //   return Response.redirect(new URL('/not-found', request.url));
+  // }
 
-  if (currentUser && currentUser.role == "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-    return Response.redirect(new URL('/sign-in', request.url));
-  }
+  // if (currentUser && currentUser.role == "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
+  //   return Response.redirect(new URL('/sign-in', request.url));
+  // }
 
-  if (currentUser && currentUser.role != "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-    return Response.redirect(new URL('/admin/sign-in', request.url));
-  }
+  // if (currentUser && currentUser.role != "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
+  //   return Response.redirect(new URL('/admin/sign-in', request.url));
+  // }
 
-  if (currentUser && currentUser.role != "OwnerCourt" && isOwnerRoute) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+  // if (currentUser && currentUser.role != "OwnerCourt" && isOwnerRoute) {
+  //   return Response.redirect(new URL('/not-found', request.url));
+  // }
 
-  if (currentUser && currentUser.role != "Admin" && isAdminRoutes) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+  // if (currentUser && currentUser.role != "Admin" && isAdminRoutes) {
+  //   return Response.redirect(new URL('/not-found', request.url));
+  // }
 
-  if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+  // if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
+  //   return Response.redirect(new URL('/not-found', request.url));
+  // }
 
-  if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
-    return Response.redirect(new URL('/verify', request.url));
-  }
+  // if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
+  //   return Response.redirect(new URL('/verify', request.url));
+  // }
 
-  if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+  // if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
+  //   return Response.redirect(new URL('/not-found', request.url));
+  // }
 
 }
 
