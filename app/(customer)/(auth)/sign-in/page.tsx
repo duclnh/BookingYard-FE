@@ -16,9 +16,11 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     const errorParam = params.get("error");
 
-    if (errorParam === "banned") {
+    if (errorParam?.includes("This email is banned")) {
       setError("Tài khoản đã bị khóa. Vui lòng liên hệ hệ thống để biết thêm chi tiết");
-    } else if (errorParam) {
+    } else if (errorParam?.includes("This email is already registered")) {
+      setError("Email này đã được đăng ký bởi tài khoản khác rồi");
+    }else if(errorParam){
       setError("Lỗi hệ thống, vui lòng thử lại");
     }
   }, []);
@@ -74,6 +76,7 @@ export default function LoginPage() {
               label='Email/Số điện thoại'
               type='text'
               name='username'
+              placeholder='Email/Số điện thoại'
               control={control}
               rules={{
                 required: "Vui lòng nhập tên tài khoản",
@@ -81,6 +84,7 @@ export default function LoginPage() {
             />
             <Input
               label='Mật khẩu'
+              placeholder='Mật khẩu'
               type='password'
               name='password'
               control={control}

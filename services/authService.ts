@@ -4,8 +4,15 @@ import { authOptions } from "@utils/index";
 import { getServerSession } from "next-auth";
 
 
-export async function authentication(username: string, password: string) {
+export async function authentication(username: string | undefined, password: string | undefined) {
     return await fetchWrapper.post("/api/auth/login", {
+        username,
+        password
+    })
+}
+
+export async function authenticationAdmin(username: string | undefined, password: string | undefined) {
+    return await fetchWrapper.post("/api/auth/admin", {
         username,
         password
     })

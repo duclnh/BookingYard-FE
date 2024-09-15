@@ -9,14 +9,14 @@ export  async function getProvince() {
     return await handleResponse(result)
 }
 
-export  async function getDistrict(id: number) {
+export  async function getDistrict(id: string) {
 
     const result = await fetch(url + `/2/${id}.htm`)
 
     return await handleResponse(result)
 }
 
-export  async function getWard(id: number) {
+export  async function getWard(id: string) {
 
     const result = await fetch(url + `/3/${id}.htm`)
 

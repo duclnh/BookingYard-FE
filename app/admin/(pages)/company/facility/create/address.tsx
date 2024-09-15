@@ -46,7 +46,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
         if (event.target.value) {
             setValue("district", event.target.value)
             setSelectedDistrict(event.target.value)
-        }else{
+        } else {
             setValue("district", "")
             setValue("ward", "")
             setWards([])
@@ -58,50 +58,38 @@ export default function Address({ control, setValue }: { control: Control<FieldV
     useEffect(() => {
         setValue("district", "")
         setValue("ward", "")
-        const selectProvince = provinces && provinces.find(
-            (district) => district.full_name === selectedProvince
-        );
-
-        if (selectProvince) {
-            getDistrict(selectProvince.id)
-                .then(x => {
-                    if (x.status == 200) {
-                        return x.data
-                    } else {
-                        toast.error("Lỗi lấy dữ liệu xã / phường")
-                    }
-                })
-                .then((wards: AddressVN[]) => {
-                    setDistricts(wards)
-                })
-                .catch(() => {
-                    toast.error("Lỗi lấy dữ liệu xã / phường")
-                });
-        }
+        getDistrict(selectedProvince)
+            .then(x => {
+                if (x.status == 200) {
+                    return x.data
+                } else {
+                    toast.error("Lỗi lấy dữ liệu quận / huyện")
+                }
+            })
+            .then((wards: AddressVN[]) => {
+                setDistricts(wards)
+            })
+            .catch(() => {
+                toast.error("Lỗi lấy dữ liệu quận / huyện")
+            });
     }, [selectedProvince])
 
     useEffect(() => {
         setValue("ward", "")
-        const selectDistrict = districts && districts.find(
-            (district) => district.full_name === selectedDistrict
-        );
-
-        if (selectDistrict) {
-            getWard(selectDistrict.id)
-                .then(x => {
-                    if (x.status == 200) {
-                        return x.data
-                    } else {
-                        toast.error("Lỗi lấy dữ liệu xã / phường")
-                    }
-                })
-                .then((wards: AddressVN[]) => {
-                    setWards(wards)
-                })
-                .catch(() => {
+        getWard(selectedDistrict)
+            .then(x => {
+                if (x.status == 200) {
+                    return x.data
+                } else {
                     toast.error("Lỗi lấy dữ liệu xã / phường")
-                })
-        }
+                }
+            })
+            .then((wards: AddressVN[]) => {
+                setWards(wards)
+            })
+            .catch(() => {
+                toast.error("Lỗi lấy dữ liệu xã / phường")
+            })
 
     }, [selectedDistrict])
 
@@ -127,7 +115,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                             >
                                 <option value=''>Tỉnh</option>
                                 {provinces?.map((province: AddressVN) => (
-                                    <option key={province.id} value={province.full_name}>{province.name}</option>
+                                    <option key={province.id} value={province.id}>{province.name}</option>
                                 ))}
                             </Select>
                             {fieldState.error && (
@@ -158,7 +146,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                             >
                                 <option value=''>Quận / Huyện</option>
                                 {districts?.map((district: AddressVN) => (
-                                    <option key={district.id} value={district.full_name}>{district.name}</option>
+                                    <option key={district.id} value={district.id}>{district.name}</option>
                                 ))}
                             </Select>
                             {fieldState.error && (
@@ -189,7 +177,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                             >
                                 <option value=''>Phường / Xã</option>
                                 {wards?.map((wards: AddressVN) => (
-                                    <option key={wards.id} value={wards.full_name}>{wards.name}</option>
+                                    <option key={wards.id} value={wards.id}>{wards.name}</option>
                                 ))}
                             </Select>
                             {fieldState.error && (

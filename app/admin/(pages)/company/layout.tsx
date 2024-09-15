@@ -1,6 +1,6 @@
 "use client";
 import { Avatar, Breadcrumb, CustomFlowbiteTheme, Dropdown, Navbar, Popover, Sidebar } from 'flowbite-react';
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { HiHome } from 'react-icons/hi';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ import { RiCalendarScheduleLine, RiDashboard2Line } from 'react-icons/ri';
 import { PiBuildingOfficeBold, PiHeadCircuitBold, PiUsersBold, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
 import { Loading } from '@components/index';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function ManagementLayout({
   children,
@@ -20,49 +20,19 @@ export default function ManagementLayout({
   children: React.ReactNode;
 }>) {
   const [collapse, setCollapse] = useState(false);
-  const { data: session , status:status } = useSession()
+  const { data: session, status: status } = useSession()
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
       inner: `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
     }
   }
 
-  const userMenu = useMemo(() => (
-    <Dropdown
-      className='z-40'
-      aria-haspopup="menu"
-      trigger='hover'
-      label={
-        <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt={session?.user.name} rounded />
-      }
-      arrowIcon={false}
-      inline
-    >
-      <Dropdown.Item href='/admin/company/profile' aria-label="Profile">
-        <FaRegUser className='mr-2' />
-        Hồ sơ
-      </Dropdown.Item>
-      <Dropdown.Item href='/admin/company/change-password' aria-label="Change Password">
-        <CiLock className='mr-2' />
-        Đổi mật khẩu
-      </Dropdown.Item>
-      <Dropdown.Divider />
-      <Dropdown.Item href='/sign-in' aria-label="Sign Out">
-        <MdLogout className='mr-2' />
-        Đăng xuất
-      </Dropdown.Item>
-    </Dropdown>
-  ), []);
-
-  if (status === 'loading') {
-    return <Loading />;
-  }
   return (
     <div className='flex h-full w-full'>
       <Sidebar theme={customTheme} className={`${!collapse ? 'w-80' : ''}`} collapseBehavior='collapse' collapsed={collapse} aria-label="Sidebar with multi-level dropdown example">
         {!collapse ? (
           <Sidebar.Items className='p-3 mb-6 relative select-none'>
-            <Image height={60} width={60} className='rounded-[50%] mx-auto' src='/assets/images/avatar-default.png' alt='img' />
+            <Image height={60} width={60} className='rounded-[50%] mx-auto' src={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt='img' />
             <div className='mt-3 text-center'>
               <p className='text-xl font-bold'>Sân Vận động hà nam</p>
             </div>
@@ -121,7 +91,7 @@ export default function ManagementLayout({
         </Sidebar.Items>
         <Sidebar.Items className='border-t-2'>
           <Sidebar.ItemGroup className='!mt-2'>
-            <Sidebar.Item href="#" icon={MdLogout}>
+            <Sidebar.Item onClick={async () => await signOut({ redirect: true, callbackUrl: "/admin/sign-in" })} icon={MdLogout}>
               Đăng xuất
             </Sidebar.Item>
           </Sidebar.ItemGroup>
@@ -170,7 +140,30 @@ export default function ManagementLayout({
                     <div className='absolute -top-1 -right-1.5 text-xs w-5 leading-5 text-center text-white bg-red-600 rounded-full'>5</div>
                   </div>
                 </Popover>
-                {userMenu}
+                <Dropdown
+                  className='z-40'
+                  aria-haspopup="menu"
+                  trigger='hover'
+                  label={
+                    <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt={session?.user.name} rounded />
+                  }
+                  arrowIcon={false}
+                  inline
+                >
+                  <Dropdown.Item href='/admin/company/profile' aria-label="Profile">
+                    <FaRegUser className='mr-2' />
+                    Hồ sơ
+                  </Dropdown.Item>
+                  <Dropdown.Item href='/admin/company/change-password' aria-label="Change Password">
+                    <CiLock className='mr-2' />
+                    Đổi mật khẩu
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={async () => await signOut({ redirect: true, callbackUrl: "/admin/sign-in" })} aria-label="Sign Out">
+                    <MdLogout className='mr-2' />
+                    Đăng xuất
+                  </Dropdown.Item>
+                </Dropdown>
                 <Navbar.Toggle />
               </div>
             </Navbar>
@@ -180,6 +173,7 @@ export default function ManagementLayout({
           <div className='py-5 px-3 md:px-12'>{children}</div>
         </div>
       </div>
+      {status === 'loading' && <Loading />}
     </div >
   )
 }

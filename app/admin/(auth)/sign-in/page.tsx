@@ -1,12 +1,12 @@
 "use client";
-import { Heading, Input, NotificationCustom } from '@components/index'
+import { Input, NotificationCustom } from '@components/index'
 import { Button, Spinner } from 'flowbite-react';
 import React, { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, getSession, } from 'next-auth/react';
 import Image from 'next/image'
 
 export default function LoginPage() {
@@ -20,27 +20,27 @@ export default function LoginPage() {
         "credentials", {
         username: data.username,
         password: data.password,
+        type: "admin",
         redirect: false
       }
       )
       if (!res?.error) {
-        toast.success("Đăng nhập thành công")
-        router.push("/")
+        const updatedSession = await getSession();
+        if (updatedSession && updatedSession.user.role !== undefined) {
+          toast.success("Đăng nhập thành công")
+          if (updatedSession.user.role === "Admin") {
+            window.location.href = "/admin/company/dashboard";
+          } else if (updatedSession.user.role === "CourtOwner") {
+            window.location.href = "/admin/owner/dashboard";
+          } else {
+            window.location.href = "/admin/owner/court";
+          }
+        } else {
+          toast.error("Lỗi đăng nhập")
+        }
       } else {
         setError("Tài khoản hoặc mật khẩu không đúng")
       }
-    } catch {
-      setError("Lỗi hệ thống vui lòng thử lại")
-    }
-  }
-  async function loginGoogle() {
-    setError('');
-    try {
-      await signIn("google",
-        {
-          callbackUrl: "/"
-        }
-      )
     } catch {
       setError("Lỗi hệ thống vui lòng thử lại")
     }
@@ -72,16 +72,17 @@ export default function LoginPage() {
       </div>
       <div className='w-full h-auto px-5 py-9'>
         <div className='flex flex-col p-4'>
-          <Link href="/" className='mx-auto mb-3'>
+          <div className='mx-auto mb-3'>
             <Image height={27} width={100} src='/assets/images/logo.png' alt='logo' />
-          </Link>
+          </div>
           <NotificationCustom error={error} />
           <form method='POST' className='flex flex-col mt-4 gap-2' onSubmit={handleSubmit(onSubmit)}>
             <Input
-              label='Email/Số điện thoại'
+              label='Tài khoản'
               type='text'
               name='username'
               control={control}
+              placeholder='Tài khoản'
               rules={{
                 required: "Vui lòng nhập tên tài khoản",
               }}
@@ -91,14 +92,16 @@ export default function LoginPage() {
               type='password'
               name='password'
               control={control}
+              placeholder='Mật khẩu'
               rules={{ required: "Vui lòng nhập mật khẩu" }}
             />
             <div className='flex justify-end'>
-              <Link href="/forget-password" className='font-sans text-sm text-neutral-500 hover:cursor-pointer hover:text-blue-500'>
+              <Link href="/admin/forget-password" className='font-sans text-sm text-neutral-500 hover:cursor-pointer hover:text-blue-500'>
                 Quên mật khẩu
               </Link>
             </div>
             <Button
+              disabled={isSubmitting}
               type='submit'
               className='mt-1 focus:ring-transparent'>
               {isSubmitting ? <Spinner /> : "Đăng nhập"}

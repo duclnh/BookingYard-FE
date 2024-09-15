@@ -70,8 +70,8 @@ export default function CreatePage() {
         ]
     )
     const [imageOther, setImageOther] = useState<File[]>([])
-    const [imageLogo, setImageLogo] = useState<File>()
-    const [imageFacility, setImageFacility] = useState<File>()
+    const [imageFacility, setImageFacility] = useState<File | undefined>(undefined)
+    const [imageLogo, setImageLogo] = useState<File | undefined>(undefined)
     const handlerSetFeatures = (title: string, feature: Feature[]) => {
         const oldConveniences = [...conveniences]
         const foundItem = conveniences.find(x => x.title === title);
@@ -89,7 +89,7 @@ export default function CreatePage() {
             item.value === value ? { ...item, isChecked: !item.isChecked } : item
         );
         setFacilityTimes(updatedFacilityTime);
-        setValue("facilitytime", facilityTimes.reduce((acc: string[], x: FacilityTime) => {
+        setValue("facilitytime", updatedFacilityTime.reduce((acc: string[], x: FacilityTime) => {
             if (x.isChecked && x.value) {
                 acc.push(x.name);
             }
@@ -110,7 +110,7 @@ export default function CreatePage() {
             index === indexRemove ? { ...item, isChecked: !item.isChecked } : item
         )
         setPeakHours(updatePeakHour);
-        setValue("peakhour", peakHours.map((x) => x.name));
+        setValue("peakhour", updatePeakHour.map((x) => x.name));
     }
 
     const handlerChangePeakHour = (time: string, openTime: boolean) => {
@@ -131,12 +131,52 @@ export default function CreatePage() {
         }
     };
 
-    const handlerSubmitCreateFacility = (data: FieldValues) => {
+    const handlerSubmitCreateFacility = async (data: FieldValues) => {
         console.log(data)
-        if (imageFacility) {
+        console.log(JSON.stringify(conveniences))
+        if (imageFacility === undefined) {
             toast.error("Vui lòng chọn ảnh cơ sở")
             return;
         }
+        // try {
+        //     var formData = new FormData();
+        //     formData.append("name", data.name)
+        //     formData.append("email", data.email);
+        //     formData.append("phone", data.phone);
+        //     formData.append("address", data.address);
+        //     formData.append("description", data.description);
+        //     formData.append("facilityName", data.facilityName);
+        //     formData.append("startTime", data.startTime);
+        //     formData.append("endTime", data.endTime);
+        //     formData.append("monthPrice", data.monthPrice);
+        //     formData.append("yearPrice", data.yearPrice);
+        //     formData.append("holidayPrice", data.holidayPrice);
+        //     formData.append("peakHourPrice", data.peakHourPrice);
+        //     formData.append("longitude", data.location[1])
+        //     formData.append("latitude", data.location[0])
+        //     formData.append("convenient", data.convenience);
+        //     formData.append("openDate", data.facilitytime);
+        //     formData.append("holidayDate", data.holiday );
+        //     formData.append("peakHour", data.peakhour);
+        //     formData.append("image", imageFacility);
+        //     formData.append("logo", imageLogo || '');
+        //     imageOther.forEach((file, index) => {
+        //         formData.append(`other[${index}]`, file);
+        //     });
+        //     formData.append("wardID", data.ward);
+        //     formData.append("districtID", data.district);
+        //     formData.append("provinceID", data.province);
+        //     var res = await createFacility(formData)
+        //     if (res.status === 201) {
+        //         toast.success("Tạo mới cơ sở thành công")
+        //     } else {
+        //         toast.error("Tạo mới thất bại")
+        //         console.log(res.data)
+        //     }
+        // } catch (error) {
+        //     toast.error("Lỗi hệ thống vui lòng thử lại")
+        //     console.log(error)
+        // }
     }
 
     return (
