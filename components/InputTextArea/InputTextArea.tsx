@@ -8,11 +8,13 @@ type Props = {
     type?: string,
     showLabel?: boolean,
     placeholder?: string | "",
-    row: number
+    row: number,
+    value?: string,
+    readOnly?: boolean,
 } & UseControllerProps
 
 export default function InputTextArea(props: Props) {
-    const { fieldState, field } = useController({ ...props, defaultValue: "" });
+    const { fieldState, field } = useController({ ...props, defaultValue: props.value || "" });
     return (
         <div>
             {props.label && (

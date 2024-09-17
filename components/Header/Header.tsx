@@ -1,5 +1,5 @@
 "use client"
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Avatar, Button, Dropdown, Navbar, Popover } from "flowbite-react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -11,53 +11,12 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image'
 import { TbBasketDiscount } from 'react-icons/tb';
 import { FiUserCheck } from 'react-icons/fi';
-import Loading from '@components/Loading/Loading';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import { useAppSelector } from '@hooks/hooks';
 
 function Header() {
-  const { data: session, status: status } = useSession();
   const pathname = usePathname();
-
-  const userMenu = useMemo(() => (
-    <Dropdown
-      aria-haspopup="menu"
-      trigger='hover'
-      label={
-        <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={session?.user.imageUrl || "assets/images/avatar-default.png"} alt={session?.user.name} rounded />
-      }
-      arrowIcon={false}
-      inline
-    >
-      <Dropdown.Item href='/profile' aria-label="Profile">
-        <FaRegUser className='mr-2' />
-        Hồ sơ
-      </Dropdown.Item>
-      <Dropdown.Item href='/my-booking' aria-label="My Booking">
-        <TiTicket className='mr-2' />
-        Đặt lịch
-      </Dropdown.Item>
-      <Dropdown.Item href='/my-booking' aria-label="My Booking">
-        <TbBasketDiscount className='mr-2' />
-        Mã giảm giá
-      </Dropdown.Item>
-      <Dropdown.Item href='/history-score' aria-label="My Booking">
-        <FiUserCheck className='mr-2' />
-        Lịch sử tích điểm
-      </Dropdown.Item>
-      <Dropdown.Item href='change-password' aria-label="Change Password">
-        <CiLock className='mr-2' />
-        Đổi mật khẩu
-      </Dropdown.Item>
-      <Dropdown.Divider />
-      <Dropdown.Item aria-label="Sign Out" onClick={() => signOut({callbackUrl: "/sign-in"})}>
-        <MdLogout className='mr-2' />
-        Đăng xuất
-      </Dropdown.Item>
-    </Dropdown>
-  ), [session])
-  if (status == "loading") {
-    return <Loading />
-  }
+  const user = useAppSelector(state => state.user.value)
   return (
     <header id='top' className='pt-8 px-5 top-0 z-50 items-center'>
       <Navbar className='lg:mx-14 fluid rounded'>
@@ -65,7 +24,7 @@ function Header() {
           <Image src="/assets/images/logo.png" alt="logo" height="60" width="60" className="sm:mr-2 lg:mr-5" />
         </Navbar.Brand>
         <div className="flex flex-row items-center gap-4 md:order-2">
-          {session?.user ?
+          {user ?
             <>
               <Popover
                 placement='auto'
@@ -98,8 +57,42 @@ function Header() {
                   <div className='absolute -top-1 -right-1.5 text-xs w-5 leading-5 text-center text-white bg-red-600 rounded-full'>5</div>
                 </div>
               </Popover>
-              <p className='hidden lg:block'>{session?.user.name}</p>
-              {userMenu}
+              <p className='hidden lg:block'>{user.name}</p>
+              <Dropdown
+                aria-haspopup="menu"
+                trigger='hover'
+                label={
+                  <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={user.imageUrl || "assets/images/avatar-default.png"} alt={user.name} rounded />
+                }
+                arrowIcon={false}
+                inline
+              >
+                <Dropdown.Item href='/profile' aria-label="Profile">
+                  <FaRegUser className='mr-2' />
+                  Hồ sơ
+                </Dropdown.Item>
+                <Dropdown.Item href='/my-booking' aria-label="My Booking">
+                  <TiTicket className='mr-2' />
+                  Đặt lịch
+                </Dropdown.Item>
+                <Dropdown.Item href='/my-booking' aria-label="My Booking">
+                  <TbBasketDiscount className='mr-2' />
+                  Mã giảm giá
+                </Dropdown.Item>
+                <Dropdown.Item href='/history-score' aria-label="My Booking">
+                  <FiUserCheck className='mr-2' />
+                  Lịch sử tích điểm
+                </Dropdown.Item>
+                <Dropdown.Item href='change-password' aria-label="Change Password">
+                  <CiLock className='mr-2' />
+                  Đổi mật khẩu
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item aria-label="Sign Out" onClick={() => signOut({ callbackUrl: "/sign-in" })}>
+                  <MdLogout className='mr-2' />
+                  Đăng xuất
+                </Dropdown.Item>
+              </Dropdown>
             </>
             :
             <Link href="/sign-in" className='lg:visible md:visible invisible'>

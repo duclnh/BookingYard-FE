@@ -1,19 +1,28 @@
 "use client"
 import { Input } from '@components/index'
-import { getDistrict, getProvince, getWard } from '@services/addressService'
+import { getDistrict, getFullAddress, getProvince, getWard } from '@services/addressService'
 import { Label, Select } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Control, Controller, FieldValues, UseFormSetValue } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { AddressVN } from 'types'
 
-export default function Address({ control, setValue }: { control: Control<FieldValues, any>, setValue: UseFormSetValue<FieldValues> }) {
+type Props = {
+    control: Control<FieldValues, any>,
+    setValue: UseFormSetValue<FieldValues>,
+    valueWard?: number,
+    address: string | undefined,
+    fullAddress?: boolean,
+    getValues?: Function,
+}
+
+export default function Address(props: Props) {
     const [provinces, setProvinces] = useState<AddressVN[] | undefined>(undefined)
     const [districts, setDistricts] = useState<AddressVN[] | undefined>(undefined)
     const [wards, setWards] = useState<AddressVN[] | undefined>(undefined)
     const [selectedProvince, setSelectedProvince] = useState("")
     const [selectedDistrict, setSelectedDistrict] = useState("")
-
+    const [fullAddressWard, setFullAddressWard] = useState("");
     useEffect(() => {
         getProvince()
             .then(x => {
@@ -29,35 +38,85 @@ export default function Address({ control, setValue }: { control: Control<FieldV
             .catch(() => {
                 toast.error("Lỗi lấy dữ liệu tỉnh thành")
             })
+        if (props.valueWard !== undefined) {
+            let wardId = props.valueWard.toString()
+            wardId = wardId.padStart(5, '0');
+            getFullAddress(wardId)
+                .then(x => {
+                    if (x.status === 200) {
+                        return x.data
+                    } else {
+                        toast.error("Lỗi lấy dữ liệu chi tiết phường")
+                    }
+                })
+                .then((addressVN: AddressVN) => {
+                    setSelectedProvince(addressVN.tinh.toString());
+                    props.setValue("province", addressVN.tinh.toString())
+                    setSelectedDistrict(addressVN.quan.toString())
+                    props.setValue("district", addressVN.quan.toString())
+                    props.setValue("ward", addressVN.phuong.toString())
+                    if (props.getValues && props.getValues("address")) {
+                        if (props.fullAddress) {
+                            props.setValue("fullAddress", `${props.getValues && props.getValues("address")}, ${addressVN.full_name}`)
+                        }
+                    }
+                })
+                .catch(() => toast.error("Lỗi lấy dữ liệu chi tiết"))
+
+        }
     }, [])
     const handleChangeProvince = (event: any) => {
         if (event.target.value) {
-            setValue("province", event.target.value)
+            props.setValue("province", event.target.value)
             setSelectedProvince(event.target.value)
+            props.setValue("fullAddress", '')
         } else {
-            setValue("province", "")
-            setValue("district", "")
-            setValue("ward", "")
+            props.setValue("province", "")
+            props.setValue("district", "")
+            props.setValue("ward", "")
+            if (props.fullAddress) {
+                props.setValue("fullAddress", '')
+            }
             setDistricts([])
             setWards([])
         }
     };
     const handleChangeDistrict = (event: any) => {
         if (event.target.value) {
-            setValue("district", event.target.value)
+            props.setValue("district", event.target.value)
             setSelectedDistrict(event.target.value)
+            props.setValue("fullAddress", '')
         } else {
-            setValue("district", "")
-            setValue("ward", "")
+            props.setValue("district", "")
+            props.setValue("ward", "")
+            if (props.fullAddress) {
+                props.setValue("fullAddress", '')
+            }
             setWards([])
         }
     };
-    const handleChangeWard = (event: any) => {
-        setValue("ward", event.target.value)
+    const handleChangeWard = async (event: any) => {
+        props.setValue("ward", event.target.value)
+        var resAddress = await getFullAddress(event.target.value);
+        if (resAddress.status == 200) {
+            setFullAddressWard(resAddress.data.full_name)
+            if (props.getValues && props.getValues("address")) {
+                if (props.fullAddress) {
+                    props.setValue("fullAddress", `${props.getValues && props.getValues("address")}, ${fullAddressWard}`)
+                }
+            }
+        } else {
+            toast.error("Lỗi lấy chi tiết địa chỉ")
+        }
     };
+    const handlerChangeAddress = () => {
+        if (fullAddressWard && props.fullAddress && props.getValues) {
+            props.setValue("fullAddress", `${props.getValues("address")}, ${fullAddressWard}`)
+        }
+    }
     useEffect(() => {
-        setValue("district", "")
-        setValue("ward", "")
+        props.setValue("district", "")
+        props.setValue("ward", "")
         getDistrict(selectedProvince)
             .then(x => {
                 if (x.status == 200) {
@@ -75,7 +134,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
     }, [selectedProvince])
 
     useEffect(() => {
-        setValue("ward", "")
+        props.setValue("ward", "")
         getWard(selectedDistrict)
             .then(x => {
                 if (x.status == 200) {
@@ -100,7 +159,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                 <Label htmlFor='province' value='Tỉnh (*)' />
                 <Controller
                     name='province'
-                    control={control}
+                    control={props.control}
                     rules={{ required: 'Vui lòng chọn tỉnh' }}
                     render={({ field, fieldState }) => (
                         <>
@@ -131,7 +190,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                 <Label htmlFor='province' value='Quận / Huyện (*)' />
                 <Controller
                     name='district'
-                    control={control}
+                    control={props.control}
                     rules={{ required: 'Vui lòng chọn Quận / Huyện ' }}
                     render={({ field, fieldState }) => (
                         <>
@@ -162,7 +221,7 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                 <Label htmlFor='province' value='Phường / Xã (*)' />
                 <Controller
                     name='ward'
-                    control={control}
+                    control={props.control}
                     rules={{ required: 'Vui lòng chọn Phường / Xã ' }}
                     render={({ field, fieldState }) => (
                         <>
@@ -195,7 +254,9 @@ export default function Address({ control, setValue }: { control: Control<FieldV
                     placeholder='Địa chỉ'
                     type='text'
                     name='address'
-                    control={control}
+                    value={props.address}
+                    onChange={handlerChangeAddress}
+                    control={props.control}
                     rules={{
                         required: "Vui lòng nhập địa chỉ",
                     }}

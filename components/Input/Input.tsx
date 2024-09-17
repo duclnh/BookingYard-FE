@@ -11,11 +11,13 @@ type Props = {
     onChange?: Function,
     row?: boolean,
     placeholder?: string | "",
+    value?: string,
+    readOnly?: boolean
 } & UseControllerProps
 
 export default function Input(props: Props) {
     const [show, setShow] = useState(false)
-    const { fieldState, field } = useController({ ...props, defaultValue: "" });
+    const { fieldState, field } = useController({ ...props, defaultValue: props.value || '' });
     return (
         <div className={`${props.row ? 'flex items-center' : ''}`}>
             {props.label && (
@@ -46,8 +48,9 @@ export default function Input(props: Props) {
                     <TextInput
                         {...props}
                         {...field}
-                        onInput={() => {
+                        onInput={(e) => {
                             if (props.onChange) {
+                                field.onChange(e.currentTarget.value)
                                 props.onChange()
                             }
                         }}

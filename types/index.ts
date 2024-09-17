@@ -46,6 +46,19 @@ export type UserUpdate = {
     role: string,
 }
 
+export type User = {
+    id: string,
+    name: string,
+    imageUrl?: string,
+    address?: string,
+    email: string,
+    phone: string,
+    gender: string,
+    point: number,
+    wardID: number,
+    role: string,
+}
+
 export type AddressVN = {
     id: number,
     name: string,
@@ -54,6 +67,9 @@ export type AddressVN = {
     full_name_en: string,
     latitude: number,
     longitude: number,
+    phuong: number
+    quan: number
+    tinh: number
 }
 
 export type FacilityTime = {

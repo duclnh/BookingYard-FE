@@ -1,7 +1,10 @@
 "use server"
 import { fetchWrapper } from "@utils/index";
 import { authOptions } from "@utils/index";
+import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
+import { cookies, headers } from "next/headers";
 
 
 export async function authentication(username: string | undefined, password: string | undefined) {
@@ -84,4 +87,16 @@ export async function getCurrentUser() {
     } catch (error) {
         return null;
     }
+}
+
+export async function getTokenWorkAround(){
+    const req = {
+        headers: Object.fromEntries(headers() as Headers),
+        cookies: Object.fromEntries(
+            cookies()
+                .getAll()
+                .map(c => [c.name, c.value])
+        )
+    } as NextApiRequest;
+    return await getToken({req});
 }
