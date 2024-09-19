@@ -3,7 +3,7 @@ import BackToTop from '@components/BackToTop/BackToTop'
 import FooterComponent from '@components/Footer/Footer'
 import Header from '@components/Header/Header'
 import { ChatBox, Loading } from '@components/index'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getUser } from '@services/userService'
 import { setUser } from '@hooks/userStore'
 import { User } from 'types'
@@ -32,8 +32,9 @@ export default function CustomerLayout({
         .then((u: User) => dispatch(setUser(u)))
         .catch(() => toast.error("Lỗi hệ thống"))
     }
+
   }, [status])
-  if (user === undefined) {
+  if (status === "loading" || (session?.user != null && user === undefined)) {
     return <Loading />
   }
   return (

@@ -38,7 +38,7 @@ export default function Address(props: Props) {
             .catch(() => {
                 toast.error("Lỗi lấy dữ liệu tỉnh thành")
             })
-        if (props.valueWard !== undefined) {
+        if (props.valueWard !== undefined && props.valueWard !== null) {
             let wardId = props.valueWard.toString()
             wardId = wardId.padStart(5, '0');
             getFullAddress(wardId)
@@ -55,6 +55,7 @@ export default function Address(props: Props) {
                     setSelectedDistrict(addressVN.quan.toString())
                     props.setValue("district", addressVN.quan.toString())
                     props.setValue("ward", addressVN.phuong.toString())
+                    setFullAddressWard(addressVN.full_name)
                     if (props.getValues && props.getValues("address")) {
                         if (props.fullAddress) {
                             props.setValue("fullAddress", `${props.getValues && props.getValues("address")}, ${addressVN.full_name}`)

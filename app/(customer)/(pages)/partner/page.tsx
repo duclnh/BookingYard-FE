@@ -39,7 +39,7 @@ export default function Partner() {
       </div>
       <Feature />
       <Salient />
-      <Service />
+      {/* <Service /> */}
       <Register />
     </>
   )

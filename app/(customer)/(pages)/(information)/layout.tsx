@@ -10,6 +10,9 @@ import { FiUserCheck } from 'react-icons/fi'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useAppSelector } from '@hooks/hooks'
+import { signOut } from 'next-auth/react'
+import { getImage } from '@utils/index'
+
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -20,10 +23,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className='mx-5 sm:-8 md:mx-20 lg:mx-30 xl:mx-40 grid grid-cols-1 gap-0 md:grid-cols-4 md:gap-3 lg:gap-10 py-16'>
       <div className='bg-[#f5f5f6] p-7 rounded-2xl mb-10 md:mb-0'>
         <div className='text-center border-b-2 border-white'>
-          <Image className='mx-auto rounded-md' height={70} width={70} src={user?.imageUrl || '/assets/images/avatar-default.png'} alt="avatar" />
+          <Image className='mx-auto rounded-md' height={70} width={70} src={getImage(user?.imageUrl) || '/assets/images/avatar-default.png'} alt="avatar" />
           <div className='mt-2'>
             <div className='text-lg font-medium'>{user?.name}</div>
-            <div className='my-2'>{user?.point} điểm</div>
+            <div className='my-2 font-bold'>{user?.point} điểm</div>
           </div>
         </div>
         <div className='grid grid-cols-1 gap-1 mt-3'>
@@ -47,10 +50,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <CiLock className='mr-2' />
             Đổi mật khẩu
           </Link>
-          <Link href="/sign-in" className='flex items-center py-1 px-2'>
+          <div onClick={() => signOut({ callbackUrl: "/sign-in" })} className='flex items-center py-1 px-2 rounded-lg hover:text-white hover:bg-cyan-800 hover:cursor-pointer'>
             <MdLogout className='mr-2' />
             Đăng xuất
-          </Link>
+          </div>
         </div>
       </div>
       {children}

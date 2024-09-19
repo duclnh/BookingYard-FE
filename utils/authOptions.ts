@@ -1,8 +1,7 @@
-import { authentication, authenticationAdmin, authenticationByGoogle } from "@services/authService";
+import { authentication, authenticationByGoogle, authenticationManager } from "@services/authService";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google";
-import { bool } from "sharp";
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -21,7 +20,7 @@ export const authOptions: NextAuthOptions = {
                 var res: { status: any, data: any } = { status: 500, data: null };
                 console.log(credentials?.type)
                 if (credentials?.type === "admin") {
-                    res = await authenticationAdmin(credentials.username, credentials.password)
+                    res = await authenticationManager(credentials.username, credentials.password)
                 } else if (credentials) {
                     res = await authentication(credentials.username, credentials.password)
                 }
@@ -46,10 +45,7 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user, account }) {
             if (user) {
                 token.userID = user.userID;
-                token.name = user.name;
-                token.imageUrl = user.imageUrl
                 token.token = user.token
-                token.email = user.email;
                 token.role = user.role;
                 token.isVerification = user.isVerification;
                 token.expiration = user.expiration
@@ -58,8 +54,6 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             session.user.userID = token.userID;
-            session.user.name = token.name;
-            session.user.imageUrl = token.imageUrl;
             session.user.role = token.role;
             return session;
         },
@@ -79,8 +73,6 @@ export const authOptions: NextAuthOptions = {
                     } else if (res.status === 200) {
                         user.userID = res.data.userID
                         user.token = res.data.token
-                        user.name = res.data.name
-                        user.imageUrl = res.data.imageUrl
                         user.expiration = res.data.expiration
                         user.isVerification = res.data.isVerification
                         user.role = res.data.role

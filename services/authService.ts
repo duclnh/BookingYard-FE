@@ -14,8 +14,8 @@ export async function authentication(username: string | undefined, password: str
     })
 }
 
-export async function authenticationAdmin(username: string | undefined, password: string | undefined) {
-    return await fetchWrapper.post("/api/auth/admin", {
+export async function authenticationManager(username: string | undefined, password: string | undefined) {
+    return await fetchWrapper.post("/api/auth/manager", {
         username,
         password
     })
@@ -72,6 +72,14 @@ export async function register(name: string, email: string, password: string) {
 export async function sendForgetPassword(email: string) {
     return await fetchWrapper.post("/api/auth/send-reset-password", {
         email
+    })
+}
+
+export async function updatePassword(userID: string | undefined, oldPassword: string, newPassword: string ) {
+    return await fetchWrapper.put('/api/auth/password', {
+        userID,
+        oldPassword,
+        newPassword
     })
 }
 

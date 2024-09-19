@@ -11,6 +11,7 @@
   "dependencies": {
     "@egjs/react-view360": "^4.0.0-beta.7",
     "@microsoft/signalr": "^8.0.0",
+    "@reduxjs/toolkit": "^2.2.7",
     "bookingyard": "file:",
     "chart.js": "^4.4.4",
     "flowbite-react": "^0.10.1",

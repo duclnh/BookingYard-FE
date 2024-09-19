@@ -1,18 +1,18 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import Header from '@components/Header/Header'
-import FooterComponent from '@components/Footer/Footer'
 import { Carousel, Rating } from 'flowbite-react'
-import { ChatBox } from '@components/index'
-import { IoIosArrowDropleft, IoIosArrowDropright, IoMdSearch } from 'react-icons/io'
+import { ChatBox, Loading } from '@components/index'
+import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
 import BackToTop from '@components/BackToTop/BackToTop'
 import Image from 'next/image'
 import Link from 'next/link'
 import { IoTimeOutline } from 'react-icons/io5'
 import { MdOutlineLocationOn } from 'react-icons/md'
 import { TbBasketDiscount } from 'react-icons/tb'
-
 export default function Home() {
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const images = [
     { src: '/assets/images/slide1.png', title: 'Tiêu đề 1' },
     { src: '/assets/images/slide2.png', title: 'Tiêu đề 2' },
@@ -22,8 +22,14 @@ export default function Home() {
     { src: '/assets/images/slide6.png', title: 'Tiêu đề 6' },
     { src: '/assets/images/slide7.png', title: 'Tiêu đề 7' }
   ];
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 5000);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+    return () => clearInterval(interval);
+  }, [images.length, 5000]);
 
   const itemsPerPage = 3;
   const totalItems = images.length;
@@ -36,17 +42,8 @@ export default function Home() {
     setCurrentIndex(prevIndex => (prevIndex < totalItems - itemsPerPage ? prevIndex + 1 : 0));
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [images.length, 5000]);
-
   return (
     <>
-      <Header />
       <div className='md:py-5 md:mx-14 lg:mx-32 px-5'>
         <h4 className='lg:text-6xl md:text-4xl text-3xl font-black text-center'>
           DỊCH VỤ ĐẶT SÂN THỂ THAO TRỰC TUYẾN TIỆN LỢI
@@ -206,7 +203,6 @@ export default function Home() {
       </div>
       <ChatBox />
       <BackToTop />
-      <FooterComponent />
     </>
   )
 }

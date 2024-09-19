@@ -57,6 +57,24 @@ export type User = {
     point: number,
     wardID: number,
     role: string,
+    collapse?: boolean,
+}
+
+export type Manager = {
+    id: string,
+    name: string,
+    imageUrl?: string,
+    address?: string,
+    email: string,
+    phone: string,
+    gender: string,
+    point: number,
+    wardID: number,
+    role: string,
+    facilityID?: string,
+    facilityName?: string,
+    facilityImage?: string,
+    collapse?: boolean,
 }
 
 export type AddressVN = {
@@ -81,4 +99,8 @@ export type FacilityTime = {
 export type PeakHour = {
     name: string,
     isChecked: boolean,
+}
+export type SportCreate = {
+    sportID: number,
+    sportName: string,
 }

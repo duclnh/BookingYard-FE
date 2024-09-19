@@ -13,6 +13,7 @@ import { TbBasketDiscount } from 'react-icons/tb';
 import { FiUserCheck } from 'react-icons/fi';
 import { signOut } from 'next-auth/react';
 import { useAppSelector } from '@hooks/hooks';
+import { getImage } from '@utils/index';
 
 function Header() {
   const pathname = usePathname();
@@ -62,7 +63,7 @@ function Header() {
                 aria-haspopup="menu"
                 trigger='hover'
                 label={
-                  <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={user.imageUrl || "assets/images/avatar-default.png"} alt={user.name} rounded />
+                  <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={getImage(user?.imageUrl) || "assets/images/avatar-default.png"} alt={user.name} rounded />
                 }
                 arrowIcon={false}
                 inline
