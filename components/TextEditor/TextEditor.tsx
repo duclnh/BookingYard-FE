@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { useController, UseControllerProps } from 'react-hook-form';
-import { Label } from 'flowbite-react';
+import { Label, TextInput } from 'flowbite-react';
 
 type Props = {
   className: string;

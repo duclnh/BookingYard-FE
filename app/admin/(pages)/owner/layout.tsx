@@ -1,8 +1,8 @@
 "use client";
 import { Avatar, Breadcrumb, CustomFlowbiteTheme, Dropdown, Navbar, Popover, Sidebar } from 'flowbite-react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiHome } from 'react-icons/hi';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import Image from 'next/image';
@@ -14,6 +14,14 @@ import { RiCalendarScheduleLine, RiDashboard2Line } from 'react-icons/ri';
 import { PiCourtBasketball, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
 import { BsQrCodeScan } from 'react-icons/bs';
+import { useAppDispatch, useAppSelector } from '@hooks/hooks';
+import { getManager, getUser } from '@services/userService';
+import toast from 'react-hot-toast';
+import { Manager, User } from 'types';
+import { setUser } from '@hooks/userStore';
+import { Loading } from '@components/index';
+import { setManager } from '@hooks/managerStore';
+import { getImage } from '@utils/imageOptions';
 
 export default function ManagementLayout({
   children,
@@ -21,14 +29,36 @@ export default function ManagementLayout({
 
   children: React.ReactNode;
 }>) {
-  const [collapse, setCollapse] = useState(false);
-  const { data: session } = useSession();
-  const pathname = usePathname();
-
+  const user = useAppSelector(state => state.manager.value)
+  const [collapse, setCollapse] = useState(user?.collapse);
+  const { data: session, status: status } = useSession()
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (session?.user && user == undefined) {
+      getManager(session.user.userID)
+        .then(x => {
+          if (x.status === 200) {
+            return x.data
+          } else {
+            toast.error("Lỗi lấy thông tin người dùng")
+          }
+        })
+        .then((u: Manager) => dispatch(setManager(u)))
+        .catch(() => toast.error("Lỗi hệ thống"))
+    }
+  }, [status])
+  if (user === undefined) {
+    return <Loading />
+  }
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
       inner: `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
     }
+  }
+
+  const handlerCollapseSidebar = (collapse: boolean) => {
+    setCollapse(collapse);
+    setManager({ ...user , collapse: collapse})
   }
 
   return (
@@ -36,15 +66,15 @@ export default function ManagementLayout({
       <Sidebar theme={customTheme} className={`${!collapse ? 'w-80' : ''}`} collapseBehavior='collapse' collapsed={collapse} aria-label="Sidebar with multi-level dropdown example">
         {!collapse ? (
           <Sidebar.Items className='p-3 mb-6 relative select-none'>
-            <Image height={60} width={60} className='rounded-[50%] mx-auto' src='/assets/images/avatar-default.png' alt='img' />
+            <Image height={60} width={60} className='rounded-[50%] mx-auto' src={getImage(user?.facilityImage) || '/assets/images/avatar-default.png'} alt={user.name} />
             <div className='mt-3 text-center'>
-              <p className='text-xl font-bold'>Sân Vận động hà nam</p>
+              <p className='text-xl font-bold'>{user?.facilityName ?? "Công Ty Fieldy"}</p>
             </div>
-            <FaList onClick={() => setCollapse(true)} size={18} className='absolute top-0 right-0 hover:cursor-pointer hover:scale-110' />
+            <FaList onClick={() => handlerCollapseSidebar(true)} size={18} className='absolute top-0 right-0 hover:cursor-pointer hover:scale-110' />
           </Sidebar.Items>
         ) : (
           <Sidebar.Items>
-            <FaList onClick={() => setCollapse(false)} size={18} className='mx-auto  mb-4 hover:cursor-pointer hover:scale-110' />
+            <FaList onClick={() => handlerCollapseSidebar(false)} size={18} className='mx-auto  mb-4 hover:cursor-pointer hover:scale-110' />
           </Sidebar.Items>
         )}
         <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} overflow-y-auto overflow-x-hidden`}>
@@ -81,7 +111,7 @@ export default function ManagementLayout({
         </Sidebar.Items>
         <Sidebar.Items className='border-t-2'>
           <Sidebar.ItemGroup className='!mt-2'>
-            <Sidebar.Item href="#" icon={MdLogout}>
+            <Sidebar.Item onClick={async () => await signOut({ redirect: true, callbackUrl: "/admin/sign-in" })} icon={MdLogout}>
               Đăng xuất
             </Sidebar.Item>
           </Sidebar.ItemGroup>
@@ -99,7 +129,6 @@ export default function ManagementLayout({
             </div>
             <Navbar className=''>
               <div className="flex flex-row items-center gap-4 md:order-2">
-                <p>{session?.user.name}</p>
                 <Popover
                   placement='bottom-start'
                   aria-labelledby="profile-popover"
@@ -135,7 +164,13 @@ export default function ManagementLayout({
                   aria-haspopup="menu"
                   trigger='hover'
                   label={
-                    <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt={session?.user.name} rounded />
+                    <>
+                      <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={getImage(user.imageUrl) || "/assets/images/avatar-default.png"} alt={user.name} rounded />
+                      <div className='ml-3 text-left'>
+                        <p className='font-bold'>{user.name}</p>
+                        <p className='text-xs'>{user.role === "StaffCourt" && 'Nhân viên' || user.role === "CourtOwner" && 'Chủ sân'}</p>
+                      </div>
+                    </>
                   }
                   arrowIcon={false}
                   inline
@@ -150,7 +185,7 @@ export default function ManagementLayout({
                     Đổi mật khẩu
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href='/sign-in' aria-label="Sign Out">
+                  <Dropdown.Item onClick={async () => await signOut({ redirect: true, callbackUrl: "/admin/sign-in" })} aria-label="Sign Out">
                     <MdLogout className='mr-2' />
                     Đăng xuất
                   </Dropdown.Item>

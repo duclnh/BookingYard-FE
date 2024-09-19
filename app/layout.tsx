@@ -1,6 +1,6 @@
 import { ToastProvider, SignalProvider } from "@providers/index";
 import "./globals.css";
-import SessionWrapper from "@context/index";
+import SessionWrapper, { ReduxWrapper } from "@context/index";
 export const metadata = {
   title: 'Fieldy ',
   description: 'Fieldy Booking Yard',
@@ -16,7 +16,9 @@ export default async function RootLayout({
       <body suppressHydrationWarning={true}>
         <ToastProvider />
         <SessionWrapper>
-          {children}
+          <ReduxWrapper>
+            {children}
+          </ReduxWrapper>
         </SessionWrapper>
       </body>
     </html>

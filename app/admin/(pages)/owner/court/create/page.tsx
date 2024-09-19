@@ -1,15 +1,31 @@
 "use client"
 import { Heading, Input, InputImage } from '@components/index'
+import { GetSportCreate } from '@services/sportService';
 import { Button, Label, Select } from 'flowbite-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { SportCreate } from 'types';
 
 
 export default function CreatePage() {
     const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [imageCourt, setImageCourt] = useState<File>()
     const [image360, setImage360] = useState<File>()
-
+    const [sports, setSports] = useState<SportCreate[]>([])
+    useEffect(() => {
+        GetSportCreate()
+            .then(x => {
+                if (x.status === 200) {
+                    console.log(x.data)
+                    return x.data
+                } else {
+                    toast.error("Lỗi lấy thông tin thể thao")
+                }
+            }).then((sport: SportCreate[]) => {
+                setSports(sport)
+            }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+    }, [])
     const handlerSubmitCreateFacility = (data: FieldValues) => {
         console.log(data)
     }
@@ -60,8 +76,8 @@ export default function CreatePage() {
                                         }
                                     >
                                         <option value=''>Chọn môn thể thao</option>
-                                        {[...Array(24)].map((_, index) => (
-                                            <option key={index} value={`${index + 1}:00`}>{`${index + 1}:00`}</option>
+                                        {sports.map((sport: SportCreate, index) => (
+                                            <option key={index} value={sport.sportID}>{sport.sportName  }</option>
                                         ))}
                                     </Select>
                                     {fieldState.error && (
@@ -77,8 +93,8 @@ export default function CreatePage() {
                         name='360'
                         label='Ảnh 360 sân (*)'
                         value={image360}
-                        setFile= {setImage360}
-                        required= "Vui chọn ảnh 360 sân"
+                        setFile={setImage360}
+                        required="Vui chọn ảnh 360 sân"
                     />
                 </div>
                 <div className='mt-3 grid md:grid-cols-2 gap-10'>

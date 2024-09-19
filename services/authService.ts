@@ -1,7 +1,10 @@
 "use server"
 import { fetchWrapper } from "@utils/index";
 import { authOptions } from "@utils/index";
+import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
+import { cookies, headers } from "next/headers";
 
 
 export async function authentication(username: string | undefined, password: string | undefined) {
@@ -11,8 +14,8 @@ export async function authentication(username: string | undefined, password: str
     })
 }
 
-export async function authenticationAdmin(username: string | undefined, password: string | undefined) {
-    return await fetchWrapper.post("/api/auth/admin", {
+export async function authenticationManager(username: string | undefined, password: string | undefined) {
+    return await fetchWrapper.post("/api/auth/manager", {
         username,
         password
     })
@@ -72,6 +75,14 @@ export async function sendForgetPassword(email: string) {
     })
 }
 
+export async function updatePassword(userID: string | undefined, oldPassword: string, newPassword: string ) {
+    return await fetchWrapper.put('/api/auth/password', {
+        userID,
+        oldPassword,
+        newPassword
+    })
+}
+
 export async function getSessions() {
     return await getServerSession(authOptions)
 }
@@ -84,4 +95,16 @@ export async function getCurrentUser() {
     } catch (error) {
         return null;
     }
+}
+
+export async function getTokenWorkAround(){
+    const req = {
+        headers: Object.fromEntries(headers() as Headers),
+        cookies: Object.fromEntries(
+            cookies()
+                .getAll()
+                .map(c => [c.name, c.value])
+        )
+    } as NextApiRequest;
+    return await getToken({req});
 }

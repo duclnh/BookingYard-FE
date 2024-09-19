@@ -13,34 +13,64 @@ import { PiBuildingOfficeBold, PiHeadCircuitBold, PiUsersBold, PiUsersThreeBold 
 import { GrSchedules } from 'react-icons/gr';
 import { Loading } from '@components/index';
 import { signOut, useSession } from 'next-auth/react';
+import { useAppDispatch, useAppSelector } from '@hooks/hooks';
+import { getUser } from '@services/userService';
+import toast from 'react-hot-toast';
+
+import { setUser } from '@hooks/userStore';
+import { User } from 'types';
 
 export default function ManagementLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [collapse, setCollapse] = useState(false);
   const { data: session, status: status } = useSession()
+  const user = useAppSelector(state => state.user.value)
+  const [collapse, setCollapse] = useState(user?.collapse);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (session?.user && user == undefined) {
+      getUser(session.user.userID)
+        .then(x => {
+          if (x.status === 200) {
+            return x.data
+          } else {
+            toast.error("Lỗi lấy thông tin người dùng")
+          }
+        })
+        .then((u: User) => dispatch(setUser(u)))
+        .catch(() => toast.error("Lỗi hệ thống"))
+    }
+  }, [status])
+  if (user === undefined) {
+    return <Loading />
+  }
   const customTheme: CustomFlowbiteTheme['sidebar'] = {
     root: {
       inner: `h-full overflow-y-auto overflow-x-hidden rounded px-2 border-b-2 border-r-2 bg-white py-4 dark:bg-gray-800`
     }
   }
-
+  const handlerCollapseSidebar = (collapse: boolean) => {
+    console.log(user)
+    setCollapse(collapse);
+    setUser({ ...user, collapse: collapse })
+    console.log(user)
+  }
   return (
     <div className='flex h-full w-full'>
       <Sidebar theme={customTheme} className={`${!collapse ? 'w-80' : ''}`} collapseBehavior='collapse' collapsed={collapse} aria-label="Sidebar with multi-level dropdown example">
         {!collapse ? (
           <Sidebar.Items className='p-3 mb-6 relative select-none'>
-            <Image height={60} width={60} className='rounded-[50%] mx-auto' src={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt='img' />
+            <Image height={30} width={60} className='rounded-[50%] mx-auto' src={"/assets/images/logo.png"} alt='img' />
             <div className='mt-3 text-center'>
-              <p className='text-xl font-bold'>Sân Vận động hà nam</p>
+              <p className='text-xl font-bold'>Công Ty Fieldy</p>
             </div>
-            <FaList onClick={() => setCollapse(true)} size={18} className='absolute top-0 right-0 hover:cursor-pointer hover:scale-110' />
+            <FaList onClick={() => handlerCollapseSidebar(true)} size={18} className='absolute top-0 right-0 hover:cursor-pointer hover:scale-110' />
           </Sidebar.Items>
         ) : (
           <Sidebar.Items>
-            <FaList onClick={() => setCollapse(false)} size={18} className='mx-auto  mb-4 hover:cursor-pointer hover:scale-110' />
+            <FaList onClick={() => handlerCollapseSidebar(false)} size={18} className='mx-auto  mb-4 hover:cursor-pointer hover:scale-110' />
           </Sidebar.Items>
         )}
         <Sidebar.Items className={`${!collapse ? 'min-h-[544px] max-h-[545px]' : 'min-h-[659px] max-h-[660px]'} hover:overflow-y-auto overflow-y-hidden overflow-x-hidden`}>
@@ -145,7 +175,13 @@ export default function ManagementLayout({
                   aria-haspopup="menu"
                   trigger='hover'
                   label={
-                    <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={session?.user.imageUrl || "/assets/images/avatar-default.png"} alt={session?.user.name} rounded />
+                    <>
+                      <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={user.imageUrl || "/assets/images/avatar-default.png"} alt={user.name} rounded />
+                      <div className='ml-3 text-left'>
+                        <p className='font-bold'>{user.name}</p>
+                        <p className='text-xs'>{user.role === "Admin" && 'Quản trị viên' || user.role === "Staff" && 'Nhân viên'}</p>
+                      </div>
+                    </>
                   }
                   arrowIcon={false}
                   inline
@@ -173,7 +209,6 @@ export default function ManagementLayout({
           <div className='py-5 px-3 md:px-12'>{children}</div>
         </div>
       </div>
-      {status === 'loading' && <Loading />}
     </div >
   )
 }

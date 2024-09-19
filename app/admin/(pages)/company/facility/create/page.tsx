@@ -1,5 +1,5 @@
 "use client"
-import { Heading, Input, InputDate, InputImage, ModalView, NewFeature } from '@components/index'
+import { Address, Heading, Input, InputDate, InputImage, ModalView, NewFeature } from '@components/index'
 import { Button, Label, Select } from 'flowbite-react';
 import React, { useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
@@ -7,9 +7,9 @@ import dynamic from 'next/dynamic';
 import { MdHealthAndSafety } from 'react-icons/md';
 import { Convenience, Feature, FacilityTime, PeakHour } from 'types';
 import { TiDelete } from 'react-icons/ti';
-import Address from './address';
 import { checkValidateTime, convertToStartTimeAndEndTime } from '@utils/timeOptions';
 import toast from 'react-hot-toast';
+import { createFacility, getFullAddress } from '@services/index';
 
 const TextEditor = dynamic(() => import('@components/TextEditor/TextEditor'), {
     ssr: false,
@@ -20,7 +20,7 @@ const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
 
 
 export default function CreatePage() {
-    const { control, handleSubmit, register, formState: { isSubmitting, isValid }, getFieldState, setValue, getValues, } = useForm({ mode: "onTouched", });
+    const { control, handleSubmit, formState: { isSubmitting, isValid }, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
     const [dates, setDates] = useState<Date[]>([])
     const [conveniences, setConveniences] = useState<Convenience[]>([
@@ -110,7 +110,6 @@ export default function CreatePage() {
             index === indexRemove ? { ...item, isChecked: !item.isChecked } : item
         )
         setPeakHours(updatePeakHour);
-        setValue("peakhour", updatePeakHour.map((x) => x.name));
     }
 
     const handlerChangePeakHour = (time: string, openTime: boolean) => {
@@ -127,56 +126,70 @@ export default function CreatePage() {
     const handleDateChange = (dates: Date | Date[]) => {
         if (Array.isArray(dates)) {
             setDates(dates);
-            setValue('holiday', dates)
         }
     };
 
     const handlerSubmitCreateFacility = async (data: FieldValues) => {
-        console.log(data)
-        console.log(JSON.stringify(conveniences))
         if (imageFacility === undefined) {
             toast.error("Vui lòng chọn ảnh cơ sở")
             return;
         }
-        // try {
-        //     var formData = new FormData();
-        //     formData.append("name", data.name)
-        //     formData.append("email", data.email);
-        //     formData.append("phone", data.phone);
-        //     formData.append("address", data.address);
-        //     formData.append("description", data.description);
-        //     formData.append("facilityName", data.facilityName);
-        //     formData.append("startTime", data.startTime);
-        //     formData.append("endTime", data.endTime);
-        //     formData.append("monthPrice", data.monthPrice);
-        //     formData.append("yearPrice", data.yearPrice);
-        //     formData.append("holidayPrice", data.holidayPrice);
-        //     formData.append("peakHourPrice", data.peakHourPrice);
-        //     formData.append("longitude", data.location[1])
-        //     formData.append("latitude", data.location[0])
-        //     formData.append("convenient", data.convenience);
-        //     formData.append("openDate", data.facilitytime);
-        //     formData.append("holidayDate", data.holiday );
-        //     formData.append("peakHour", data.peakhour);
-        //     formData.append("image", imageFacility);
-        //     formData.append("logo", imageLogo || '');
-        //     imageOther.forEach((file, index) => {
-        //         formData.append(`other[${index}]`, file);
-        //     });
-        //     formData.append("wardID", data.ward);
-        //     formData.append("districtID", data.district);
-        //     formData.append("provinceID", data.province);
-        //     var res = await createFacility(formData)
-        //     if (res.status === 201) {
-        //         toast.success("Tạo mới cơ sở thành công")
-        //     } else {
-        //         toast.error("Tạo mới thất bại")
-        //         console.log(res.data)
-        //     }
-        // } catch (error) {
-        //     toast.error("Lỗi hệ thống vui lòng thử lại")
-        //     console.log(error)
-        // }
+        console.log(getValues("description"))
+        var resAddress = await getFullAddress(data.ward);
+        if (resAddress.status !== 200) {
+            toast.error("Lỗi lấy dữ liệu địa chỉ")
+            return;
+        }
+        try {
+            var formData = new FormData();
+            formData.append("name", data.name)
+            formData.append("email", data.email);
+            formData.append("phone", data.phone);
+            formData.append("address", data.address);
+            formData.append("fullAddress", `${data.address}, ${resAddress.data.full_name}`);
+            formData.append("description", data.description);
+            formData.append("facilityName", data.nameFacility);
+            formData.append("startTime", data.open);
+            formData.append("endTime", data.close);
+            formData.append("monthPrice", data.monthPrice);
+            formData.append("yearPrice", data.yearPrice);
+            formData.append("holidayPrice", data.holidayPrice);
+            formData.append("peakHourPrice", data.peakHourPrice);
+            formData.append("longitude", data.location[1])
+            formData.append("latitude", data.location[0])
+            formData.append("convenient", JSON.stringify(conveniences));
+            facilityTimes.forEach((facilityTime: FacilityTime) => {
+                if (facilityTime.isChecked) {
+                    formData.append('openDate', facilityTime.value);
+                }
+            });
+            dates.forEach((date: Date) => {
+                formData.append('holidayDate', date.toISOString());
+            });
+            peakHours.forEach((peakHour: PeakHour) => {
+                if (peakHour.isChecked) {
+                    formData.append('peakHour', peakHour.name);
+                }
+            });
+            formData.append("image", imageFacility);
+            formData.append("logo", imageLogo || '');
+            imageOther.forEach((file) => {
+                formData.append('Other', file);
+            });
+            formData.append("wardID", data.ward);
+            formData.append("districtID", data.district);
+            formData.append("provinceID", data.province);
+            var res = await createFacility(formData)
+            if (res.status === 201) {
+                toast.success("Tạo mới cơ sở thành công")
+            } else {
+                toast.error("Tạo mới thất bại")
+                console.log(res.data)
+            }
+        } catch (error) {
+            toast.error("Lỗi hệ thống vui lòng thử lại")
+            console.log(error)
+        }
     }
 
     return (
@@ -190,7 +203,7 @@ export default function CreatePage() {
                                 label='Tên cơ sở (*)'
                                 placeholder='Tên cơ sở '
                                 type='text'
-                                name='namefacility'
+                                name='nameFacility'
                                 control={control}
                                 rules={{
                                     required: "Vui lòng nhập tên cơ sở",
@@ -309,7 +322,7 @@ export default function CreatePage() {
                         label='Số tiền cộng thêm giờ cao điểm (*)'
                         placeholder='Số tiền cộng thêm giờ cao điểm'
                         type='text'
-                        name='peakhourprice'
+                        name='peakHourPrice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền cộng thêm giờ cao điểm",
@@ -319,7 +332,7 @@ export default function CreatePage() {
                         label='Số tiền giảm đăng kí tháng (*)'
                         placeholder='Số tiền giảm đăng kí tháng'
                         type='text'
-                        name='monthprice'
+                        name='monthPrice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền giảm đăng kí tháng",
@@ -331,7 +344,7 @@ export default function CreatePage() {
                         label='Số tiền giảm đăng kí năm (*)'
                         placeholder='Số tiền giảm đăng kí năm'
                         type='text'
-                        name='yearprice'
+                        name='yearPrice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền giảm đăng kí năm",
@@ -341,14 +354,14 @@ export default function CreatePage() {
                         label='Số tiền cộng thêm ngày lễ (*)'
                         placeholder='Số tiền cộng thêm ngày lễ'
                         type='text'
-                        name='holidayprice'
+                        name='holidayPrice'
                         control={control}
                         rules={{
                             required: "Vui lòng nhập số tiền cộng thêm ngày lễ",
                         }}
                     />
                 </div>
-                <Address control={control} setValue={setValue} />
+                <Address address='' control={control} setValue={setValue} />
                 <div className='mt-3 grid sm:grid-cols-2'>
                     <div className='mb-3 sm:mr-5'>
                         <Label htmlFor='open' value='Thời gian mở cửa (*)' />

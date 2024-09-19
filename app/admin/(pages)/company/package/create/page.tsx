@@ -15,7 +15,7 @@ export default function CreatePackage() {
     ]);
 
     const handlerSubmitCreatePackage = () => {
-
+            console.log(JSON.stringify(features))
     }
 
     return (

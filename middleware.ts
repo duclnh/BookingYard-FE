@@ -1,31 +1,31 @@
 import { decode } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
-
-const protectedRoutes = ['/profile']
-const publicRoutes = ['/', '/partner', '/contact','/booking']
+// '/profile'
+const protectedRoutes = ['']
+const publicRoutes = ['/', '/partner', '/contact', '/booking']
 const ownerRoutes = ['/admin/owner/dashboard',
-                    '/admin/owner/booking',
-                    '/admin/owner/check-in',
-                    '/admin/owner/court',
-                    '/admin/owner/feedback',
-                    '/admin/owner/schedule',
-                    '/admin/owner/staff',
-                    '/admin/owner/voucher']
+  '/admin/owner/booking',
+  '/admin/owner/check-in',
+  '/admin/owner/court',
+  '/admin/owner/feedback',
+  '/admin/owner/schedule',
+  '/admin/owner/staff',
+  '/admin/owner/voucher']
 const adminRoutes = ['/admin/company/dashboard',
-                    '/admin/company/booking',
-                    '/admin/company/check-in',
-                    '/admin/company/court',
-                    '/admin/company/feedback',
-                    '/admin/company/schedule',
-                    '/admin/company/staff',
-                    '/admin/company/facility',
-                    '/admin/company/voucher']
-const authenticationRoutes = ['/sign-in', 
-                              '/admin/sign-in', 
-                              '/sign-up', 
-                              '/verify', 
-                              '/forget-password', 
-                              '/admin/forget-password']
+  '/admin/company/booking',
+  '/admin/company/check-in',
+  '/admin/company/court',
+  '/admin/company/feedback',
+  '/admin/company/schedule',
+  '/admin/company/staff',
+  '/admin/company/facility',
+  '/admin/company/voucher']
+const authenticationRoutes = ['/sign-in',
+  '/admin/sign-in',
+  '/sign-up',
+  '/verify',
+  '/forget-password',
+  '/admin/forget-password']
 
 
 export async function middleware(request: NextRequest) {
@@ -41,46 +41,46 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET || '',
     token: sessionToken,
   })
+  if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
+    return Response.redirect(new URL('/not-found', request.url));
+  }
+  
+  if (currentUser && currentUser.role == "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
+    return Response.redirect(new URL('/sign-in', request.url));
+  }
 
-  // if ((isAdminRoutes || isOwnerRoute) && currentUser == null) {
-  //   return Response.redirect(new URL('/admin/sign-in', request.url));
-  // }
+  if (currentUser && currentUser.role != "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
+    return Response.redirect(new URL('/admin/sign-in', request.url));
+  }
 
-  // if (isProtectedRoute && currentUser == null) {
-  //   return Response.redirect(new URL('/sign-in', request.url));
-  // }
+  if ((isAdminRoutes || isOwnerRoute) && currentUser == null && !isAuthenticationRoutes) {
+    return Response.redirect(new URL('/admin/sign-in', request.url));
+  }
 
-  // if (currentUser && isAuthenticationRoutes) {
-  //   return Response.redirect(new URL('/not-found', request.url));
-  // }
+  if (isProtectedRoute && currentUser == null && !isAuthenticationRoutes) {
+    return Response.redirect(new URL('/sign-in', request.url));
+  }
 
-  // if (currentUser && currentUser.role == "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-  //   return Response.redirect(new URL('/sign-in', request.url));
-  // }
 
-  // if (currentUser && currentUser.role != "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-  //   return Response.redirect(new URL('/admin/sign-in', request.url));
-  // }
+  if (currentUser && currentUser.role != "CourtOwner" && isOwnerRoute) {
+    return Response.redirect(new URL('/not-found', request.url));
+  }
 
-  // if (currentUser && currentUser.role != "OwnerCourt" && isOwnerRoute) {
-  //   return Response.redirect(new URL('/not-found', request.url));
-  // }
+  if (currentUser && currentUser.role != "Admin" && isAdminRoutes) {
+    return Response.redirect(new URL('/not-found', request.url));
+  }
 
-  // if (currentUser && currentUser.role != "Admin" && isAdminRoutes) {
-  //   return Response.redirect(new URL('/not-found', request.url));
-  // }
+  if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
+    return Response.redirect(new URL('/not-found', request.url));
+  }
 
-  // if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
-  //   return Response.redirect(new URL('/not-found', request.url));
-  // }
+  if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
+    return Response.redirect(new URL('/verify', request.url));
+  }
 
-  // if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
-  //   return Response.redirect(new URL('/verify', request.url));
-  // }
-
-  // if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
-  //   return Response.redirect(new URL('/not-found', request.url));
-  // }
+  if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
+    return Response.redirect(new URL('/not-found', request.url));
+  }
 
 }
 
