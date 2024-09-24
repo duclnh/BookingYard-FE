@@ -1,6 +1,6 @@
 "use client"
 import { Label } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { TiDelete } from 'react-icons/ti';
 
 type Props = {
@@ -15,7 +15,15 @@ type Props = {
 export default function InputImage(props: Props) {
     const [imageSources, setImageSources] = useState<string[]>([]);
     const [isInput, setIsInput] = useState<boolean | null>(null);
-
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        if (props.value === undefined) {
+            setImageSources([]);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+        }
+    }, [props.value])
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const files = event.target.files
@@ -57,7 +65,7 @@ export default function InputImage(props: Props) {
             )}
             <div className="flex">
                 <div className="relative w-full">
-                    <input multiple={props.multiple} onChange={handleFileChange}
+                    <input multiple={props.multiple} ref={fileInputRef} onChange={handleFileChange}
                         className={`block w-full overflow-hidden rounded-lg border disabled:cursor-not-allowed 
                         disabled:opacity-50 text-sm ${isInput != null && props.required ? isInput ? success
                                 : error : ''}`}

@@ -134,7 +134,6 @@ export default function CreatePage() {
             toast.error("Vui lòng chọn ảnh cơ sở")
             return;
         }
-        console.log(getValues("description"))
         var resAddress = await getFullAddress(data.ward);
         if (resAddress.status !== 200) {
             toast.error("Lỗi lấy dữ liệu địa chỉ")
@@ -188,7 +187,6 @@ export default function CreatePage() {
             }
         } catch (error) {
             toast.error("Lỗi hệ thống vui lòng thử lại")
-            console.log(error)
         }
     }
 

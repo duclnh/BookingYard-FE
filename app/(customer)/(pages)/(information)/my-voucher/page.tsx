@@ -31,8 +31,8 @@ export default function MyVoucher() {
       <div className='p-5 space-y-4'>
         {[...Array(5)].map((_, index) => (
           <div key={index} className='rounded-lg border'>
-            <div className='grid grid-cols-4 place-items-center gap-2 p-2'>
-              <div className='col-span-1 p-5 w-full rounded-lg bg-gray-700 text-orange-500'>
+            <div className='grid grid-cols-5 place-items-center gap-2 p-2'>
+              <div className='col-span-0.5 p-5 w-full rounded-lg bg-gray-700 text-orange-500'>
                 <p className='mb-2 text-lg text-center'>Fieldy</p>
                 <TbBasketDiscount className='mx-auto' size={35} />
               </div>
@@ -41,6 +41,9 @@ export default function MyVoucher() {
                 <p>Sân: sân vận động Hà Nam</p>
                 <p>Ngày bắt đầu: 10/08/2024</p>
                 <p>Ngày hết hạn 20/08/2024</p>
+              </div>
+              <div className='col-span-1'>
+                <p className='font-bold'>Bóng đá</p>
               </div>
               <div className='col-span-1'>
                 <Button type='button' className=''>Sử dụng</Button>

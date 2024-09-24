@@ -2,6 +2,6 @@
 
 import { fetchWrapper } from "@utils/index";
 
-export async function GetSportCreate() {
+export async function getSportCreate() {
     return await fetchWrapper.get("/api/sport-create");
   }
