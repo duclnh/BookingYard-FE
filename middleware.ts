@@ -41,16 +41,18 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET || '',
     token: sessionToken,
   })
-  if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
   
   if (currentUser && currentUser.role == "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-    return Response.redirect(new URL('/sign-in', request.url));
+    return Response.redirect(new URL('/logout', request.url));
   }
+  
 
   if (currentUser && currentUser.role != "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-    return Response.redirect(new URL('/admin/sign-in', request.url));
+    return Response.redirect(new URL('/logout', request.url));
+  }
+
+  if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
+    return Response.redirect(new URL('/not-found', request.url));
   }
 
   if ((isAdminRoutes || isOwnerRoute) && currentUser == null && !isAuthenticationRoutes) {

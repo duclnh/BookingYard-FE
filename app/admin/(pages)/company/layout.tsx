@@ -62,7 +62,7 @@ export default function ManagementLayout({
       <Sidebar theme={customTheme} className={`${!collapse ? 'w-80' : ''}`} collapseBehavior='collapse' collapsed={collapse} aria-label="Sidebar with multi-level dropdown example">
         {!collapse ? (
           <Sidebar.Items className='p-3 mb-6 relative select-none'>
-            <Image height={30} width={60} className='rounded-[50%] mx-auto' src={"/assets/images/logo.png"} alt='img' />
+            <Image height={30} width={60} className='mx-auto' src={"/assets/images/logo.png"} alt='img' />
             <div className='mt-3 text-center'>
               <p className='text-xl font-bold'>Công Ty Fieldy</p>
             </div>

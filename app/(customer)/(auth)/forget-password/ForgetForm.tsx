@@ -39,7 +39,7 @@ export default function ForgetForm({onEmailSubmit}:{onEmailSubmit: Function}) {
                 name='email'
                 rules={{ required: "Vui lòng nhập email" }}
             />
-            <Button type='submit' className='mt-2 focus:ring-transparent'>
+            <Button disabled={isSubmitting} type='submit' className='mt-2 focus:ring-transparent'>
                 {isSubmitting ? <Spinner /> : "Gửi"}
             </Button>
         </form>

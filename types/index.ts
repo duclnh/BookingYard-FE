@@ -104,3 +104,39 @@ export type SportCreate = {
     sportID: number,
     sportName: string,
 }
+
+export type SportCreateSelect = {
+    sportID: number,
+    sportName: string,
+    isSelected: boolean
+}
+
+
+export type HistoryPoint = {
+    historyPointID: string,
+    point: number,
+    createdAt: string,
+}
+
+export type Court = {
+    courtID: number,
+    courtName: string,
+    image: string,
+    sportID: number,
+    numberPlayer: number,
+    sportName: string,
+    courtPrice: number,
+    isActive: boolean
+}
+
+export type CourtDetail = {
+    courtID: number,
+    courtName: string,
+    image: string,
+    image360: string,
+    sportID: number,
+    numberPlayer: number,
+    sportName: string,
+    courtPrice: number,
+    isActive: boolean
+}

@@ -15,3 +15,7 @@ export async function getManager(id: string) {
 export async function updateUser(data: FormData) {
     return await fetchWrapper.put('/api/user', {}, data)
 }
+
+export async function getHistoryScoreUser(id: string, query: string){
+    return await fetchWrapper.get(`/api/historypoint/${id}${query}`)
+}
