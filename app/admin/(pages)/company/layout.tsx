@@ -30,9 +30,6 @@ export default function ManagementLayout({
   const [collapse, setCollapse] = useState<boolean>();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (status === "authenticated" && new Date() > new Date(session.user.expiration)) {
-      signOut({ callbackUrl: "/admin/sign-in" });
-    }
     if (session?.user && user == undefined) {
       getUser(session.user.userID)
         .then(x => {
@@ -40,6 +37,7 @@ export default function ManagementLayout({
             return x.data
           } else {
             toast.error("Lỗi lấy thông tin người dùng")
+            signOut({ callbackUrl: "/admin/sign-in" });
           }
         })
         .then((u: User) => dispatch(setUser(u)))
