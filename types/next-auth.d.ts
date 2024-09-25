@@ -7,7 +7,8 @@ declare module 'next-auth' {
             token: string;
             expiration: string;
             role: string;
-            isVerification: boolean
+            isVerification: boolean,
+            isCollapse?:boolean
         }
     }
     interface User {

@@ -50,9 +50,9 @@ export default function Address(props: Props) {
                     }
                 })
                 .then((addressVN: AddressVN) => {
-                    setSelectedProvince(addressVN.tinh.toString());
+                    setSelectedProvince((prev) => prev = addressVN.tinh.toString());
                     props.setValue("province", addressVN.tinh.toString())
-                    setSelectedDistrict(addressVN.quan.toString())
+                    setSelectedDistrict((prev) => prev = addressVN.quan.toString())
                     props.setValue("district", addressVN.quan.toString())
                     props.setValue("ward", addressVN.phuong.toString())
                     setFullAddressWard(addressVN.full_name)

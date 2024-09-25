@@ -8,7 +8,7 @@ import { getUser } from '@services/userService'
 import { setUser } from '@hooks/userStore'
 import { User } from 'types'
 import toast from 'react-hot-toast'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useAppDispatch, useAppSelector } from '@hooks/hooks'
 
 export default function CustomerLayout({
@@ -20,6 +20,9 @@ export default function CustomerLayout({
   const user = useAppSelector(state => state.user.value)
   const dispatch = useAppDispatch();
   useEffect(() => {
+    if (status === "authenticated" && new Date() > new Date(session.user.expiration)) {
+      signOut({ callbackUrl: "/sign-in" });
+    }
     if (session?.user && user == undefined) {
       getUser(session.user.userID)
         .then(x => {

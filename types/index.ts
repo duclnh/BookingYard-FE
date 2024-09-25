@@ -57,7 +57,6 @@ export type User = {
     point: number,
     wardID: number,
     role: string,
-    collapse?: boolean,
 }
 
 export type Manager = {

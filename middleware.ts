@@ -25,7 +25,8 @@ const authenticationRoutes = ['/sign-in',
   '/sign-up',
   '/verify',
   '/forget-password',
-  '/admin/forget-password']
+  '/admin/forget-password',
+  '/logout']
 
 
 export async function middleware(request: NextRequest) {
@@ -42,15 +43,6 @@ export async function middleware(request: NextRequest) {
     token: sessionToken,
   })
   
-  if (currentUser && currentUser.role == "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-    return Response.redirect(new URL('/logout', request.url));
-  }
-  
-
-  if (currentUser && currentUser.role != "Customer" && (new Date() > new Date(currentUser.expiration) && !isAuthenticationRoutes)) {
-    return Response.redirect(new URL('/logout', request.url));
-  }
-
   if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
     return Response.redirect(new URL('/not-found', request.url));
   }
@@ -62,7 +54,6 @@ export async function middleware(request: NextRequest) {
   if (isProtectedRoute && currentUser == null && !isAuthenticationRoutes) {
     return Response.redirect(new URL('/sign-in', request.url));
   }
-
 
   if (currentUser && currentUser.role != "CourtOwner" && isOwnerRoute) {
     return Response.redirect(new URL('/not-found', request.url));
@@ -82,8 +73,8 @@ export async function middleware(request: NextRequest) {
 
   if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
     return Response.redirect(new URL('/not-found', request.url));
-  }
-
+  } 
+  
 }
 
 export const config = {

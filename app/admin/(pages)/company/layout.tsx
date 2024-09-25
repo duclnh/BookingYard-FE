@@ -27,9 +27,12 @@ export default function ManagementLayout({
 }>) {
   const { data: session, status: status } = useSession()
   const user = useAppSelector(state => state.user.value)
-  const [collapse, setCollapse] = useState(user?.collapse);
+  const [collapse, setCollapse] = useState<boolean>();
   const dispatch = useAppDispatch();
   useEffect(() => {
+    if (status === "authenticated" && new Date() > new Date(session.user.expiration)) {
+      signOut({ callbackUrl: "/admin/sign-in" });
+    }
     if (session?.user && user == undefined) {
       getUser(session.user.userID)
         .then(x => {
@@ -42,6 +45,7 @@ export default function ManagementLayout({
         .then((u: User) => dispatch(setUser(u)))
         .catch(() => toast.error("Lỗi hệ thống"))
     }
+    setCollapse(localStorage.getItem("collapse") === "true");
   }, [status])
   if (user === undefined) {
     return <Loading />
@@ -52,10 +56,8 @@ export default function ManagementLayout({
     }
   }
   const handlerCollapseSidebar = (collapse: boolean) => {
-    console.log(user)
     setCollapse(collapse);
-    setUser({ ...user, collapse: collapse })
-    console.log(user)
+    localStorage.setItem("collapse", `${collapse}`)
   }
   return (
     <div className='flex h-full w-full'>
