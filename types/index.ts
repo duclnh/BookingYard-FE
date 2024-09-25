@@ -139,3 +139,14 @@ export type CourtDetail = {
     courtPrice: number,
     isActive: boolean
 }
+
+export type Facility = {
+    facilityID: string,
+    facilityImage: string,
+    facilityName: string,
+    facilityAddress: string,
+    facilityRating: number,
+    facilityMinPrice: number,
+    facilityMaxPrice: number,
+    facilityDistance: number,
+}

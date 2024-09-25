@@ -20,9 +20,6 @@ export default function CustomerLayout({
   const user = useAppSelector(state => state.user.value)
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (status === "authenticated" && new Date() > new Date(session.user.expiration)) {
-      signOut({ callbackUrl: "/sign-in" });
-    }
     if (session?.user && user == undefined) {
       getUser(session.user.userID)
         .then(x => {
@@ -30,6 +27,7 @@ export default function CustomerLayout({
             return x.data
           } else {
             toast.error("Lỗi lấy thông tin người dùng")
+            signOut({ callbackUrl: "/sign-in" });
           }
         })
         .then((u: User) => dispatch(setUser(u)))

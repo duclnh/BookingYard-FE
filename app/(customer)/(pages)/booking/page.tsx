@@ -1,19 +1,49 @@
 'use client'
 import { Button, Label, Popover, RangeSlider, Rating, Select } from 'flowbite-react'
-import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import { IoMdSearch } from 'react-icons/io'
 import { TiDelete, TiLocation } from 'react-icons/ti'
 import Image from 'next/image'
 import { PiFunnelThin } from 'react-icons/pi'
+import { Facility, PageResult } from 'types'
+import { getAllFacilityBooking } from '@services/facilityService'
+import toast from 'react-hot-toast'
+import { getImage } from '@utils/imageOptions'
+import { convertNumberToPrice } from '@utils/moneyOptions'
+import qs from "query-string";
 
 export default function Booking() {
-  const router = useRouter();
   const [indexSearch, setIndexSearch] = useState(0);
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
   const textPlaceholder = 'Tìm kiếm tên sân, địa chỉ sân...';
-
+  const [facilities, setFacilities] = useState<PageResult<Facility> | undefined>(undefined)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState('');
+  
+  const url = qs.stringifyUrl({
+    url: "", query: {
+      "search": search,
+      "currentPage": currentPage,
+      "pageSize": 10,
+    }
+  });
+  useEffect(() => {
+    getAllFacilityBooking(url)
+      .then(x => {
+        if (x.status == 200) {
+          console.log(x.data)
+          return x.data
+        }
+      })
+      .then((data: PageResult<Facility>) => {
+        setFacilities(data);
+      })
+      .catch(() => {
+        toast.error("Hệ thống đang lỗi vui lòng thử lại sau!", { duration: 120 })
+      });
+  }, [])
   useEffect(() => {
     let interval;
     if (searchPlaceholder.length < textPlaceholder.length) {
@@ -315,24 +345,28 @@ export default function Booking() {
       {/* End Filter */}
       {/* Start View List */}
       <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
-        {[...Array(8)].map((_, index) => (
+        {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
           <div key={index} className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
-            <img className='rounded-lg' height={500} width={500} src="assets/images/contact.png" alt="img" />
+            <img className='rounded-lg' height={500} width={500} src={getImage(facility.facilityImage)} alt="img" />
             <div className='mx-2'>
               <div className='flex justify-between items-center py-4'>
                 <Rating>
                   <Rating.Star />
-                  <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
+                  <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility.facilityRating}</p>
                 </Rating>
-                <div>12km</div>
+                {/* <div>12km</div> */}
               </div>
-              <div className='font-bold mb-5 text-center text-xl'>Sân bóng đá Hà Anh</div>
+              <div className='font-bold mb-5 text-center text-xl'>{facility.facilityName}</div>
               <div className='flex text-sm'>
                 <TiLocation size={25} className='mr-2' />
-                146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
+                {facility.facilityAddress}
               </div>
               <div className='py-5 flex justify-between items-center'>
-                <div className='text-green-500 font-bold'>60.000d</div>
+                <div className='text-green-500 font-bold'>
+                  {facility.facilityMinPrice === facility.facilityMaxPrice
+                    ? convertNumberToPrice(facility.facilityMinPrice)
+                    : `${convertNumberToPrice(facility.facilityMinPrice)} - ${convertNumberToPrice(facility.facilityMinPrice)}`}
+                </div>
                 <Button size='xs' href='/facility' className='text-sm px-3'>
                   Chi tiết
                   <FaArrowRight className='ml-2 mt-0.5' size={12} />
