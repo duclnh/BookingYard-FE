@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:5223"
+const baseUrl = "https://api.hamazaki.online"
 
 export function getImage(image: string | undefined) {
     if (image === undefined || image === null) {

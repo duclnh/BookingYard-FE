@@ -1,7 +1,6 @@
 "use client";
 import { Avatar, Breadcrumb, CustomFlowbiteTheme, Dropdown, Navbar, Popover, Sidebar } from 'flowbite-react';
 import { signOut, useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { HiHome } from 'react-icons/hi';
 import { IoMdNotificationsOutline } from 'react-icons/io';
@@ -15,10 +14,9 @@ import { PiCourtBasketball, PiUsersThreeBold } from 'react-icons/pi';
 import { GrSchedules } from 'react-icons/gr';
 import { BsQrCodeScan } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector } from '@hooks/hooks';
-import { getManager, getUser } from '@services/userService';
+import { getManager } from '@services/userService';
 import toast from 'react-hot-toast';
-import { Manager, User } from 'types';
-import { setUser } from '@hooks/userStore';
+import { Manager } from 'types';
 import { Loading } from '@components/index';
 import { setManager } from '@hooks/managerStore';
 import { getImage } from '@utils/imageOptions';
@@ -30,10 +28,13 @@ export default function ManagementLayout({
   children: React.ReactNode;
 }>) {
   const user = useAppSelector(state => state.manager.value)
-  const [collapse, setCollapse] = useState(user?.collapse);
+  const [collapse, setCollapse] = useState<boolean>(false);
   const { data: session, status: status } = useSession()
   const dispatch = useAppDispatch();
   useEffect(() => {
+    if (status === "authenticated" && new Date() > new Date(session.user.expiration)) {
+      signOut({ callbackUrl: "/admin/sign-in" });
+    }
     if (session?.user && user == undefined) {
       getManager(session.user.userID)
         .then(x => {
@@ -46,6 +47,7 @@ export default function ManagementLayout({
         .then((u: Manager) => dispatch(setManager(u)))
         .catch(() => toast.error("Lỗi hệ thống"))
     }
+    setCollapse(localStorage.getItem("collapse") === "true");
   }, [status])
   if (user === undefined) {
     return <Loading />
@@ -58,7 +60,7 @@ export default function ManagementLayout({
 
   const handlerCollapseSidebar = (collapse: boolean) => {
     setCollapse(collapse);
-    setManager({ ...user , collapse: collapse})
+    localStorage.setItem("collapse", `${collapse}`)
   }
 
   return (
