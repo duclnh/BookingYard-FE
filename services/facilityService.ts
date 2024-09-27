@@ -8,3 +8,6 @@ export async function createFacility(formData: FormData) {
 export async function getAllFacilityBooking(query: string) {
   return await fetchWrapper.get(`/api/facility-booking${query}`);
 }
+export async function getFacilityDetailBooking(id: string) {
+  return await fetchWrapper.get(`/api/facility/${id}`);
+}

@@ -29,11 +29,11 @@ export default function LoginPage() {
         if (updatedSession && updatedSession.user.role !== undefined) {
           toast.success("Đăng nhập thành công")
           if (updatedSession.user.role === "Admin") {
-            window.location.href = "/admin/company/dashboard";
+            router.push("/admin/company/dashboard")
           } else if (updatedSession.user.role === "CourtOwner") {
-            window.location.href = "/admin/owner/dashboard";
+            router.push("/admin/owner/dashboard")
           } else {
-            window.location.href = "/admin/owner/court";
+            router.push("/admin/owner/court")
           }
         } else {
           toast.error("Lỗi đăng nhập")

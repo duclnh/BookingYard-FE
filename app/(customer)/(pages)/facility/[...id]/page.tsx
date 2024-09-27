@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { Button, Carousel, CustomFlowbiteTheme, Label, Modal, Rating, Textarea } from 'flowbite-react'
 import { MdHealthAndSafety, MdOutlineLocationOn, MdOutlineSportsKabaddi, MdPayments, MdReportGmailerrorred, MdZoomOutMap } from 'react-icons/md'
@@ -13,8 +13,14 @@ import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import { useRouter } from 'next/navigation'
 import "@egjs/react-view360/css/view360.min.css";
 import { useForm } from 'react-hook-form'
+import { getFacilityDetailBooking } from '@services/facilityService'
+import { Convenience, FacilityDetail, Feature } from 'types'
+import toast from 'react-hot-toast'
+import { getImage } from '@utils/imageOptions'
+import { PiDoorOpenBold } from 'react-icons/pi'
+import { features } from 'process'
 
-export default function Facility() {
+export default function Facility({ params }: { params: { id: string } }) {
   const [modal360, setModal360] = useState(false);
   const [modalMap, setModalMap] = useState(false);
   const [modalImage, setModalImage] = useState(false);
@@ -24,14 +30,31 @@ export default function Facility() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentIndex360, setCurrentIndex360] = useState(0);
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
-  const router = useRouter();
+  const [facility, setFacility] = useState<FacilityDetail>();
+
+  useEffect(() => {
+    getFacilityDetailBooking(params.id)
+      .then(x => {
+        if (x.status == 200) {
+          return x.data
+        }
+      })
+      .then((facility: FacilityDetail) => {
+        facility.convenient = JSON.parse(facility.convenient.toString())
+        setFacility(facility);
+        console.log(facility.facility360s)
+
+      })
+      .catch(() => {
+        toast.error("Lỗi hệ thống vui lòng thử lại sau")
+      });
+  }, [])
 
   const customTheme: CustomFlowbiteTheme["ratingAdvanced"] = {
     progress: {
       label: 'text-sm font-medium text-black dark:text-cyan-500'
     }
   };
-
   // const customToolTipTheme: CustomFlowbiteTheme["tooltip"] = {
   //   "base": "absolute z-10 inline-block rounded-lg text-sm font-medium",
   //   "arrow": {
@@ -44,10 +67,11 @@ export default function Facility() {
   // };
 
   const times = ["5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00",];
-  const images = ['/assets/images/slide1.png', '/assets/images/slide2.png', '/assets/images/slide3.png'];
+  const images = facility?.facilityImages || [];
+  const image360s = facility?.facility360s || [];
 
   const projection = useMemo(() => new EquirectProjection({
-    src: images[currentIndex360],
+    src: getImage(image360s[currentIndex360]) || "",
   }), [currentIndex360]);
 
   const prevImage = () => {
@@ -61,12 +85,12 @@ export default function Facility() {
   };
   const prevImage360 = () => {
     if (currentIndex360 == 0) return;
-    setCurrentIndex360((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    setCurrentIndex360((prevIndex) => (prevIndex === 0 ? image360s.length - 1 : prevIndex - 1));
   };
 
   const nextImage360 = () => {
-    if ((images.length - 1) == currentIndex360) return;
-    setCurrentIndex360((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    if ((image360s.length - 1) == currentIndex360) return;
+    setCurrentIndex360((prevIndex) => (prevIndex === image360s.length - 1 ? 0 : prevIndex + 1));
   };
   return (
     <>
@@ -74,9 +98,9 @@ export default function Facility() {
         {/* Start slide */}
         <div className="grid md:grid-cols-4 md:gap-4 gap-5 md:mb-20">
           <Carousel slideInterval={3000} pauseOnHover={slideAuto} indicators={false} className='md:col-span-3'>
-            {[...Array(6)].map((_, index) => (
+            {facility?.facilityImages?.map((image, index) => (
               <div key={index} className='relative group/item' onMouseOver={() => setSlideAuto(true)} onMouseOut={() => setSlideAuto(false)} onClick={() => setModalImage(true)}>
-                <Image priority height={1000} width={1000} className='rounded-2xl h-full w-full' src="/assets/images/slide2.png" alt="dá" />
+                <Image priority height={1000} width={1000} className='rounded-2xl max-h-[600px] w-full' src={getImage(image) || ""} alt={`image ${index}`} />
                 <div className='absolute right-0 top-0  w-full h-full bg-[#302f2f] opacity-70 rounded-2xl flex justify-center items-center invisible group-hover/item:visible'>
                   <MdZoomOutMap size={40} className='text-white' />
                 </div>
@@ -87,7 +111,7 @@ export default function Facility() {
             <div className='relative mb-5 md:mb-0'>
               <iframe
                 title='map'
-                src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9318.999450695495!2d106.79499512440712!3d10.875690087176755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d8a6b19d6763%3A0x143c54525028b2e!2sVNUHCM%20Student%20Cultural%20House!5e0!3m2!1sen!2s!4v1722617783521!5m2!1sen!2s'
+                src={`https://maps.google.com/maps?q=${facility?.latitude},${facility?.longitude}&hl=es;&output=embed`}
                 className='w-full rounded-xl xl:h-[190%] lg:h-[145%] md:h-[105%] sm:h-[100%]'
                 loading="lazy"
                 allowFullScreen
@@ -97,7 +121,7 @@ export default function Facility() {
               </div>
             </div>
             <div className='relative hover:cursor-pointer w-full' onClick={() => setModal360(true)}>
-              <Image height={395} width={395} className='rounded-2xl !w-[100%] sm:w-96' src={images[0]} alt="dá" />
+              <Image height={395} width={395} className='rounded-2xl !w-[100%] sm:w-96' src={getImage(images[0]) || ""} alt="360" />
               <div className='absolute right-0 top-0  w-full h-full bg-[#302f2f] opacity-70 rounded-2xl flex justify-center items-center'>
                 <TbView360Number size={40} className='text-white' />
               </div>
@@ -111,15 +135,15 @@ export default function Facility() {
             {/* Start information court */}
             <div className='flex items-center justify-between'>
               <div className='flex items-center'>
-                <div className='text-3xl font-bold mr-3'>
-                  San van dong ha nam
+                <div className='text-3xl font-bold mr-3 max-w-[450px]'>
+                  {facility?.facilityName}
                 </div>
                 <Rating className='mt-2'>
                   <Rating.Star />
-                  <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">4.95</p>
+                  <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility?.facilityRating}</p>
                   <span className="mx-1.5 h-1 w-1 rounded-full bg-gray-500 dark:bg-gray-400" />
                   <a href="#feedback" className="text-sm font-medium text-gray-900 underline hover:no-underline dark:text-white">
-                    73 Lượt đánh giá
+                    {facility?.numberFeedback} Lượt đánh giá
                   </a>
                 </Rating>
               </div>
@@ -128,47 +152,36 @@ export default function Facility() {
                 Báo cáo
               </p>
             </div>
+            <p className='flex text-sm mt-5'>
+              <PiDoorOpenBold size={20} className='mr-2' />
+              {facility?.openDate}
+            </p>
             <p className='flex text-sm mt-3'>
               <IoTimeOutline size={20} className='mr-2' />
-              8:00 - 22:00
+              {facility?.startTime} - {facility?.endTime}
             </p>
             <p className='flex text-sm mt-3'>
               <MdOutlineLocationOn size={20} className='mr-2' />
-              146 Nam Hòa, phường Phước Long A, TP. Thủ Đức
+              {facility?.facilityAddress}
             </p>
             <div className='mt-10'>
               <div className='text-2xl font-bold border-b-2 py-3'>Thông tin chi tiết sân</div>
               <div
-                className={`text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-full' : 'max-h-44'
-                  }`}
-              >
-                <p className='mt-3'>
-                  Demesne far-hearted suppose venture excited see had has. Dependent on so extremely delivered by. Yet no jokes worse her why. Bed one supposing breakfast day fulfilled off depending questions.
-                </p>
-                <p className='mt-3'>
-                  Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do. Water timed folly right aware if oh truth. Large above be to means. Dashwood does provide stronger is.
-                </p>
-                <p className='mt-3'>
-                  We focus a great deal on the understanding of behavioral psychology and influence triggers which are crucial for becoming a well-rounded Digital Marketer. We understand that theory is important to build a solid foundation, we understand that theory alone isnt going to get the job done so thats why this rickets is packed with practical hands-on examples that you can follow step by step.
-                </p>
-                <p className='mt-3'>
-                  Behavioral psychology and influence triggers which are crucial for becoming a well-rounded Digital Marketer. We understand that theory is important to build a solid foundation, we understand that theory alone isnt going to get the job done so thats why this tickets is packed with practical hands-on examples that you can follow step by step.
-                </p>
-              </div>
-              <div
-                className="py-2 font-medium hover:cursor-pointer"
-              >
-                {isExpanded ?
+                className={`mt-5 text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-full' : 'max-h-80'}`}
+                dangerouslySetInnerHTML={{ __html: facility?.description || '' }}
+              />
+              <div className="py-2 font-medium hover:cursor-pointer">
+                {isExpanded ? (
                   <div onClick={() => setIsExpanded(false)} className='flex items-center'>
                     Thu gọn
                     <IoIosArrowUp className='ml-1' />
                   </div>
-                  :
+                ) : (
                   <div onClick={() => setIsExpanded(true)} className='flex items-center'>
                     Xêm thêm
                     <IoIosArrowDown className='ml-1' />
                   </div>
-                }
+                )}
               </div>
             </div>
             {/* End information court */}
@@ -182,96 +195,40 @@ export default function Facility() {
                     Các sân thể thao
                   </div>
                   <div className='mt-3'>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Bể bơi
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Bóng chuyền
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Bóng đá
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Bống rổ
-                    </div>
+                    {facility?.sports.map((sport, index) => (
+                      <div key={index} className='flex items-center mt-2'>
+                        <FaCheckCircle size={14} className='mr-3 text-green-500' />
+                        {sport}
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div>
-                  <div className='flex items-center font-bold'>
-                    <MdPayments size={20} className='mr-2' />
-                    Các phương thức thanh toán
-                  </div>
-                  <div className='mt-3'>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Thẻ tín dụng (Visa, Master card)
+                {Array.isArray(facility?.convenient) && facility.convenient.length > 0 && facility.convenient.map((convenient: Convenience, index) => (
+
+                  <div key={index}>
+                    <div className='flex items-center font-bold'>
+                      {convenient.title === 'payment' && (
+                        <MdPayments size={20} className='mr-2' />
+                      )}
+                      {convenient.title === 'safe' && (
+                        <MdHealthAndSafety size={20} className='mr-2' />
+                      )}
+                      {convenient.title === 'entertainment' && (
+                        <IoStorefrontSharp size={20} className='mr-2' />
+                      )}
+                      {convenient.content}
                     </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Momo
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Chuyển khoản
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Tiền mặt
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div className='flex items-center font-bold'>
-                    <IoStorefrontSharp size={20} className='mr-2' />
-                    Các dịch vụ giải trí
-                  </div>
-                  <div className='mt-3'>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Nhà hàng
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Quán nước
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Căn tin
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Karoke
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Cửa hàng tiện lợi
+                    <div className='mt-3'>
+                      {convenient.feature?.map((feature: Feature, indexFeature) => (
+                        <div key={indexFeature} className='flex items-center mt-2'>
+                          <FaCheckCircle size={14} className='mr-3 text-green-500' />
+                          {feature.title}
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-                <div>
-                  <div className='flex items-center font-bold'>
-                    <MdHealthAndSafety size={20} className='mr-2' />
-                    Các dịch vụ an toàn và chăm sóc
-                  </div>
-                  <div className='mt-3'>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Bảo vệ
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Nhà gửi xe
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                      Chăm sóc y tế
-                    </div>
-                  </div>
-                </div>
+
+                ))}
               </div>
             </div>
             {/* End convenient */}
@@ -281,12 +238,12 @@ export default function Facility() {
               <div className='grid grid-cols-3 mt-10 gap-10 place-items-start'>
                 <div className='col-span-1'>
                   <div className='text-center'>
-                    <p className='text-6xl font-bold'>4.5</p>
-                    <p className='mt-2'>Dựa trên 120 lượt đánh giá</p>
+                    <p className='text-6xl font-bold'>{facility?.facilityRating}</p>
+                    <p className='mt-2'>{`Dựa trên ${facility?.numberFeedback} lượt đánh giá`}</p>
                   </div>
                 </div>
                 <div className='col-span-2 w-full'>
-                  <Rating.Advanced percentFilled={70} theme={customTheme} className="mb-2">
+                  <Rating.Advanced percentFilled={facility?.percentFiveStar} theme={customTheme} className="mb-2">
                     <Rating>
                       <Rating.Star />
                       <Rating.Star />
@@ -295,7 +252,7 @@ export default function Facility() {
                       <Rating.Star />
                     </Rating>
                   </Rating.Advanced>
-                  <Rating.Advanced percentFilled={60} theme={customTheme} className="mb-2">
+                  <Rating.Advanced percentFilled={facility?.percentFourStar} theme={customTheme} className="mb-2">
                     <Rating>
                       <Rating.Star />
                       <Rating.Star />
@@ -304,7 +261,7 @@ export default function Facility() {
                       <Rating.Star filled={false} />
                     </Rating>
                   </Rating.Advanced>
-                  <Rating.Advanced percentFilled={50} theme={customTheme} className="mb-2">
+                  <Rating.Advanced percentFilled={facility?.percentThreeStar} theme={customTheme} className="mb-2">
                     <Rating>
                       <Rating.Star />
                       <Rating.Star />
@@ -313,7 +270,7 @@ export default function Facility() {
                       <Rating.Star filled={false} />
                     </Rating>
                   </Rating.Advanced>
-                  <Rating.Advanced percentFilled={40} theme={customTheme} className="mb-2">
+                  <Rating.Advanced percentFilled={facility?.percentTwoStar} theme={customTheme} className="mb-2">
                     <Rating>
                       <Rating.Star />
                       <Rating.Star />
@@ -322,7 +279,7 @@ export default function Facility() {
                       <Rating.Star filled={false} />
                     </Rating>
                   </Rating.Advanced>
-                  <Rating.Advanced percentFilled={30} theme={customTheme} className="mb-2">
+                  <Rating.Advanced percentFilled={facility?.percentOneStar} theme={customTheme} className="mb-2">
                     <Rating>
                       <Rating.Star />
                       <Rating.Star filled={false} />
@@ -417,7 +374,7 @@ export default function Facility() {
                     ))}
                   </div>
                 </div>
-                <InputDate handlerChange={() => {}}  name='date' multiple={false} minDate={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
+                <InputDate handlerChange={() => { }} name='date' multiple={false} minDate={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
                 <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
                   <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn giờ bắt đầu:</label>
                   <div className='col-span-2 grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 gap-2'>
@@ -455,41 +412,25 @@ export default function Facility() {
         <div className='rounded-lg shadow dark:bg-gray-700 flex items-center justify-between w-[100%] h-[100%]'>
           <SlArrowLeftCircle className={`${currentIndex360 == 0 ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={prevImage360} />
           <View360 className="is-16by9 h-full w-full" projection={projection} />
-          <SlArrowRightCircle className={`${currentIndex360 == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage360} />
+          <SlArrowRightCircle className={`${currentIndex360 == (image360s.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage360} />
         </div>
       </ModalView>
       {/*End view 360 */}
 
       {/*Start view Image */}
       <ModalView key={'View Images'} toggle={modalImage} setToggle={setModalImage}>
-        <div className='rounded-lg shadow flex items-center justify-between w-[100%] h-[100%]'>
-          <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={prevImage} />
-          <div className=''>
-            <div className='mb-5 h-[600px]'>
-              <Image
-                height={600}
-                width={1100}
-                className='select-none h-full w-full'
-                src={images[currentIndex]}
-                alt='Slide'
-              />
-            </div>
-            <div className='flex justify-center overflow-hidden'>
-              {[...Array(images.length)].map((_, index) => (
-                <div key={index} className='mx-2 mb-2'>
-                  <Image
-                    height={90}
-                    width={90}
-                    className='select-none rounded-md hover:scale-105 hover:cursor-pointer'
-                    src={images[index]}
-                    alt='Thumbnail'
-                    onClick={() => setCurrentIndex(index)}
-                  />
-                </div>
-              ))}
-            </div>
+        <div className='rounded-lg shadow dark:bg-gray-700 w-[100%] h-[100%] group'>
+          <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 left-3`} cursor='pointer' size={40} onClick={prevImage} />
+          <div className='mb-5'>
+            <Image
+              height={600}
+              width={1100}
+              className='select-none w-full max-h-[775px]'
+              src={getImage(images[currentIndex]) || ''}
+              alt='Slide'
+            />
           </div>
-          <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage} />
+          <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 right-3`} cursor='pointer' size={40} onClick={nextImage} />
         </div>
       </ModalView>
       {/*End view Image */}
@@ -498,7 +439,7 @@ export default function Facility() {
       <ModalView key={'View Map'} toggle={modalMap} setToggle={setModalMap}>
         <div className='rounded-lg bg-white shadow dark:bg-gray-700 items-center justify-center w-[100%] h-[100%]'>
           <iframe
-            src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9318.999450695495!2d106.79499512440712!3d10.875690087176755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d8a6b19d6763%3A0x143c54525028b2e!2sVNUHCM%20Student%20Cultural%20House!5e0!3m2!1sen!2s!4v1722617783521!5m2!1sen!2s'
+            src={`https://maps.google.com/maps?q=${facility?.latitude},${facility?.longitude}&hl=es;&output=embed`}
             className=' w-[100%] h-[100%]'
             loading="lazy"
             allowFullScreen
