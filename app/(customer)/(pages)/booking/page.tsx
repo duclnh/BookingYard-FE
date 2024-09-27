@@ -367,7 +367,7 @@ export default function Booking() {
                     ? convertNumberToPrice(facility.facilityMinPrice)
                     : `${convertNumberToPrice(facility.facilityMinPrice)} - ${convertNumberToPrice(facility.facilityMinPrice)}`}
                 </div>
-                <Button size='xs' href='/facility' className='text-sm px-3'>
+                <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
                   Chi tiết
                   <FaArrowRight className='ml-2 mt-0.5' size={12} />
                 </Button>
