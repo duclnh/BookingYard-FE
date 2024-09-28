@@ -63,7 +63,7 @@ function Header() {
                 aria-haspopup="menu"
                 trigger='hover'
                 label={
-                  <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={getImage(user?.imageUrl) || "assets/images/avatar-default.png"} alt={user.name} rounded />
+                  <Avatar role='button' aria-label="Open menu" id='avatar' size="md" img={getImage(user?.imageUrl) || "/assets/images/avatar-default.png"} alt={user.name} rounded />
                 }
                 arrowIcon={false}
                 inline
