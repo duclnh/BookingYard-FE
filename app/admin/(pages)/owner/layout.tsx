@@ -39,6 +39,7 @@ export default function ManagementLayout({
             return x.data
           } else {
             toast.error("Lỗi lấy thông tin người dùng")
+            console.log("error here managemnt")
             signOut({ callbackUrl: "/admin/sign-in" });
           }
         })
