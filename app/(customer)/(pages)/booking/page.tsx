@@ -383,7 +383,7 @@ export default function Booking() {
                 <div className='text-green-500 font-bold'>
                   {facility.facilityMinPrice === facility.facilityMaxPrice
                     ? convertNumberToPrice(facility.facilityMinPrice)
-                    : `${convertNumberToPrice(facility.facilityMinPrice)} - ${convertNumberToPrice(facility.facilityMaxPrice)}`}
+                    : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
                 </div>
                 <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
                   Chi tiết

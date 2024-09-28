@@ -68,14 +68,17 @@ body {
   height: 50px;
   width: 54px;
 }
-.rmdp-shadow{
+
+.rmdp-shadow {
   /* box-shadow: none !important; */
   border-radius: 8px !important;
 }
-.rmdp-input{
+
+.rmdp-input {
   height: 28px !important;
   width: 100%;
 }
+
 @layer components {
   @media screen and (min-width: 767px) {
     .navbar-link::after {

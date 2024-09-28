@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { Button, Carousel, CustomFlowbiteTheme, Label, Modal, Rating, Textarea } from 'flowbite-react'
+import { Button, Carousel, Label, Modal, Rating, Textarea } from 'flowbite-react'
 import { MdHealthAndSafety, MdOutlineLocationOn, MdOutlineSportsKabaddi, MdPayments, MdReportGmailerrorred, MdZoomOutMap } from 'react-icons/md'
 import { TbView360Number } from 'react-icons/tb'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
@@ -10,19 +10,19 @@ import { IoStorefrontSharp, IoTimeOutline } from 'react-icons/io5'
 import { Input, InputDate, ModalView } from '@components/index'
 import View360, { EquirectProjection } from '@egjs/react-view360'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
-import { useRouter } from 'next/navigation'
 import "@egjs/react-view360/css/view360.min.css";
 import { useForm } from 'react-hook-form'
 import { getFacilityDetailBooking } from '@services/facilityService'
-import { Convenience, FacilityDetail, Feature, FeedbackFacilityDetail, PageResult } from 'types'
+import { Convenience, FacilityDetail, Feature } from 'types'
 import toast from 'react-hot-toast'
-import { getImage } from '@utils/imageOptions'
+import { getImage, getImage360 } from '@utils/imageOptions'
 import { PiDoorOpenBold } from 'react-icons/pi'
-import qs from "query-string";
-import { getFeedbackFacilityDetail } from '@services/feedbackService'
+import Feedback from './feedback'
 
 export default function Facility({ params }: { params: { id: string } }) {
   const [modal360, setModal360] = useState(false);
+  const [image360s, setImage360s] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [modalMap, setModalMap] = useState(false);
   const [modalImage, setModalImage] = useState(false);
   const [slideAuto, setSlideAuto] = useState(false)
@@ -32,52 +32,33 @@ export default function Facility({ params }: { params: { id: string } }) {
   const [currentIndex360, setCurrentIndex360] = useState(0);
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   const [facility, setFacility] = useState<FacilityDetail>();
-  const [feedback, setFeedback] = useState<PageResult<FeedbackFacilityDetail> | undefined>(undefined)
-  const [modalImageFeedback, setModalImageFeedback] = useState(false);
-  const [imageFeedback, setImageFeedback] = useState<string[]>([])
-  const [currentIndexFeedback, setCurrentIndexFeedback] = useState(0);
 
-  const url = qs.stringifyUrl({
-    url: "", query: {
-      "search": "",
-      "currentPage": 1,
-      "pageSize": 10,
-    }
-  });
   useEffect(() => {
     getFacilityDetailBooking(params.id)
       .then(x => {
-        if (x.status == 200) {
-          return x.data
+        if (x.status === 200) {
+          return x.data;
         }
       })
       .then((facility: FacilityDetail) => {
-        facility.convenient = JSON.parse(facility.convenient.toString())
-        console.log(facility.facility360s)
+        facility.convenient = JSON.parse(facility.convenient.toString());
+        setImage360s(facility.facility360s.reduce((img: string[], link: string) => {
+          img.push(getImage360(link) || '');
+          return img;
+        }, []));
+        setImages(facility.facilityImages);
         setFacility(facility);
       })
       .catch(() => {
-        toast.error("Lỗi hệ thống vui lòng thử lại sau")
+        toast.error("Lỗi hệ thống vui lòng thử lại sau");
       });
-    getFeedbackFacilityDetail(params.id, url)
-      .then(x => {
-        if (x.status == 200) {
-          return x.data
-        }
-      })
-      .then((feedback: PageResult<FeedbackFacilityDetail>) => {
-        setFeedback(feedback);
-      })
-      .catch(() => {
-        toast.error("Lỗi hệ thống vui lòng thử lại sau")
-      });
-  }, [])
-
-  const customTheme: CustomFlowbiteTheme["ratingAdvanced"] = {
-    progress: {
-      label: 'text-sm font-medium text-black dark:text-cyan-500'
-    }
-  };
+  }, []); 
+  
+  const projection = useMemo(() => {
+    return new EquirectProjection({
+      src: image360s[currentIndex],
+    });
+  }, [image360s, currentIndex360])
   // const customToolTipTheme: CustomFlowbiteTheme["tooltip"] = {
   //   "base": "absolute z-10 inline-block rounded-lg text-sm font-medium",
   //   "arrow": {
@@ -90,12 +71,6 @@ export default function Facility({ params }: { params: { id: string } }) {
   // };
 
   const times = ["5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00",];
-  const images = facility?.facilityImages || [];
-  const image360s = facility?.facility360s || [];
-
-  const projection = useMemo(() => new EquirectProjection({
-    src: getImage(image360s[currentIndex360]) || "",
-  }), [currentIndex360]);
 
   const prevImage = () => {
     if (currentIndex == 0) return;
@@ -106,15 +81,7 @@ export default function Facility({ params }: { params: { id: string } }) {
     if ((images.length - 1) == currentIndex) return;
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
-  const prevImageFeedback = () => {
-    if (currentIndexFeedback == 0) return;
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageFeedback.length - 1 : prevIndex - 1));
-  };
 
-  const nextImageFeedback = () => {
-    if ((imageFeedback.length - 1) == currentIndexFeedback) return;
-    setCurrentIndex((prevIndex) => (prevIndex === imageFeedback.length - 1 ? 0 : prevIndex + 1));
-  };
   const prevImage360 = () => {
     if (currentIndex360 == 0) return;
     setCurrentIndex360((prevIndex) => (prevIndex === 0 ? image360s.length - 1 : prevIndex - 1));
@@ -125,20 +92,15 @@ export default function Facility({ params }: { params: { id: string } }) {
     setCurrentIndex360((prevIndex) => (prevIndex === image360s.length - 1 ? 0 : prevIndex + 1));
   };
 
-  const handlerOpenFeedbackImage = (index: number, images: string []) => {
-    setImageFeedback(images);
-    setCurrentIndexFeedback(index);
-    setModalImageFeedback(true);
-  }
   return (
     <>
       <div className='lg:mx-20 sm:mx-10 mx-5 lg:py-20 py-10 '>
         {/* Start slide */}
         <div className="grid md:grid-cols-4 md:gap-4 gap-5 md:mb-20">
-          <Carousel slideInterval={3000} pauseOnHover={slideAuto} indicators={false} className='md:col-span-3'>
+          <Carousel slideInterval={5000} pauseOnHover={slideAuto} indicators={false} className='md:col-span-3 max-h-[600px]'>
             {facility?.facilityImages?.map((image, index) => (
               <div key={index} className='relative group/item' onMouseOver={() => setSlideAuto(true)} onMouseOut={() => setSlideAuto(false)} onClick={() => setModalImage(true)}>
-                <Image priority height={1000} width={1000} className='rounded-2xl max-h-[600px] w-full' src={getImage(image) || ""} alt={`image ${index}`} />
+                <Image height={1000} width={1000} className='rounded-2xl h-[100%] w-full' src={getImage(image) || ''} alt={`image ${index}`} />
                 <div className='absolute right-0 top-0  w-full h-full bg-[#302f2f] opacity-70 rounded-2xl flex justify-center items-center invisible group-hover/item:visible'>
                   <MdZoomOutMap size={40} className='text-white' />
                 </div>
@@ -159,7 +121,7 @@ export default function Facility({ params }: { params: { id: string } }) {
               </div>
             </div>
             <div className='relative hover:cursor-pointer w-full' onClick={() => setModal360(true)}>
-              <Image height={395} width={395} className='rounded-2xl !w-[100%] sm:w-96' src={getImage(images[0]) || ""} alt="360" />
+              <Image height={395} width={395} className='rounded-2xl !w-[100%] sm:w-96' src={getImage(images[0]) || "/assets/images/slide1.png"} alt="360" />
               <div className='absolute right-0 top-0  w-full h-full bg-[#302f2f] opacity-70 rounded-2xl flex justify-center items-center'>
                 <TbView360Number size={40} className='text-white' />
               </div>
@@ -270,112 +232,16 @@ export default function Facility({ params }: { params: { id: string } }) {
               </div>
             </div>
             {/* End convenient */}
-            {/* Start feedback */}
-            <div className='mt-10' id='feedback'>
-              <div className='text-2xl font-bold border-b-2 py-3'>Đánh giá của khách hàng</div>
-              <div className='grid grid-cols-3 mt-10 gap-10 place-items-start'>
-                <div className='col-span-1'>
-                  <div className='text-center'>
-                    <p className='text-6xl font-bold'>{facility?.facilityRating}</p>
-                    <p className='mt-2'>{`Dựa trên ${facility?.numberFeedback} lượt đánh giá`}</p>
-                  </div>
-                </div>
-                <div className='col-span-2 w-full'>
-                  <Rating.Advanced percentFilled={facility?.percentFiveStar} theme={customTheme} className="mb-2">
-                    <Rating>
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star />
-                    </Rating>
-                  </Rating.Advanced>
-                  <Rating.Advanced percentFilled={facility?.percentFourStar} theme={customTheme} className="mb-2">
-                    <Rating>
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star filled={false} />
-                    </Rating>
-                  </Rating.Advanced>
-                  <Rating.Advanced percentFilled={facility?.percentThreeStar} theme={customTheme} className="mb-2">
-                    <Rating>
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star filled={false} />
-                      <Rating.Star filled={false} />
-                    </Rating>
-                  </Rating.Advanced>
-                  <Rating.Advanced percentFilled={facility?.percentTwoStar} theme={customTheme} className="mb-2">
-                    <Rating>
-                      <Rating.Star />
-                      <Rating.Star />
-                      <Rating.Star filled={false} />
-                      <Rating.Star filled={false} />
-                      <Rating.Star filled={false} />
-                    </Rating>
-                  </Rating.Advanced>
-                  <Rating.Advanced percentFilled={facility?.percentOneStar} theme={customTheme} className="mb-2">
-                    <Rating>
-                      <Rating.Star />
-                      <Rating.Star filled={false} />
-                      <Rating.Star filled={false} />
-                      <Rating.Star filled={false} />
-                      <Rating.Star filled={false} />
-                    </Rating>
-                  </Rating.Advanced>
-                </div>
-              </div>
-              <div className='mt-10 overflow-hidden max-h-[400px] overflow-y-hidden hover:overflow-y-auto'>
-                {feedback != undefined && feedback.results.map((feedback: FeedbackFacilityDetail, index) => (
-                  <div key={index} className='flex justify-between items-start mb-10'>
-                    <div className='flex'>
-                      <div className='min-w-8'>
-                        <Image height={40} width={40} src={getImage(feedback.avatar) || "/assets/images/avatar-default.png"} alt={feedback.name} className='rounded-full mt-1' />
-                      </div>
-                      <div className='ml-3'>
-                        <div className='text-xl font-bold mb-1'>{feedback.name}</div>
-                        <div className='flex items-center mb-3'>
-                          {feedback.rating && (
-                            <Rating>
-                              {Array.from({ length: 5 }, (_, index) => (
-                                <Rating.Star key={index} filled={index < feedback.rating} />
-                              ))}
-                            </Rating>
-                          )}
-                        </div>
-                        <div className='max-w-[490px] text-gray-700 mb-5'>
-                          <p>Demesne far-hearted suppose venture excited see had has. Dependent on so extremely delivered by. Yet no jokes worse her why. Bed one supposing breakfast day fulfilled off depending questions.</p>
-                        </div>
-                        <div className='flex'>
-                          {feedback.images.length > 3 ? <>
-                            <Image height={100} width={100} src={getImage(imageFeedback[0]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(0, feedback.images)} alt="image 1" />
-                            <Image height={100} width={100} src={getImage(imageFeedback[1]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(1,feedback.images)} alt="image 2" />
-                            <Image height={100} width={100} src={getImage(imageFeedback[2]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(2,feedback.images)} alt="image 3" />
-                            <div className='hover:cursor-pointer relative'>
-                              <Image height={100} width={100} src={getImage(imageFeedback[3]) || ''} className='rounded-lg hover:cursor-pointer' alt="image 4" onClick={() => handlerOpenFeedbackImage(3,feedback.images)} />
-                              <div className='absolute right-0 top-0 w-full h-full bg-[#302f2f] opacity-70 rounded-lg flex justify-center items-center text-white font-bold'>
-                                + {imageFeedback.length - 3}
-                              </div>
-                            </div>
-                          </> : <>
-                            {feedback.images.map((image, index) => (
-                              <Image key={index} height={100} width={100} src={getImage(image) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(index, feedback.images)} alt={`image ${index}`} />
-                            ))}
-                          </>}
-                        </div>
-                      </div>
-                    </div>
-                    <div className='text-gray-500 pr-3'>
-                      {feedback.createdAt}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* End feedback */}
+            <Feedback
+              facilityID={params.id || ''}
+              rating={facility?.facilityRating || 0}
+              numberRating={facility?.numberFeedback || 0}
+              percentOneStar={facility?.percentOneStar || 0}
+              percentTwoStar={facility?.percentTwoStar || 0}
+              percentThreeStar={facility?.percentThreeStar || 0}
+              percentFourStar={facility?.percentFourStar || 0}
+              percentFiveStar={facility?.percentFiveStar || 0}
+            />
           </div>
           <div className='col-span-2'>
             <div className='border rounded-l py-5'>
@@ -455,7 +321,9 @@ export default function Facility({ params }: { params: { id: string } }) {
       <ModalView key={'View 360'} toggle={modal360} setToggle={setModal360}>
         <div className='rounded-lg shadow dark:bg-gray-700 flex items-center justify-between w-[100%] h-[100%]'>
           <SlArrowLeftCircle className={`${currentIndex360 == 0 ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={prevImage360} />
-          <View360 className="is-16by9 h-full w-full" projection={projection} />
+          {image360s && image360s.length > 0 && (
+            <View360 className="is-16by9 h-full w-full" projection={projection} />
+          )}
           <SlArrowRightCircle className={`${currentIndex360 == (image360s.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage360} />
         </div>
       </ModalView>
@@ -470,7 +338,7 @@ export default function Facility({ params }: { params: { id: string } }) {
               height={600}
               width={1100}
               className='select-none w-full max-h-[775px]'
-              src={getImage(images[currentIndex]) || ''}
+              src={getImage(images[currentIndex]) || "/assets/images/slide1.png"}
               alt='Slide'
             />
           </div>
@@ -522,23 +390,6 @@ export default function Facility({ params }: { params: { id: string } }) {
         </Modal.Body>
       </Modal>
       {/* End Report */}
-      {/*Start view Image */}
-      <ModalView key={'View Feedback'} toggle={modalImageFeedback} setToggle={setModalImageFeedback}>
-        <div className='rounded-lg shadow dark:bg-gray-700 w-[100%] h-[100%] group'>
-          <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 left-3`} cursor='pointer' size={40} onClick={prevImageFeedback} />
-          <div className='mb-5'>
-            <Image
-              height={600}
-              width={1100}
-              className='select-none w-full max-h-[775px]'
-              src={getImage(imageFeedback[currentIndex]) || ''}
-              alt='Slide'
-            />
-          </div>
-          <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 right-3`} cursor='pointer' size={40} onClick={nextImageFeedback} />
-        </div>
-      </ModalView>
-      {/*End view Image */}
     </>
   )
 }

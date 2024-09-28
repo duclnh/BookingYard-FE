@@ -20,8 +20,7 @@ const adminRoutes = ['/admin/company/dashboard',
   '/admin/company/staff',
   '/admin/company/facility',
   '/admin/company/voucher']
-const authenticationRoutes = ['/sign-in',
-  '/admin/sign-in',
+const authenticationRoutes = [
   '/sign-up',
   '/verify',
   '/forget-password',

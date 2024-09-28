@@ -79,6 +79,67 @@ export default function CreatePage() {
                                 }}
                             />
                         </div>
+                        <div className='mb-3'>
+                            <Label htmlFor='sport' value='Môn thể thao (*)' />
+                            <Controller
+                                name='sport'
+                                control={control}
+                                rules={{ required: 'Vui lòng nhập môn thể thao' }}
+                                render={({ field, fieldState }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            className='focus:ring-transparent'
+                                            id="sport"
+                                            color={
+                                                fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
+                                            }
+                                        >
+                                            <option value=''>Chọn môn thể thao</option>
+                                            {sports.map((sport: SportCreate, index) => (
+                                                <option key={index} value={sport.sportID}>{sport.sportName}</option>
+                                            ))}
+                                        </Select>
+                                        {fieldState.error && (
+                                            <div className="text-red-500 text-sm mt-2">
+                                                {fieldState.error.message}
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            />
+                        </div>
+                        <div className='mb-3'>
+                            <Input
+                                label='Số người chơi (*)'
+                                type='text'
+                                name='numberPlayer'
+                                control={control}
+                                rules={{
+                                    required: "Vui lòng nhập số người chơi",
+                                    pattern: {
+                                        value: /^[0-9]+$/,
+                                        message: "Vui lòng nhập số"
+                                    }
+                                }}
+                            />
+                        </div>
+                        <Input
+                            label='Giá tiền (*)'
+                            type='text'
+                            name='price'
+                            control={control}
+                            rules={{
+                                required: "Vui lòng nhập giá tiền",
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: "Vui lòng nhập số"
+                                }
+                            }}
+                        />
+                        <Button className='mt-5' type='submit'>
+                            {isSubmitting ? <Spinner /> : "Tạo mới"}
+                        </Button>
                     </div>
                     <div>
                         <InputImage
@@ -88,78 +149,15 @@ export default function CreatePage() {
                             setFile={setImageCourt}
                             required="Vui chọn ảnh sân"
                         />
-                    </div>
-                </div>
-                <div className='mt-3 grid md:grid-cols-2 gap-10'>
-                    <div>
-                        <Label htmlFor='sport' value='Môn thể thao (*)' />
-                        <Controller
-                            name='sport'
-                            control={control}
-                            rules={{ required: 'Vui lòng nhập môn thể thao' }}
-                            render={({ field, fieldState }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        className='focus:ring-transparent'
-                                        id="sport"
-                                        color={
-                                            fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
-                                        }
-                                    >
-                                        <option value=''>Chọn môn thể thao</option>
-                                        {sports.map((sport: SportCreate, index) => (
-                                            <option key={index} value={sport.sportID}>{sport.sportName}</option>
-                                        ))}
-                                    </Select>
-                                    {fieldState.error && (
-                                        <div className="text-red-500 text-sm mt-2">
-                                            {fieldState.error.message}
-                                        </div>
-                                    )}
-                                </>
-                            )}
+                        <InputImage
+                            name='360'
+                            label='Ảnh 360 sân (*)'
+                            value={image360}
+                            setFile={setImage360}
+                            required="Vui chọn ảnh 360 sân"
                         />
                     </div>
-                    <InputImage
-                        name='360'
-                        label='Ảnh 360 sân (*)'
-                        value={image360}
-                        setFile={setImage360}
-                        required="Vui chọn ảnh 360 sân"
-                    />
                 </div>
-                <div className='mt-3 grid md:grid-cols-2 gap-10'>
-                    <Input
-                        label='Số người chơi (*)'
-                        type='text'
-                        name='numberPlayer'
-                        control={control}
-                        rules={{
-                            required: "Vui lòng nhập số người chơi",
-                            pattern: {
-                                value: /^[0-9]+$/,
-                                message: "Vui lòng nhập số"
-                            }
-                        }}
-                    />
-                    <Input
-                        label='Giá tiền (*)'
-                        type='text'
-                        name='price'
-                        control={control}
-                        rules={{
-                            required: "Vui lòng nhập giá tiền",
-                            pattern: {
-                                value: /^[0-9]+$/,
-                                message: "Vui lòng nhập số"
-                            }
-                        }}
-                    />
-                </div>
-                <Button className='mt-5' type='submit'>
-                    {isSubmitting ? <Spinner /> : "Tạo mới"}
-                </Button>
             </form >
         </>
     )

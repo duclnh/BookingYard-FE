@@ -202,7 +202,7 @@ export default function Facility() {
         <div className='mt-10 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-14'>
           {filterCourts !== undefined && filterCourts.map((court: Court, index) => (
             <div key={index} className='shadow-3xl border hover:cursor-pointer rounded-lg p-4 relative'>
-              <Image className='rounded-lg' height={500} width={500} src={getImage(court.image) || ''} alt={court.courtName} />
+              <Image className='rounded-lg w-full max-h-40' height={700} width={700} src={getImage(court.image) || ''} alt={court.courtName} />
               <div className='font-bold my-5 text-center text-xl'>{court.courtName}</div>
               <div className={`absolute -top-1 -right-1 h-4 w-4 rounded-full ${court.isActive ? 'bg-green-700' : 'bg-orange-500'}`}></div>
               <div className='flex justify-center'>
