@@ -53,6 +53,7 @@ export default function Facility({ params }: { params: { id: string } }) {
       })
       .then((facility: FacilityDetail) => {
         facility.convenient = JSON.parse(facility.convenient.toString())
+        console.log(facility.facility360s)
         setFacility(facility);
       })
       .catch(() => {
@@ -124,7 +125,8 @@ export default function Facility({ params }: { params: { id: string } }) {
     setCurrentIndex360((prevIndex) => (prevIndex === image360s.length - 1 ? 0 : prevIndex + 1));
   };
 
-  const handlerOpenFeedbackImage = (index: number) => {
+  const handlerOpenFeedbackImage = (index: number, images: string []) => {
+    setImageFeedback(images);
     setCurrentIndexFeedback(index);
     setModalImageFeedback(true);
   }
@@ -336,29 +338,31 @@ export default function Facility({ params }: { params: { id: string } }) {
                       <div className='ml-3'>
                         <div className='text-xl font-bold mb-1'>{feedback.name}</div>
                         <div className='flex items-center mb-3'>
-                          <Rating>
-                            {[...Array(5).map((_, index) => (
-                              <Rating.Star key={index} filled={index < feedback?.rating} />
-                            ))]}
-                          </Rating>
+                          {feedback.rating && (
+                            <Rating>
+                              {Array.from({ length: 5 }, (_, index) => (
+                                <Rating.Star key={index} filled={index < feedback.rating} />
+                              ))}
+                            </Rating>
+                          )}
                         </div>
                         <div className='max-w-[490px] text-gray-700 mb-5'>
                           <p>Demesne far-hearted suppose venture excited see had has. Dependent on so extremely delivered by. Yet no jokes worse her why. Bed one supposing breakfast day fulfilled off depending questions.</p>
                         </div>
                         <div className='flex'>
                           {feedback.images.length > 3 ? <>
-                            <Image height={100} width={100} src={getImage(imageFeedback[0]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(0)} alt="image 1" />
-                            <Image height={100} width={100} src={getImage(imageFeedback[1]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(1)} alt="image 2" />
-                            <Image height={100} width={100} src={getImage(imageFeedback[2]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(2)} alt="image 3" />
+                            <Image height={100} width={100} src={getImage(imageFeedback[0]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(0, feedback.images)} alt="image 1" />
+                            <Image height={100} width={100} src={getImage(imageFeedback[1]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(1,feedback.images)} alt="image 2" />
+                            <Image height={100} width={100} src={getImage(imageFeedback[2]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(2,feedback.images)} alt="image 3" />
                             <div className='hover:cursor-pointer relative'>
-                              <Image height={100} width={100} src={getImage(imageFeedback[3]) || ''} className='rounded-lg hover:cursor-pointer' alt="image 4" />
+                              <Image height={100} width={100} src={getImage(imageFeedback[3]) || ''} className='rounded-lg hover:cursor-pointer' alt="image 4" onClick={() => handlerOpenFeedbackImage(3,feedback.images)} />
                               <div className='absolute right-0 top-0 w-full h-full bg-[#302f2f] opacity-70 rounded-lg flex justify-center items-center text-white font-bold'>
                                 + {imageFeedback.length - 3}
                               </div>
                             </div>
                           </> : <>
-                            {feedback.images.map((image, index)=> (
-                              <Image key={index} height={100} width={100} src={getImage(image) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(index)} alt={`image ${index}`} />
+                            {feedback.images.map((image, index) => (
+                              <Image key={index} height={100} width={100} src={getImage(image) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(index, feedback.images)} alt={`image ${index}`} />
                             ))}
                           </>}
                         </div>
