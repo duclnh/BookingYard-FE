@@ -26,7 +26,7 @@ const authenticationRoutes = ['/sign-in',
   '/verify',
   '/forget-password',
   '/admin/forget-password',
-  '/logout']
+  '/admin/authorization',]
 
 
 export async function middleware(request: NextRequest) {
