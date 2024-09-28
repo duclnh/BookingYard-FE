@@ -30,7 +30,10 @@ const authenticationRoutes = ['/sign-in',
 
 
 export async function middleware(request: NextRequest) {
-  const sessionToken = request.cookies.get("next-auth.session-token")?.value;
+  let sessionToken = request.cookies.get("next-auth.session-token")?.value;
+  if (process.env.NODE_ENV === 'production') {
+    sessionToken = request.cookies.get("__Secure-next-auth.session-token")?.value;
+  }
   const path = request.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
@@ -45,9 +48,13 @@ export async function middleware(request: NextRequest) {
   if (currentUser && !isAuthenticationRoutes && (new Date() > new Date(currentUser.expiration))) {
     return Response.redirect(new URL('/not-found', request.url));
   }
-  
+
   if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
     return Response.redirect(new URL('/not-found', request.url));
+  }
+
+  if ((isAdminRoutes || isOwnerRoute) && currentUser == null && !isAuthenticationRoutes) {
+    return Response.redirect(new URL('/admin/sign-in', request.url));
   }
 
   if (isProtectedRoute && currentUser == null && !isAuthenticationRoutes) {
@@ -72,8 +79,8 @@ export async function middleware(request: NextRequest) {
 
   if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
     return Response.redirect(new URL('/not-found', request.url));
-  } 
-  
+  }
+
 }
 
 export const config = {
