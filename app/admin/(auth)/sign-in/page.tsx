@@ -1,15 +1,14 @@
 "use client";
 import { Input, NotificationCustom } from '@components/index'
 import { Button, Spinner } from 'flowbite-react';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { signIn, useSession, } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image'
 
 export default function LoginPage() {
-  const { data: session, status: status } = useSession();
   const [error, setError] = useState('');
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   async function onSubmit(data: FieldValues) {
@@ -33,9 +32,6 @@ export default function LoginPage() {
       setError("Lỗi hệ thống vui lòng thử lại")
     }
   }
-  useEffect(() => {
-
- }, [session])
   return (
     <>
       <div className='w-full h-auto bg-cyan-900 rounded-l-lg py-8'>
