@@ -43,7 +43,7 @@ export default function LoginPage() {
         window.location.href = "/admin/owner/court";
       }
     }
-  }, [status])
+ }, [session])
   return (
     <>
       <div className='w-full h-auto bg-cyan-900 rounded-l-lg py-8'>
