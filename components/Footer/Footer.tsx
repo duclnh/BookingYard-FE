@@ -16,16 +16,16 @@ export default function FooterComponent() {
             <p className='font-bold'>Quản lí lịch hẹn - giải pháp số dành cho cơ sở tập luyện và sân thể thao</p>
             <div className="flex space-x-6 mb-10 mt-4 sm:justify-start">
               <Link href="#">
-                <img className='mx-auto select-none' height={30} width={30} src="assets/images/facebook.png" alt="facebook" />
+                <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/facebook.png" alt="facebook" />
               </Link>
               <Link href="#">
-                <img className='mx-auto select-none' height={30} width={30} src="assets/images/youtube.png" alt="youtube" />
+                <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/youtube.png" alt="youtube" />
               </Link>
               <Link href="#">
-                <img className='mx-auto select-none' height={30} width={30} src="assets/images/instagram.png" alt="instagram" />
+                <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/instagram.png" alt="instagram" />
               </Link>
               <Link href="#">
-                <img className='mx-auto select-none' height={30} width={30} src="assets/images/tiktok.png" alt="tiktok" />
+                <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/tiktok.png" alt="tiktok" />
               </Link>
             </div>
             <div className='w-full mt-4 '>
