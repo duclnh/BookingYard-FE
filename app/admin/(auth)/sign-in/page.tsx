@@ -1,16 +1,17 @@
 "use client";
 import { Input, NotificationCustom } from '@components/index'
 import { Button, Spinner } from 'flowbite-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { signIn, getSession, } from 'next-auth/react';
+import { signIn, useSession, } from 'next-auth/react';
 import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { data: session, status: status } = useSession();
   const [error, setError] = useState('');
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   async function onSubmit(data: FieldValues) {
@@ -24,27 +25,25 @@ export default function LoginPage() {
         redirect: false
       }
       )
-      if (!res?.error) {
-        const updatedSession = await getSession();
-        if (updatedSession && updatedSession.user.role !== undefined) {
-          toast.success("Đăng nhập thành công")
-          if (updatedSession.user.role === "Admin") {
-            router.push("/admin/company/dashboard")
-          } else if (updatedSession.user.role === "CourtOwner") {
-            router.push("/admin/owner/dashboard")
-          } else {
-            router.push("/admin/owner/court")
-          }
-        } else {
-          toast.error("Lỗi đăng nhập")
-        }
-      } else {
+      if (res?.error) {
         setError("Tài khoản hoặc mật khẩu không đúng")
       }
     } catch {
       setError("Lỗi hệ thống vui lòng thử lại")
     }
   }
+  useEffect(() => {
+    if (session && session.user.role !== undefined) {
+      toast.success("Đăng nhập thành công")
+      if (session.user.role === "Admin") {
+        window.location.href = "/admin/company/dashboard";
+      } else if (session.user.role === "CourtOwner") {
+        window.location.href = "/admin/owner/dashboard";
+      } else {
+        window.location.href = "/admin/owner/court";
+      }
+    }
+  }, [status])
   return (
     <>
       <div className='w-full h-auto bg-cyan-900 rounded-l-lg py-8'>

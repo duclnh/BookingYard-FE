@@ -6,22 +6,23 @@ import { IoMdSearch } from 'react-icons/io'
 import { TiDelete, TiLocation } from 'react-icons/ti'
 import Image from 'next/image'
 import { PiFunnelThin } from 'react-icons/pi'
-import { Facility, PageResult } from 'types'
-import { getAllFacilityBooking } from '@services/facilityService'
+import { Facility, PageResult, SportCreate } from 'types'
 import toast from 'react-hot-toast'
 import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import qs from "query-string";
+import { getAllFacilityBooking, getSportCreate } from '@services/index'
 
 export default function Booking() {
   const [indexSearch, setIndexSearch] = useState(0);
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
   const textPlaceholder = 'Tìm kiếm tên sân, địa chỉ sân...';
   const [facilities, setFacilities] = useState<PageResult<Facility> | undefined>(undefined)
+  const [sports, setSports] = useState<SportCreate[]>([])
   const [currentPage, setCurrentPage] = useState(1);
   const [value, setValue] = useState('');
   const [search, setSearch] = useState('');
-  
+
   const url = qs.stringifyUrl({
     url: "", query: {
       "search": search,
@@ -29,6 +30,19 @@ export default function Booking() {
       "pageSize": 10,
     }
   });
+  useEffect(() => {
+    getSportCreate()
+      .then(x => {
+        if (x.status === 200) {
+          console.log(x.data)
+          return x.data
+        } else {
+          toast.error("Lỗi lấy thông tin thể thao")
+        }
+      }).then((sport: SportCreate[]) => {
+        setSports(sport)
+      }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+  }, [])
   useEffect(() => {
     getAllFacilityBooking(url)
       .then(x => {
@@ -93,9 +107,9 @@ export default function Booking() {
           <div className='grid xl:grid-cols-6 lg:grid-cols-6 sm:grid-cols-2 xl:gap-5 lg:gap-1'>
             <Select className='focus:ring-transparent' id="type" required>
               <option value=''>Môn thể thao</option>
-              <option value="Canada">Canada</option>
-              <option value="France">France</option>
-              <option value="Germany">Germany</option>
+              {sports.map((sport: SportCreate, index) => (
+                <option key={index} value={sport.sportID}>{sport.sportName}</option>
+              ))}
             </Select>
 
             <Select className='focus:ring-transparent' id="province" required>
@@ -358,8 +372,12 @@ export default function Booking() {
               </div>
               <div className='font-bold mb-5 text-center text-xl'>{facility.facilityName}</div>
               <div className='flex text-sm'>
-                <TiLocation size={25} className='mr-2' />
-                {facility.facilityAddress}
+                <p className='mt-0.5'>
+                  <TiLocation className='mr-2 h-4 w-4' />
+                </p>
+                <p>
+                  {facility.facilityAddress}
+                </p>
               </div>
               <div className='py-5 flex justify-between items-center'>
                 <div className='text-green-500 font-bold'>

@@ -21,7 +21,7 @@ function Header() {
   return (
     <header id='top' className='pt-8 px-5 top-0 z-50 items-center'>
       <Navbar className='lg:mx-14 fluid rounded'>
-        <Navbar.Brand className='xl:min-w-56' href="/">
+        <Navbar.Brand className='xl:min-w-48' href="/">
           <Image src="/assets/images/logo.png" alt="logo" height="60" width="60" className="sm:mr-2 lg:mr-5" />
         </Navbar.Brand>
         <div className="flex flex-row items-center gap-4 md:order-2">

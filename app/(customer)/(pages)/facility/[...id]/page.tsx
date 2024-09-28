@@ -14,11 +14,12 @@ import { useRouter } from 'next/navigation'
 import "@egjs/react-view360/css/view360.min.css";
 import { useForm } from 'react-hook-form'
 import { getFacilityDetailBooking } from '@services/facilityService'
-import { Convenience, FacilityDetail, Feature } from 'types'
+import { Convenience, FacilityDetail, Feature, FeedbackFacilityDetail, PageResult } from 'types'
 import toast from 'react-hot-toast'
 import { getImage } from '@utils/imageOptions'
 import { PiDoorOpenBold } from 'react-icons/pi'
-import { features } from 'process'
+import qs from "query-string";
+import { getFeedbackFacilityDetail } from '@services/feedbackService'
 
 export default function Facility({ params }: { params: { id: string } }) {
   const [modal360, setModal360] = useState(false);
@@ -31,7 +32,18 @@ export default function Facility({ params }: { params: { id: string } }) {
   const [currentIndex360, setCurrentIndex360] = useState(0);
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   const [facility, setFacility] = useState<FacilityDetail>();
+  const [feedback, setFeedback] = useState<PageResult<FeedbackFacilityDetail> | undefined>(undefined)
+  const [modalImageFeedback, setModalImageFeedback] = useState(false);
+  const [imageFeedback, setImageFeedback] = useState<string[]>([])
+  const [currentIndexFeedback, setCurrentIndexFeedback] = useState(0);
 
+  const url = qs.stringifyUrl({
+    url: "", query: {
+      "search": "",
+      "currentPage": 1,
+      "pageSize": 10,
+    }
+  });
   useEffect(() => {
     getFacilityDetailBooking(params.id)
       .then(x => {
@@ -42,8 +54,18 @@ export default function Facility({ params }: { params: { id: string } }) {
       .then((facility: FacilityDetail) => {
         facility.convenient = JSON.parse(facility.convenient.toString())
         setFacility(facility);
-        console.log(facility.facility360s)
-
+      })
+      .catch(() => {
+        toast.error("Lỗi hệ thống vui lòng thử lại sau")
+      });
+    getFeedbackFacilityDetail(params.id, url)
+      .then(x => {
+        if (x.status == 200) {
+          return x.data
+        }
+      })
+      .then((feedback: PageResult<FeedbackFacilityDetail>) => {
+        setFeedback(feedback);
       })
       .catch(() => {
         toast.error("Lỗi hệ thống vui lòng thử lại sau")
@@ -83,6 +105,15 @@ export default function Facility({ params }: { params: { id: string } }) {
     if ((images.length - 1) == currentIndex) return;
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
+  const prevImageFeedback = () => {
+    if (currentIndexFeedback == 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageFeedback.length - 1 : prevIndex - 1));
+  };
+
+  const nextImageFeedback = () => {
+    if ((imageFeedback.length - 1) == currentIndexFeedback) return;
+    setCurrentIndex((prevIndex) => (prevIndex === imageFeedback.length - 1 ? 0 : prevIndex + 1));
+  };
   const prevImage360 = () => {
     if (currentIndex360 == 0) return;
     setCurrentIndex360((prevIndex) => (prevIndex === 0 ? image360s.length - 1 : prevIndex - 1));
@@ -92,6 +123,11 @@ export default function Facility({ params }: { params: { id: string } }) {
     if ((image360s.length - 1) == currentIndex360) return;
     setCurrentIndex360((prevIndex) => (prevIndex === image360s.length - 1 ? 0 : prevIndex + 1));
   };
+
+  const handlerOpenFeedbackImage = (index: number) => {
+    setCurrentIndexFeedback(index);
+    setModalImageFeedback(true);
+  }
   return (
     <>
       <div className='lg:mx-20 sm:mx-10 mx-5 lg:py-20 py-10 '>
@@ -291,41 +327,45 @@ export default function Facility({ params }: { params: { id: string } }) {
                 </div>
               </div>
               <div className='mt-10 overflow-hidden max-h-[400px] overflow-y-hidden hover:overflow-y-auto'>
-                {[...Array(7)].map((_, index) => (
+                {feedback != undefined && feedback.results.map((feedback: FeedbackFacilityDetail, index) => (
                   <div key={index} className='flex justify-between items-start mb-10'>
                     <div className='flex'>
                       <div className='min-w-8'>
-                        <Image height={40} width={40} src="/assets/images/avatar-default.png" alt='avatar' className='rounded-full mt-1' />
+                        <Image height={40} width={40} src={getImage(feedback.avatar) || "/assets/images/avatar-default.png"} alt={feedback.name} className='rounded-full mt-1' />
                       </div>
                       <div className='ml-3'>
-                        <div className='text-xl font-bold mb-1'>Jacqueline Miller</div>
+                        <div className='text-xl font-bold mb-1'>{feedback.name}</div>
                         <div className='flex items-center mb-3'>
                           <Rating>
-                            <Rating.Star />
-                            <Rating.Star />
-                            <Rating.Star />
-                            <Rating.Star />
-                            <Rating.Star filled={false} />
+                            {[...Array(5).map((_, index) => (
+                              <Rating.Star key={index} filled={index < feedback?.rating} />
+                            ))]}
                           </Rating>
                         </div>
                         <div className='max-w-[490px] text-gray-700 mb-5'>
                           <p>Demesne far-hearted suppose venture excited see had has. Dependent on so extremely delivered by. Yet no jokes worse her why. Bed one supposing breakfast day fulfilled off depending questions.</p>
                         </div>
                         <div className='flex'>
-                          <Image height={100} width={100} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer mr-3' onClick={() => setModalImage(true)} alt="das" />
-                          <Image height={100} width={100} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer mr-3' onClick={() => setModalImage(true)} alt="das" />
-                          <Image height={100} width={100} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer mr-3' onClick={() => setModalImage(true)} alt="das" />
-                          <div className='hover:cursor-pointer relative'>
-                            <Image height={100} width={100} src="/assets/images/slide2.png" className='rounded-lg hover:cursor-pointer' alt="das" />
-                            <div className='absolute right-0 top-0 w-full h-full bg-[#302f2f] opacity-70 rounded-lg flex justify-center items-center text-white font-bold'>
-                              + 999
+                          {feedback.images.length > 3 ? <>
+                            <Image height={100} width={100} src={getImage(imageFeedback[0]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(0)} alt="image 1" />
+                            <Image height={100} width={100} src={getImage(imageFeedback[1]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(1)} alt="image 2" />
+                            <Image height={100} width={100} src={getImage(imageFeedback[2]) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(2)} alt="image 3" />
+                            <div className='hover:cursor-pointer relative'>
+                              <Image height={100} width={100} src={getImage(imageFeedback[3]) || ''} className='rounded-lg hover:cursor-pointer' alt="image 4" />
+                              <div className='absolute right-0 top-0 w-full h-full bg-[#302f2f] opacity-70 rounded-lg flex justify-center items-center text-white font-bold'>
+                                + {imageFeedback.length - 3}
+                              </div>
                             </div>
-                          </div>
+                          </> : <>
+                            {feedback.images.map((image, index)=> (
+                              <Image key={index} height={100} width={100} src={getImage(image) || ''} className='rounded-lg hover:cursor-pointer mr-3' onClick={() => handlerOpenFeedbackImage(index)} alt={`image ${index}`} />
+                            ))}
+                          </>}
                         </div>
                       </div>
                     </div>
                     <div className='text-gray-500 pr-3'>
-                      Stayed 13 Nov 2022
+                      {feedback.createdAt}
                     </div>
                   </div>
                 ))}
@@ -478,6 +518,23 @@ export default function Facility({ params }: { params: { id: string } }) {
         </Modal.Body>
       </Modal>
       {/* End Report */}
+      {/*Start view Image */}
+      <ModalView key={'View Feedback'} toggle={modalImageFeedback} setToggle={setModalImageFeedback}>
+        <div className='rounded-lg shadow dark:bg-gray-700 w-[100%] h-[100%] group'>
+          <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 left-3`} cursor='pointer' size={40} onClick={prevImageFeedback} />
+          <div className='mb-5'>
+            <Image
+              height={600}
+              width={1100}
+              className='select-none w-full max-h-[775px]'
+              src={getImage(imageFeedback[currentIndex]) || ''}
+              alt='Slide'
+            />
+          </div>
+          <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 right-3`} cursor='pointer' size={40} onClick={nextImageFeedback} />
+        </div>
+      </ModalView>
+      {/*End view Image */}
     </>
   )
 }

@@ -153,17 +153,17 @@ export type Facility = {
 export type FacilityDetail = {
     facilityID: string,
     facilityName: string,
-    facilityImages: string [],
-    facility360s: string [],
+    facilityImages: string[],
+    facility360s: string[],
     facilityAddress: string,
     facilityRating: string,
-    sports: string [],
+    sports: string[],
     openDate: string,
     startTime: string,
     endTime: string,
     numberFeedback: string,
     description: string,
-    convenient: Convenience [],
+    convenient: Convenience[],
     facilityMinPrice: number,
     facilityMaxPrice: number,
     longitude: number,
@@ -173,4 +173,13 @@ export type FacilityDetail = {
     percentThreeStar: number,
     percentTwoStar: number,
     percentOneStar: number,
+}
+
+export type FeedbackFacilityDetail = {
+    name: string,
+    avatar: string,
+    content: string,
+    rating: number,
+    images: string[],
+    createdAt: string
 }
