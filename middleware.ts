@@ -25,8 +25,7 @@ const authenticationRoutes = ['/sign-in',
   '/sign-up',
   '/verify',
   '/forget-password',
-  '/admin/forget-password',
-  '/admin/authorization',]
+  '/admin/forget-password',]
 
 
 export async function middleware(request: NextRequest) {
@@ -50,6 +49,10 @@ export async function middleware(request: NextRequest) {
   }
 
   if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
+    return Response.redirect(new URL('/not-found', request.url));
+  }
+
+  if ((currentUser == null || currentUser.role === 'Customer') && path.startsWith('/admin/authorization')) {
     return Response.redirect(new URL('/not-found', request.url));
   }
 
