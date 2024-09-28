@@ -72,7 +72,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
-    return Response.redirect(new URL('/not-found', request.url));
+    return Response.redirect(new URL('/admin/authorization', request.url));
   }
 
   if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
