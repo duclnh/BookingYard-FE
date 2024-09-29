@@ -65,7 +65,7 @@ export default function CreatePage() {
     return (
         <>
             <form method='POST' className='py-5 w-full' onSubmit={handleSubmit(handlerSubmitCreateFacility)}>
-                <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo cơ sở mới' center />
+                <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo sân mới' center />
                 <div className='mt-10 grid md:grid-cols-2 gap-10'>
                     <div>
                         <div className='mb-3'>

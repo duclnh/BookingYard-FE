@@ -37,10 +37,10 @@ export default function ManagementLayout({
         .then(x => {
           if (x.status === 200) {
             return x.data
+          } else if (x.status === 401) {
+            signOut({ callbackUrl: "/admin/sign-in" });
           } else {
             toast.error("Lỗi lấy thông tin người dùng")
-            console.log("error here managemnt")
-            signOut({ callbackUrl: "/admin/sign-in" });
           }
         })
         .then((u: Manager) => dispatch(setManager(u)))

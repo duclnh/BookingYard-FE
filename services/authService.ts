@@ -61,11 +61,12 @@ export async function updateResetPassword(email: string, verificationCode: strin
     })
 }
 
-export async function register(name: string, email: string, password: string) {
+export async function register(name: string, email: string, password: string, gender: string) {
     return await fetchWrapper.post("/api/auth/register", {
         name,
         email,
-        password
+        password,
+        gender
     })
 }
 

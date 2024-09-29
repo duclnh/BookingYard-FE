@@ -1,52 +1,53 @@
 "use client"
 import { CardStatistic, Heading } from '@components/index'
+import { useAppSelector } from '@hooks/hooks'
+import { getVoucherFacility } from '@services/voucherService'
 import { Button, Modal, Pagination, Select, Table } from 'flowbite-react'
-import React, { useState } from 'react'
-import { FaEye } from 'react-icons/fa'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { FaPencil } from 'react-icons/fa6'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { IoMdSearch } from 'react-icons/io';
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { TbBasketDiscount, TbRosetteDiscountCheck, TbRosetteDiscountOff } from 'react-icons/tb'
+import { PageResult, VoucherManagement } from 'types'
+import qs from "query-string";
 
 export default function Voucher() {
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page: number) => setCurrentPage(page);
   const [openModalCancel, setOpenModalCancel] = useState(false);
-  const sampleData = [
-    {
-      id: 1,
-      name: 'Giảm giá mùa hè',
-      image: 'summer-sale.png',
-      percentage: '20%',
-      startDate: '2024-06-01',
-      endDate: '2024-06-30',
-      createdDate: '2024-05-15'
-    },
-    {
-      id: 2,
-      name: 'Giảm giá Black Friday',
-      image: 'black-friday.png',
-      percentage: '50%',
-      startDate: '2024-11-24',
-      endDate: '2024-11-30',
-      createdDate: '2024-10-01'
-    },
-    {
-      id: 3,
-      name: 'Giảm giá Giáng sinh',
-      image: 'christmas-sale.png',
-      percentage: '30%',
-      startDate: '2024-12-01',
-      endDate: '2024-12-25',
-      createdDate: '2024-11-15'
+  const user = useAppSelector(state => state.manager.value)
+  const [vouchers, setVouchers] = useState<PageResult<VoucherManagement> | undefined>(undefined)
+  const [search, setSearch] = useState<string>('')
+  const url = qs.stringifyUrl({
+    url: "", query: {
+      "search": search,
+      "currentPage": currentPage,
+      "pageSize": 10,
     }
-  ];
+  });
+
+  useEffect(() => {
+    getVoucherFacility(user?.facilityID, url)
+      .then(x => {
+        if (x.status === 200) {
+          console.log(x.data)
+          return x.data
+        } else {
+          toast.error("Lỗi lấy danh sách mã giảm giá")
+        }
+      }).then((vouchers: PageResult<VoucherManagement>) => {
+        console.log(vouchers)
+        setVouchers(vouchers)
+      })
+      .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+  }, [])
   return (
     <>
       <div className='py-5 w-full'>
         <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Danh sách mã giảm giá' center />
-        <div className='my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
+        {/* <div className='my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
           <CardStatistic
             title='Tổng số mã giảm giá'
             amount={3000}
@@ -71,11 +72,11 @@ export default function Voucher() {
             gradientTo='to-red-500'
             iconColor='text-red-700'
           />
-        </div>
+        </div> */}
         <div className='mt-36 bg-white'>
           <div className='mt-10 md:flex justify-between mb-3'>
             <div className='flex'>
-              <input className='border rounded-md px-3 w-full md:w-96' name='search' placeholder={'Tìm tên nhân viên, địa chỉ'} />
+              <input className='border rounded-md px-3 w-full md:w-96' name='search' placeholder={'Tìm tên mã giảm giá'} />
               <Button className='p-1'>
                 <IoMdSearch className='font-bold' size={18} />
               </Button>
@@ -92,8 +93,8 @@ export default function Voucher() {
                 <Table.HeadCell>STT</Table.HeadCell>
                 <Table.HeadCell className='min-w-44'>Tên mã giảm giá</Table.HeadCell>
                 {/* <Table.HeadCell className='min-w-44'>Ảnh</Table.HeadCell> */}
-                <Table.HeadCell className='max-w-24'>Phần trăm</Table.HeadCell>
-                <Table.HeadCell className='max-w-24'>Số lượng</Table.HeadCell>
+                <Table.HeadCell className='max-w-28'>Phần trăm</Table.HeadCell>
+                <Table.HeadCell className='max-w-28'>Số lượng</Table.HeadCell>
                 <Table.HeadCell className='max-w-24'>Ngày bắt đầu</Table.HeadCell>
                 <Table.HeadCell className='max-w-24'>Ngày hết hạn</Table.HeadCell>
                 {/* <Table.HeadCell className='min-w-44'>Ngày tạo</Table.HeadCell> */}
@@ -101,20 +102,20 @@ export default function Voucher() {
                 </Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                {sampleData.map((item, index) => (
-                  <Table.Row className='text-center' key={item.id}>
+                {vouchers != undefined && vouchers.results.map((voucher: VoucherManagement, index) => (
+                  <Table.Row className='text-center' key={voucher.voucherID}>
                     <Table.Cell>{index + 1}</Table.Cell>
-                    <Table.Cell className='font-bold text-left'>{item.name}</Table.Cell>
+                    <Table.Cell className='font-bold text-left'>{voucher.voucherName}</Table.Cell>
                     {/* <Table.Cell><img src={item.image} alt={item.name} className='w-10 h-10' /></Table.Cell> */}
-                    <Table.Cell>{item.percentage}</Table.Cell>
-                    <Table.Cell>{index}</Table.Cell>
-                    <Table.Cell>{item.startDate}</Table.Cell>
-                    <Table.Cell>{item.endDate}</Table.Cell>
+                    <Table.Cell>{voucher.percentage}</Table.Cell>
+                    <Table.Cell>{voucher.quantity}</Table.Cell>
+                    <Table.Cell>{voucher.registerDate}</Table.Cell>
+                    <Table.Cell>{voucher.expiredDate}</Table.Cell>
                     {/* <Table.Cell>{item.createdDate}</Table.Cell> */}
                     <Table.Cell className='flex space-x-2 justify-center'>
-                      <Button size='xs'>
+                      {/* <Button size='xs'>
                         <FaEye size={16} />
-                      </Button>
+                      </Button> */}
                       <Button color='warning' type='submit' size='xs'>
                         <FaPencil size={16} />
                       </Button>
@@ -127,17 +128,19 @@ export default function Voucher() {
               </Table.Body>
             </Table>
           </div>
-          <div className="flex justify-end">
-            <Pagination
-              layout="pagination"
-              currentPage={currentPage}
-              totalPages={1000}
-              onPageChange={onPageChange}
-              previousLabel=""
-              nextLabel=""
-              showIcons
-            />
-          </div>
+          {vouchers != undefined && vouchers.totalPages > 0 && (
+            <div className="flex justify-end">
+              <Pagination
+                layout="pagination"
+                currentPage={currentPage}
+                totalPages={vouchers?.totalPages || 0}
+                onPageChange={onPageChange}
+                previousLabel=""
+                nextLabel=""
+                showIcons
+              />
+            </div>
+          )}
         </div>
       </div>
       <Modal key={"cancel"} show={openModalCancel} size="md" onClose={() => setOpenModalCancel(false)} popup>

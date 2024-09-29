@@ -15,7 +15,7 @@ export default function RegisterPage() {
     async function handleSubmitForm(data: FieldValues) {
         setError("")
         try {
-            var res = await register(data.name, data.email, data.password);
+            var res = await register(data.name, data.email, data.password, data.gender);
             if (res?.status === 201) {
                 toast.success("Đăng kí thành công", { duration: 120 })
                 await signIn(
