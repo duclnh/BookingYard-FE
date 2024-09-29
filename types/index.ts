@@ -183,3 +183,43 @@ export type FeedbackFacilityDetail = {
     images: string[],
     createdAt: string
 }
+export type FeedbackHome = {
+    name: string,
+    avatar: string,
+    content: string,
+    rating: number,
+    typeFeedback: string
+}
+
+export type FacilityHome = {
+    facilityID: string,
+    facilityImage: string,
+    facilityName: string,
+    facilityAddress: string,
+    facilityRating: number,
+    facilityMinPrice: number,
+    facilityMaxPrice: number,
+    startTime: string,
+    endTime: string
+}
+
+export type VoucherHome = {
+    voucherID: string,
+    voucherName: string,
+    facilityName: string,
+    percentage: number,
+    sportName: string,
+}
+
+export type VoucherManagement = {
+    voucherID: string,
+    voucherName: string,
+    image: string,
+    percentage: number,
+    quantity: number,
+    voucherDescription: string,
+    registerDate: string,
+    expiredDate: string,
+    reason: string,
+    status: boolean
+}

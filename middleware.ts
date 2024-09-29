@@ -1,7 +1,7 @@
 import { decode } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
-// '/profile'
-const protectedRoutes = ['']
+
+const protectedRoutes = ['/profile']
 const publicRoutes = ['/', '/partner', '/contact', '/booking']
 const ownerRoutes = ['/admin/owner/dashboard',
   '/admin/owner/booking',
@@ -43,43 +43,49 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET || '',
     token: sessionToken,
   })
-  if (currentUser && !isAuthenticationRoutes && (new Date() > new Date(currentUser.expiration))) {
-    return Response.redirect(new URL('/not-found', request.url));
-  }
 
   if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
+    console.log("Error Here: 2")
     return Response.redirect(new URL('/not-found', request.url));
   }
 
   if ((currentUser == null || currentUser.role === 'Customer') && path.startsWith('/admin/authorization')) {
+    console.log("Error Here: 3")
     return Response.redirect(new URL('/not-found', request.url));
   }
 
   if ((isAdminRoutes || isOwnerRoute) && currentUser == null && !isAuthenticationRoutes) {
+    console.log("Error Here: 4")
     return Response.redirect(new URL('/admin/sign-in', request.url));
   }
 
   if (isProtectedRoute && currentUser == null && !isAuthenticationRoutes) {
+    console.log("Error Here: 5")
     return Response.redirect(new URL('/sign-in', request.url));
   }
 
   if (currentUser && currentUser.role != "CourtOwner" && isOwnerRoute) {
+    console.log("Error Here: 6")
     return Response.redirect(new URL('/not-found', request.url));
   }
 
   if (currentUser && currentUser.role != "Admin" && isAdminRoutes) {
+    console.log("Error Here: 7")
     return Response.redirect(new URL('/not-found', request.url));
   }
 
   if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
+    console.log("Error Here: 8")
     return Response.redirect(new URL('/admin/authorization', request.url));
   }
 
   if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
+    console.log("Error Here: 9")
     return Response.redirect(new URL('/verify', request.url));
   }
 
   if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
+    console.log("Error Here: 10")
     return Response.redirect(new URL('/not-found', request.url));
   }
 

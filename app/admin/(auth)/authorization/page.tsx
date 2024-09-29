@@ -18,11 +18,7 @@ export default function Authorization() {
         }
     }, [status])
 
-    if(status === 'loading'){
-        return <Loading />
-    }
     return (
-        <>
-        </>
+        <Loading />
     )
 }

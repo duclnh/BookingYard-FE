@@ -130,11 +130,15 @@ export default function DetailPage({ params }: { params: { id: string } }) {
                             <div className=''>
                                 <div className='mb-3'>
                                     <Label className='mb-1' value='Ảnh sân (*)' />
-                                    <Image className='rounded-md' src={getImage(court?.image) || '/assets/images/logo.png'} height={600} width={600} alt='Sân' />
+                                    {court?.image && (
+                                        <Image className='rounded-md' src={getImage(court?.image) || ''} height={600} width={600} alt='Sân' />
+                                    )}
                                 </div>
                                 <div>
                                     <Label className='mb-1' value='Ảnh 360 (*)' />
-                                    <Image className='rounded-md' src={getImage(court?.image360) || '/assets/images/logo.png'} height={600} width={600} alt='Sân' />
+                                    {court?.image360 && (
+                                        <Image className='rounded-md' src={getImage(court?.image360) || ''} height={600} width={600} alt='360' />
+                                    )}
                                 </div>
                             </div>
                             <div className=''>

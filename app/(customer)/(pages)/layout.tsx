@@ -19,15 +19,17 @@ export default function CustomerLayout({
   const { data: session, status: status } = useSession();
   const user = useAppSelector(state => state.user.value)
   const dispatch = useAppDispatch();
+  
   useEffect(() => {
     if (session?.user && user == undefined) {
       getUser(session.user.userID)
         .then(x => {
           if (x.status === 200) {
             return x.data
+          } else if (x.status === 401) {
+            signOut({ callbackUrl: "/sign-in" });
           } else {
             toast.error("Lỗi lấy thông tin người dùng")
-            signOut({ callbackUrl: "/sign-in" });
           }
         })
         .then((u: User) => dispatch(setUser(u)))
@@ -38,6 +40,7 @@ export default function CustomerLayout({
   if (status === "loading" || (session?.user != null && user === undefined)) {
     return <Loading />
   }
+
   return (
     <>
       <Header />

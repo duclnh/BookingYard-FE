@@ -14,5 +14,5 @@ export function getImage(image: string | undefined) {
 }
 
 export function getImage360(image: string) {
-    return `${BASE_URL}/_next/image?url=${image}&w=1200&q=100`;
+    return `${BASE_URL}/_next/image?url=${getImage(image)}&w=1200&q=100`;
 }

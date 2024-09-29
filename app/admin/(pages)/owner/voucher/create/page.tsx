@@ -19,7 +19,6 @@ export default function CreateStaff() {
     getSportCreate()
       .then(x => {
         if (x.status === 200) {
-          console.log(x.data)
           return x.data
         } else {
           toast.error("Lỗi lấy thông tin thể thao")
@@ -33,27 +32,28 @@ export default function CreateStaff() {
     try {
       var formData = new FormData();
       formData.append("VoucherName", data.name);
+      formData.append("Code", data.code);
       if (image) {
         formData.append("Image", image);
       }
-      formData.append("Percentage", data.number);
+      formData.append("Percentage", data.discount);
+      formData.append("Quantity", data.quantity);
       formData.append("RegisterDate", data.start);
       formData.append("ExpiredDate", data.end);
       if (user?.facilityID) {
         formData.append("FacilityID", user?.facilityID);
       }
-      if (data.sport !== '') {
-        formData.append("SportID", data.sport);
-      }
+      formData.append("SportID", data.sport);
 
       var res = await createVoucher(formData)
       if (res.status === 201) {
-        toast.success("Tạo mới sân thành công")
+        toast.success("Tạo mới mã giảm giá thành công")
         reset()
         setImage(undefined)
+      } else if (res.status === 409) {
+        toast.error("Mã code này đã có")
       } else {
-        toast.error("Tạo mới sân thất bại")
-        console.log(res.data)
+        toast.error("Tạo mới mã giảm giá thất bại")
       }
     } catch (error) {
       toast.error("Lỗi hệ thống vui lòng thử lại")
@@ -126,7 +126,6 @@ export default function CreateStaff() {
               <Controller
                 name='sport'
                 control={control}
-                rules={{ required: 'Vui lòng chọn môn thể thao' }}
                 render={({ field, fieldState }) => (
                   <>
                     <Select
@@ -137,7 +136,7 @@ export default function CreateStaff() {
                         fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
                       }
                     >
-                      <option value=''>Chọn môn thể thao</option>
+                      <option value='0'>Tất cả</option>
                       {sports.map((sport: SportCreate, index) => (
                         <option key={index} value={sport.sportID}>{sport.sportName}</option>
                       ))}
@@ -151,13 +150,23 @@ export default function CreateStaff() {
                 )}
               />
             </div>
-            <InputImage
-              label='Ảnh mã giảm giá (*)'
-              name='image'
-              value={image}
-              setFile={setImage}
-              required="Vui lòng chọn ảnh mã giảm giá"
-            />
+            <div>
+              {/* <InputImage
+                label='Ảnh mã giảm giá'
+                name='image'
+                value={image}
+                setFile={setImage}
+              />  */}
+              <div className='mt-3'>
+                <Input
+                  label='Mã giảm giá'
+                  type='text'
+                  name='code'
+                  control={control}
+                />
+              </div>
+            </div>
+
           </div>
         </div>
         <Button disabled={isSubmitting} className='mt-4 w-28' type='submit' size='sm'>
