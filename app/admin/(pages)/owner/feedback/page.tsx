@@ -29,7 +29,7 @@ export default function Feedback() {
         <>
             <div className='py-5 w-full'>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Đánh giá từ chủ sân' center />
-                <div className='sm:my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
+                {/* <div className='sm:my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
                     <CardStatistic
                         title='5 sao'
                         amount={3000}
@@ -72,7 +72,7 @@ export default function Feedback() {
                         gradientTo='to-yellow-400'
                         iconColor='text-yellow-400'
                     />
-                </div>
+                </div> */}
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
@@ -96,7 +96,8 @@ export default function Feedback() {
                                 <Table.HeadCell className='min-w-24'>Số điện thoại</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Số sao</Table.HeadCell>
                                 <Table.HeadCell className='min-w-60'>Nội dung</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>                                    
+                                <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
@@ -117,13 +118,18 @@ export default function Feedback() {
                                             </Rating>
                                         </Table.Cell>
                                         <Table.Cell className='text-left'>0914501749</Table.Cell>
+                                        <Table.Cell>
+                                            <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                                                Hiện thị
+                                            </p>
+                                        </Table.Cell>
                                         <Table.Cell className='flex space-x-2 justify-center'>
                                             <Button size='xs'>
                                                 <FaEye size={16} />
                                             </Button>
-                                            <Button color='failure' type='submit' size='xs'>
+                                            {/* <Button color='failure' type='submit' size='xs'>
                                                 <RiDeleteBinLine size={16} />
-                                            </Button>
+                                            </Button> */}
                                         </Table.Cell>
                                     </Table.Row>
                                 ))}

@@ -4,18 +4,20 @@ import { Button, Label, Radio, Spinner } from 'flowbite-react';
 import React, { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { register } from '@services/index';
+import { register as registerAccount } from '@services/index';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 export default function RegisterPage() {
     const router = useRouter();
     const [error, setError] = useState('');
-    const { control, getValues, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
+    const { control, getValues, handleSubmit, formState: { isSubmitting, isValid }, register } = useForm({ mode: "onTouched", });
     async function handleSubmitForm(data: FieldValues) {
         setError("")
         try {
-            var res = await register(data.name, data.email, data.password, data.gender);
+            console.log(data.name, data.email, data.password, data.gender, data.phone)
+            var res = await registerAccount(data.name, data.email, data.password, data.gender, data.phone);
+            console.log(res?.data)
             if (res?.status === 201) {
                 toast.success("Đăng kí thành công", { duration: 120 })
                 await signIn(
@@ -93,15 +95,15 @@ export default function RegisterPage() {
                         </div>
                         <div className='flex flex-row'>
                             <div>
-                                <Radio className='focus:outline-none focus:ring-transparent' id="male" name="gender" value="0" defaultChecked />
+                                <Radio {...register("gender")} className='focus:outline-none focus:ring-transparent' id="male" name="gender" value="0" defaultChecked />
                                 <Label className='ml-2 hover:cursor-pointer' htmlFor="male">Nam</Label>
                             </div>
                             <div className='ml-4'>
-                                <Radio className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="1" />
+                                <Radio {...register("gender")} className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="1" />
                                 <Label className='ml-2 hover:cursor-pointer' htmlFor="female">Nữ</Label>
                             </div>
                             <div className='ml-4'>
-                                <Radio className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="2" />
+                                <Radio {...register("gender")} className='focus:outline-none focus:ring-transparent' id="female" name="gender" value="2" />
                                 <Label className='ml-2 hover:cursor-pointer' htmlFor="female">Khác</Label>
                             </div>
                         </div>
@@ -138,6 +140,7 @@ export default function RegisterPage() {
                             }}
                         />
                         <Button
+                            disabled={isSubmitting}
                             type='submit'
                             className='mt-4 focus:ring-transparent'>
                             {isSubmitting ? <Spinner /> : "Đăng kí"}

@@ -61,14 +61,22 @@ export async function updateResetPassword(email: string, verificationCode: strin
     })
 }
 
-export async function register(name: string, email: string, password: string, gender: string) {
+export async function register(
+    name: string, 
+    email: string, 
+    password: string, 
+    gender: number,
+    phone: string
+) {
     return await fetchWrapper.post("/api/auth/register", {
-        name,
-        email,
-        password,
-        gender
-    })
+        name: name,
+        password: password,
+        phone: phone,
+        email: email,
+        gender: gender, 
+    });
 }
+
 
 export async function sendForgetPassword(email: string) {
     return await fetchWrapper.post("/api/auth/send-reset-password", {
@@ -76,7 +84,7 @@ export async function sendForgetPassword(email: string) {
     })
 }
 
-export async function updatePassword(userID: string | undefined, oldPassword: string, newPassword: string ) {
+export async function updatePassword(userID: string | undefined, oldPassword: string, newPassword: string) {
     return await fetchWrapper.put('/api/auth/password', {
         userID,
         oldPassword,
@@ -98,7 +106,7 @@ export async function getCurrentUser() {
     }
 }
 
-export async function getTokenWorkAround(){
+export async function getTokenWorkAround() {
     const req = {
         headers: Object.fromEntries(headers() as Headers),
         cookies: Object.fromEntries(
@@ -107,5 +115,5 @@ export async function getTokenWorkAround(){
                 .map(c => [c.name, c.value])
         )
     } as NextApiRequest;
-    return await getToken({req});
+    return await getToken({ req });
 }
