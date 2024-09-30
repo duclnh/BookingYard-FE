@@ -190,7 +190,7 @@ export default function Home() {
       </div>
       <div className='md:py-5md:mx-14 lg:mx-32 mb-20'>
         <div className='lg:text-6xl md:text-4xl text-3xl font-black text-center'>
-          Những sân nội bật
+          Những sân nổi bật
         </div>
         <div className='pt-20 group relative'>
           <div className='flex justify-center items-center'>

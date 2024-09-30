@@ -76,11 +76,11 @@ function Header() {
                   <TiTicket className='mr-2' />
                   Đặt lịch
                 </Dropdown.Item>
-                <Dropdown.Item href='/my-booking' aria-label="My Booking">
+                <Dropdown.Item href='/my-voucher' aria-label="My voucher">
                   <TbBasketDiscount className='mr-2' />
                   Mã giảm giá
                 </Dropdown.Item>
-                <Dropdown.Item href='/history-score' aria-label="My Booking">
+                <Dropdown.Item href='/history-score' aria-label="My history score">
                   <FiUserCheck className='mr-2' />
                   Lịch sử tích điểm
                 </Dropdown.Item>
