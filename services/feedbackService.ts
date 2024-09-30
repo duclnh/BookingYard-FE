@@ -10,3 +10,7 @@ export async function getFeedbackHome() {
   return await fetchWrapper.get('/api/feedback-home');
 }
 
+export async function getFeedbackFacility(id: string | undefined ,query: string) {
+  return await fetchWrapper.get(`/api/feedback-facility-owner/${id}${query}`);
+}
+

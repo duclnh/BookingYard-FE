@@ -10,24 +10,27 @@ import toast from 'react-hot-toast';
 import { HistoryPoint, PageResult } from 'types';
 import { EmptyList } from '@components/index';
 import qs from "query-string";
-import { Pagination } from 'flowbite-react';
 
 export default function HistoryScore() {
   const user = useAppSelector(state => state.user.value)
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(100);
+  const [currentPageSize, setCurrentPageSize] = useState(5);
   const [currentSelect, setSelect] = useState<string>('all');
   const [historyPoints, setHistoryPoints] = useState<PageResult<HistoryPoint> | undefined>(undefined)
-  const onPageChange = (page: number) => setCurrentPage(page);
+
   const url = qs.stringifyUrl({
     url: "", query: {
       "search": "",
-      "currentPage": currentPage,
-      "pageSize": pageSize,
-      "type" : currentSelect,
+      "currentPage": 1,
+      "pageSize": currentPageSize,
+      "type": currentSelect,
     }
   });
-
+  const handleScroll = (e: any) => {
+    const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
+    if (bottom) {
+      setCurrentPageSize(prev => prev + 5);
+    }
+  };
   useEffect(() => {
     if (user !== undefined) {
       getHistoryScoreUser(user.id, url)
@@ -43,7 +46,7 @@ export default function HistoryScore() {
         .catch(() => toast.error("Lỗi hệ thống"))
     }
 
-  }, [currentPage, pageSize, currentSelect])
+  }, [currentPageSize, currentSelect])
   return (
     <div className='col-span-3 rounded-2xl border'>
       <div className='text-2xl font-bold border-b-2 px-5 py-3'>
@@ -62,7 +65,7 @@ export default function HistoryScore() {
           Dùng điểm
         </div>
       </div>
-      <div className='p-5 space-y-4'>
+      <div className='p-5 space-y-4 max-h-[630px] overflow-y-auto' onScroll={handleScroll}>
         {historyPoints != undefined && historyPoints?.results.length > 0 ? historyPoints?.results.map((history: HistoryPoint, index) => (
           <div key={index} className='rounded-lg border'>
             <div className='grid grid-cols-4 place-items-center gap-2 p-2'>
@@ -81,19 +84,6 @@ export default function HistoryScore() {
         )) : <>
           <EmptyList />
         </>}
-        {historyPoints !== undefined && historyPoints.totalPages > 1 && (
-          <div className="flex justify-end">
-            <Pagination
-              layout="pagination"
-              currentPage={currentPage}
-              totalPages={historyPoints?.totalPages || 0}
-              onPageChange={onPageChange}
-              previousLabel=""
-              nextLabel=""
-              showIcons
-            />
-          </div>
-        )}
       </div>
     </div>
   )

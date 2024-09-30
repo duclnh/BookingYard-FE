@@ -191,6 +191,18 @@ export type FeedbackHome = {
     typeFeedback: string
 }
 
+export type FeedbackOwner = {
+    feedbackID: string,
+    name: string,
+    phone: string,
+    content: string,
+    rating: number,
+    typeFeedback: number,
+    isShow: true,
+    images: string [],
+    createdAt: string
+}
+
 export type FacilityHome = {
     facilityID: string,
     facilityImage: string,
@@ -222,4 +234,17 @@ export type VoucherManagement = {
     expiredDate: string,
     reason: string,
     status: boolean
+}
+
+export type CollectVoucher = {
+    collectVoucherID: string,
+    facilityID: string,
+    percentage: number,
+    facilityName: string,
+    sportName: string,
+    voucherName: string,
+    startDate: string,
+    endDate: string,
+    isOutDate: boolean,
+    isUsed: boolean
 }

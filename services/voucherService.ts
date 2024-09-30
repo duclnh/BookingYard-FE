@@ -10,8 +10,8 @@ export async function getVoucherHome() {
     return await fetchWrapper.get("/api/voucher-home")
 }
 
-export async function getVoucherFacility(id: string | undefined, url: string) {
-    return await fetchWrapper.get(`/api/voucher-facility/${id}${url}`)
+export async function getVoucherFacility(id: string | undefined, query: string) {
+    return await fetchWrapper.get(`/api/voucher-facility/${id}${query}`)
 }
 
 export async function collectVoucher(userID: string | undefined, voucherID: string) {
@@ -20,4 +20,8 @@ export async function collectVoucher(userID: string | undefined, voucherID: stri
         userID,
         voucherID
     })
+}
+
+export async function getCollectVoucher(id: string | undefined, query: string) {
+    return await fetchWrapper.get(`/api/collect-voucher/${id}${query}`)
 }

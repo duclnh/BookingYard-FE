@@ -91,17 +91,17 @@ export default function Booking() {
       {/* End Search */}
       <div className='mt-20 mb-10'>
         <div className='lg:w-[80%] grid grid-cols-4 gap-2 lg:flex lg:space-x-2'>
-          {[...Array(6)].map((_, index) => (
+          {/* {[...Array(6)].map((_, index) => (
             <div key={index} className='border p-2 block w-fit rounded-md relative group hover:cursor-pointer'>
               <p className='text-sm select-none'>
                 Bóng đá
               </p>
               <TiDelete size={20} className='text-red-500 absolute -top-2.5 -right-2.5 hidden group-hover:block z-10' />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
-      {/* Start Filter */}
+      {/*  Start Filter */}
       <div className='grid xl:grid-cols-6 lg:grid-cols-5 grid-cols-2 sm:gap-20 gap-5'>
         <div className='hidden lg:block xl:col-span-5 lg:col-span-4'>
           <div className='grid xl:grid-cols-6 lg:grid-cols-6 sm:grid-cols-2 xl:gap-5 lg:gap-1'>

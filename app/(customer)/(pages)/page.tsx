@@ -102,28 +102,29 @@ export default function Home() {
   const handlerCollectVoucher = (voucherID: string) => {
     if (user === undefined) {
       toast.error("Vui lòng đăng nhập");
-    }
-    collectVoucher(user?.id, voucherID)
-      .then(x => {
-        if (x.status == 201) {
-          toast.success("Lấy mã giảm giá thành công")
-        } else if (x.status == 409) {
-          toast.error("Bạn đã có mâ giảm giá này rồi")
-        } else if (x.status == 404) {
-          toast.error("Mã giảm giá này không tồn tại")
-        }
-        else {
-          if (x.data.title.includes('Cannot collect voucher: It has already been fully redeemed.')) {
-            toast.error("Mã giảm giá đã hết")
-          } else if (x.data.title.includes('Cannot collect voucher. This voucher has already expired.')) {
-            toast.error("Mã giảm giá này đã hết hạn")
-          } else {
-            toast.error("Lỗi hệ thống vui lòng thử lại sau")
+    } else {
+      collectVoucher(user?.id, voucherID)
+        .then(x => {
+          if (x.status == 201) {
+            toast.success("Lấy mã giảm giá thành công")
+          } else if (x.status == 409) {
+            toast.error("Bạn đã có mâ giảm giá này rồi")
+          } else if (x.status == 404) {
+            toast.error("Mã giảm giá này không tồn tại")
           }
-        }
-      }).catch(() => {
-        toast.error("Lỗi hệ thống vui lòng thử lại sau")
-      })
+          else {
+            if (x.data.title.includes('Cannot collect voucher: It has already been fully redeemed.')) {
+              toast.error("Mã giảm giá đã hết")
+            } else if (x.data.title.includes('Cannot collect voucher. This voucher has already expired.')) {
+              toast.error("Mã giảm giá này đã hết hạn")
+            } else {
+              toast.error("Lỗi hệ thống vui lòng thử lại sau")
+            }
+          }
+        }).catch(() => {
+          toast.error("Lỗi hệ thống vui lòng thử lại sau")
+        })
+    }
   }
 
   return (
@@ -189,7 +190,7 @@ export default function Home() {
       </div>
       <div className='md:py-5md:mx-14 lg:mx-32 mb-20'>
         <div className='lg:text-6xl md:text-4xl text-3xl font-black text-center'>
-          Những sân nội bật
+          Những sân nổi bật
         </div>
         <div className='pt-20 group relative'>
           <div className='flex justify-center items-center'>

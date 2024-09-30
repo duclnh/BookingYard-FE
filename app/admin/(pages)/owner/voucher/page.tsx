@@ -149,7 +149,7 @@ export default function Voucher() {
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Bạn có muốn xóa môn thể thao này không?
+              Bạn có muốn xóa mã giảm giá này không?
             </h3>
             <div className="flex justify-center gap-4 mt-10">
               <Button type='submit' color="failure" onClick={() => setOpenModalCancel(false)}>

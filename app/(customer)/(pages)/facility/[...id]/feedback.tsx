@@ -26,21 +26,28 @@ export default function Feedback(props: Props) {
     const [feedback, setFeedback] = useState<PageResult<FeedbackFacilityDetail> | undefined>(undefined)
     const [imageFeedback, setImageFeedback] = useState<string[]>([])
     const [currentIndexFeedback, setCurrentIndexFeedback] = useState(0);
-
+    const [currentPageSize, setCurrentPageSize] = useState<number>(4)
     const customTheme: CustomFlowbiteTheme["ratingAdvanced"] = {
         progress: {
             label: 'text-sm font-medium text-black dark:text-cyan-500'
         }
     };
+    const handleScroll = (e: any) => {
+        const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
+        console.log(Math.floor(e.target.scrollHeight - e.target.scrollTop), e.target.clientHeight)
+        if (bottom) {
+          setCurrentPageSize(prev => prev + 5);
+        }
+      };
     const url = qs.stringifyUrl({
         url: "", query: {
             "search": "",
             "currentPage": 1,
-            "pageSize": 10,
+            "pageSize": currentPageSize,
         }
     });
     useEffect(() => {
-        if (props.facilityID !== undefined && feedback === undefined) {
+        if (props.facilityID !== undefined) {
             getFeedbackFacilityDetail(props.facilityID, url)
                 .then(x => {
                     if (x.status == 200) {
@@ -54,7 +61,7 @@ export default function Feedback(props: Props) {
                     toast.error("Lỗi hệ thống vui lòng thử lại sau")
                 });
         }
-    }, [props.facilityID])
+    }, [currentPageSize])
 
     const prevImageFeedback = () => {
         if (currentIndexFeedback == 0) return;
@@ -131,7 +138,7 @@ export default function Feedback(props: Props) {
                         </Rating.Advanced>
                     </div>
                 </div>
-                <div className='mt-10 overflow-hidden max-h-[400px] overflow-y-hidden hover:overflow-y-auto'>
+                <div className='mt-10 overflow-hidden max-h-[400px] hover:overflow-y-auto' onScroll={handleScroll}>
                     {feedback != undefined && feedback.results.map((feedback: FeedbackFacilityDetail, index) => (
                         <div key={index} className='flex justify-between items-start mb-10'>
                             <div className='flex'>

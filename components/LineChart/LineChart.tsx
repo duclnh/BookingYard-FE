@@ -26,14 +26,7 @@ export default function LineChart({ className, label }: { className: string, lab
                 fill: false,
                 borderColor: '#ff6384',
                 tension: 0.1,
-            },
-            {
-                label: 'Gói sân',
-                data: generateRandomData(50000, 100000, hoursOfDay.length),
-                fill: false,
-                borderColor: '#3a98b3',
-                tension: 0.1,
-            },
+            }
         ],  
     };
     return (

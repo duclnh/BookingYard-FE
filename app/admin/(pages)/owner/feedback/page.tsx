@@ -1,20 +1,31 @@
 "use client"
 import { CardStatistic, Heading, ModalView } from '@components/index'
 import { Button, Pagination, Rating, Select, Table } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import { IoMdSearch } from 'react-icons/io'
 import { FaEye, FaStar } from 'react-icons/fa'
 import { FaPencil } from 'react-icons/fa6'
 import { RiDeleteBinLine } from 'react-icons/ri'
+import { useSelector } from 'react-redux'
+import { useAppSelector } from '@hooks/hooks'
+import qs from "query-string";
+import { getFeedbackFacility } from '@services/feedbackService'
+import { FeedbackOwner, PageResult } from 'types'
+import toast from 'react-hot-toast'
+import { getImage } from '@utils/imageOptions'
 
 export default function Feedback() {
+    const user = useAppSelector(state => state.manager.value)
     const [modalImage, setModalImage] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const onPageChange = (page: number) => setCurrentPage(page);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const images = ['/assets/images/slide1.png', '/assets/images/slide2.png', '/assets/images/slide3.png'];
+    const [images, setImages] = useState<string[]>([])
+    const [search, setSearch] = useState<string>('')
+    const [feedbacks, setFeedbacks] = useState<PageResult<FeedbackOwner> | undefined>(undefined)
+
     const prevImage = () => {
         if (currentIndex == 0) return;
         setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
@@ -24,12 +35,33 @@ export default function Feedback() {
         if ((images.length - 1) == currentIndex) return;
         setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     };
+    const url = qs.stringifyUrl({
+        url: "", query: {
+            "search": search,
+            "currentPage": currentPage,
+            "pageSize": 10,
+        }
+    });
 
+    useEffect(() => {
+        getFeedbackFacility(user?.facilityID, url)
+            .then(x => {
+                if (x.status === 200) {
+                    console.log(x.data)
+                    return x.data
+                } else {
+                    toast.error("Lỗi lấy danh sách đánh giá")
+                }
+            }).then((feedbacks: PageResult<FeedbackOwner>) => {
+                setFeedbacks(feedbacks)
+            })
+            .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+    }, [])
     return (
         <>
             <div className='py-5 w-full'>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Đánh giá từ chủ sân' center />
-                <div className='sm:my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
+                {/* <div className='sm:my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
                     <CardStatistic
                         title='5 sao'
                         amount={3000}
@@ -72,7 +104,7 @@ export default function Feedback() {
                         gradientTo='to-yellow-400'
                         iconColor='text-yellow-400'
                     />
-                </div>
+                </div> */}
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
@@ -96,83 +128,80 @@ export default function Feedback() {
                                 <Table.HeadCell className='min-w-24'>Số điện thoại</Table.HeadCell>
                                 <Table.HeadCell className='min-w-32'>Số sao</Table.HeadCell>
                                 <Table.HeadCell className='min-w-60'>Nội dung</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>                                    
+                                <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
+                                <Table.HeadCell className='min-w-32'>
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
-                                {[...Array(5)].map((_, index) => (
+                                {feedbacks !== undefined && feedbacks?.results?.map((feedbackOwner: FeedbackOwner, index) => (
                                     <Table.Row key={index} className="text-center">
                                         <Table.Cell>
-                                            {index}
+                                            {index + 1}
                                         </Table.Cell>
-                                        <Table.Cell className='text-left font-bold'>Sân bảo an Sân bảo an</Table.Cell>
-                                        <Table.Cell>0914501749</Table.Cell>
+                                        <Table.Cell className='text-left font-bold'>{feedbackOwner.name}</Table.Cell>
+                                        <Table.Cell>{feedbackOwner.phone}</Table.Cell>
                                         <Table.Cell className='p-1 flex justify-center'>
-                                            <Rating>
-                                                <Rating.Star />
-                                                <Rating.Star />
-                                                <Rating.Star />
-                                                <Rating.Star />
-                                                <Rating.Star filled={false} />
-                                            </Rating>
+                                            {feedbackOwner.rating && (
+                                                <Rating>
+                                                    {Array.from({ length: 5 }, (_, index) => (
+                                                        <Rating.Star key={index} filled={index < feedbackOwner.rating} />
+                                                    ))}
+                                                </Rating>
+                                            )}
                                         </Table.Cell>
-                                        <Table.Cell className='text-left'>0914501749</Table.Cell>
+                                        <Table.Cell className='text-left'>{feedbackOwner.content}</Table.Cell>
+                                        <Table.Cell>
+                                            {feedbackOwner.isShow ? <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                                                Hiện thị
+                                            </p> : <p className='bg-red-200 text-red-500 p-1 rounded-md text-center font-bold'>
+                                                Đã ẩn
+                                            </p>}
+                                        </Table.Cell>
                                         <Table.Cell className='flex space-x-2 justify-center'>
-                                            <Button size='xs'>
+                                            <Button size='xs' onClick={() => {
+                                                setImages(feedbackOwner.images)
+                                                setModalImage(true)
+                                            }}>
                                                 <FaEye size={16} />
                                             </Button>
-                                            <Button color='failure' type='submit' size='xs'>
+                                            {/* <Button color='failure' type='submit' size='xs'>
                                                 <RiDeleteBinLine size={16} />
-                                            </Button>
+                                            </Button> */}
                                         </Table.Cell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>
                         </Table>
                     </div>
-                    <div className="flex justify-end">
-                        <Pagination
-                            layout="pagination"
-                            currentPage={currentPage}
-                            totalPages={1000}
-                            onPageChange={onPageChange}
-                            previousLabel=""
-                            nextLabel=""
-                            showIcons
-                        />
-                    </div>
+                    {feedbacks != undefined && feedbacks.totalPages > 0 && (
+                        <div className="flex justify-end">
+                            <Pagination
+                                layout="pagination"
+                                currentPage={currentPage}
+                                totalPages={feedbacks?.totalPages || 0}
+                                onPageChange={onPageChange}
+                                previousLabel=""
+                                nextLabel=""
+                                showIcons
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
             {/*Start view Image */}
             <ModalView key={'View Images'} toggle={modalImage} setToggle={setModalImage}>
-                <div className='rounded-lg shadow flex items-center justify-between w-[100%] h-[100%]'>
-                    <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={prevImage} />
-                    <div className=''>
-                        <div className='mb-5 h-[600px]'>
-                            <Image
-                                height={600}
-                                width={1100}
-                                className='select-none h-full w-full'
-                                src={images[currentIndex]}
-                                alt='Slide'
-                            />
-                        </div>
-                        <div className='flex justify-center overflow-hidden'>
-                            {[...Array(images.length)].map((_, index) => (
-                                <div key={index} className='mx-2 mb-2'>
-                                    <Image
-                                        height={90}
-                                        width={90}
-                                        className='select-none rounded-md hover:scale-105 hover:cursor-pointer'
-                                        src={images[index]}
-                                        alt='Thumbnail'
-                                        onClick={() => setCurrentIndex(index)}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                <div className='rounded-lg shadow dark:bg-gray-700 w-[100%] h-[100%] group'>
+                    <SlArrowLeftCircle className={`${currentIndex == 0 ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 left-3`} cursor='pointer' size={40} onClick={prevImage} />
+                    <div className='mb-5'>
+                        <Image
+                            height={600}
+                            width={1100}
+                            className='select-none w-full max-h-[775px]'
+                            src={getImage(images[currentIndex]) || "/assets/images/slide1.png"}
+                            alt='Slide'
+                        />
                     </div>
-                    <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2`} cursor='pointer' size={40} onClick={nextImage} />
+                    <SlArrowRightCircle className={`${currentIndex == (images.length - 1) ? 'text-gray-500' : 'text-white'} mx-2 absolute top-1/2 right-3`} cursor='pointer' size={40} onClick={nextImage} />
                 </div>
             </ModalView>
             {/*End view Image */}
