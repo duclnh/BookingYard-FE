@@ -140,6 +140,16 @@ export type CourtDetail = {
     isActive: boolean
 }
 
+export type FacilityAdmin = {
+    facilityID: string,
+    ownerName: string,
+    image: string,
+    facilityName: string,
+    address: string,
+    isActive: boolean,
+    isDeleted: boolean,
+}
+
 export type Facility = {
     facilityID: string,
     facilityImage: string,
@@ -150,6 +160,7 @@ export type Facility = {
     facilityMaxPrice: number,
     facilityDistance: number,
 }
+
 export type FacilityDetail = {
     facilityID: string,
     facilityName: string,
@@ -199,7 +210,7 @@ export type FeedbackOwner = {
     rating: number,
     typeFeedback: number,
     isShow: true,
-    images: string [],
+    images: string[],
     createdAt: string
 }
 
@@ -247,4 +258,48 @@ export type CollectVoucher = {
     endDate: string,
     isOutDate: boolean,
     isUsed: boolean
+}
+
+export type MyBooking = {
+    bookingID: string,
+    facilityID: string,
+    code: string,
+    image: string,
+    facilityName: string,
+    startTime: string,
+    endTime: string,
+    datePlay: string,
+    dateBooking: string,
+    totalPrice: number,
+    statusBooking: boolean,
+    isCheckIn: boolean,
+    isFeedback: boolean,
+    isDelete: boolean
+}
+
+export type BookingDetail = {
+    bookingID: string,
+    facilityID: string,
+    codeBooking: string,
+    image: string,
+    facilityName: string,
+    fullAddress: string,
+    courtName: string,
+    courtImage: string,
+    court360: string,
+    typeCourt: string,
+    bookingName: string,
+    bookingPhone: string,
+    paymentMethod: string,
+    paymentStatus: string,
+    startTime: string,
+    endTime: string,
+    datePlay: string,
+    dateBooking: string,
+    voucherName: string,
+    percentage: number,
+    codeVoucher: string,
+    courtPrice: number,
+    totalPrice: number,
+    isCheckIn: boolean,
 }

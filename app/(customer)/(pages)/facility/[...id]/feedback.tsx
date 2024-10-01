@@ -34,11 +34,10 @@ export default function Feedback(props: Props) {
     };
     const handleScroll = (e: any) => {
         const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
-        console.log(Math.floor(e.target.scrollHeight - e.target.scrollTop), e.target.clientHeight)
         if (bottom) {
-          setCurrentPageSize(prev => prev + 5);
+            setCurrentPageSize(prev => prev + 5);
         }
-      };
+    };
     const url = qs.stringifyUrl({
         url: "", query: {
             "search": "",
@@ -83,14 +82,14 @@ export default function Feedback(props: Props) {
             {/* Start feedback */}
             <div className='mt-10' id='feedback'>
                 <div className='text-2xl font-bold border-b-2 py-3'>Đánh giá của khách hàng</div>
-                <div className='grid grid-cols-3 mt-10 gap-10 place-items-start'>
+                <div className='grid sm:grid-cols-3 mt-10 gap-10 sm:place-items-start'>
                     <div className='col-span-1'>
                         <div className='text-center'>
                             <p className='text-6xl font-bold'>{props?.rating}</p>
                             <p className='mt-2'>{`Dựa trên ${props?.numberRating} lượt đánh giá`}</p>
                         </div>
                     </div>
-                    <div className='col-span-2 w-full'>
+                    <div className='sm:col-span-2 w-full ml-8'>
                         <Rating.Advanced percentFilled={props.percentFiveStar} theme={customTheme} className="mb-2">
                             <Rating>
                                 <Rating.Star />

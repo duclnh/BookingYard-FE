@@ -18,6 +18,7 @@ import toast from 'react-hot-toast'
 import { getImage, getImage360 } from '@utils/imageOptions'
 import { PiDoorOpenBold } from 'react-icons/pi'
 import Feedback from './feedback'
+import { convertNumberToPrice } from '@utils/index'
 
 export default function Facility({ params }: { params: { id: string } }) {
   const [modal360, setModal360] = useState(false);
@@ -52,8 +53,8 @@ export default function Facility({ params }: { params: { id: string } }) {
       .catch(() => {
         toast.error("Lỗi hệ thống vui lòng thử lại sau");
       });
-  }, []); 
-  
+  }, []);
+
   const projection = useMemo(() => {
     return new EquirectProjection({
       src: image360s[currentIndex],
@@ -121,7 +122,7 @@ export default function Facility({ params }: { params: { id: string } }) {
               </div>
             </div>
             <div className='relative hover:cursor-pointer w-full' onClick={() => setModal360(true)}>
-              <Image height={395} width={395} className='rounded-2xl !w-[100%] sm:w-96' src={getImage(images[0]) || "/assets/images/slide1.png"} alt="360" />
+              <Image height={395} width={395} className='rounded-2xl !w-[100%] h-36 sm:h-full sm:w-96' src={getImage(images[0]) || "/assets/images/slide1.png"} alt="360" />
               <div className='absolute right-0 top-0  w-full h-full bg-[#302f2f] opacity-70 rounded-2xl flex justify-center items-center'>
                 <TbView360Number size={40} className='text-white' />
               </div>
@@ -130,15 +131,15 @@ export default function Facility({ params }: { params: { id: string } }) {
         </div>
         {/* End slide */}
 
-        <div className='grid sm:grid-cols-5 md:grid-cols-5 md:py-4 md:gap-10 gap-10 mt-10 md:mt-0'>
-          <div className='sm:col-span-1 md:col-span-3'>
+        <div className='grid sm:grid-cols-7 md:grid-cols-7 md:py-4 md:gap-10 sm:gap-10 mt-10 md:mt-0'>
+          <div className='sm:col-span-1 md:col-span-5'>
             {/* Start information court */}
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center'>
-                <div className='text-3xl font-bold mr-3 max-w-[450px]'>
+            <div className='flex sm:items-center justify-between'>
+              <div className='xl:flex items-center'>
+                <div className='sm:text-3xl text-2xl font-bold mr-3 max-w-[450px]'>
                   {facility?.facilityName}
                 </div>
-                <Rating className='mt-2'>
+                <Rating className='mt-5 xl:mt-2'>
                   <Rating.Star />
                   <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility?.facilityRating}</p>
                   <span className="mx-1.5 h-1 w-1 rounded-full bg-gray-500 dark:bg-gray-400" />
@@ -149,7 +150,7 @@ export default function Facility({ params }: { params: { id: string } }) {
               </div>
               <p className='flex text-sm mt-3 hover:cursor-pointer' onClick={() => setOpenModalReport(true)}>
                 <MdReportGmailerrorred size={20} className='mr-2' />
-                Báo cáo
+                <p className='min-w-14'>Báo cáo</p>
               </p>
             </div>
             <p className='flex text-sm mt-5'>
@@ -162,7 +163,7 @@ export default function Facility({ params }: { params: { id: string } }) {
             </p>
             <p className='flex text-sm mt-3'>
               <MdOutlineLocationOn size={20} className='mr-2' />
-              {facility?.facilityAddress}
+              <p onClick={() => setModalMap(true)} className='hover:underline hover:cursor-pointer'>{facility?.facilityAddress}</p>
             </p>
             <div className='mt-10'>
               <div className='text-2xl font-bold border-b-2 py-3'>Thông tin chi tiết sân</div>
@@ -196,9 +197,9 @@ export default function Facility({ params }: { params: { id: string } }) {
                   </div>
                   <div className='mt-3'>
                     {facility?.sports.map((sport, index) => (
-                      <div key={index} className='flex items-center mt-2'>
-                        <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                        {sport}
+                      <div key={index} className='flex mt-2'>
+                        <p className='mr-5 mt-1 h-1 w-1'><FaCheckCircle className='text-green-500' /></p>
+                        <p>{sport}</p>
                       </div>
                     ))}
                   </div>
@@ -206,23 +207,23 @@ export default function Facility({ params }: { params: { id: string } }) {
                 {Array.isArray(facility?.convenient) && facility.convenient.length > 0 && facility.convenient.map((convenient: Convenience, index) => (
 
                   <div key={index}>
-                    <div className='flex items-center font-bold'>
+                    <div className='flex font-bold'>
                       {convenient.title === 'payment' && (
-                        <MdPayments size={20} className='mr-2' />
+                        <p className='mr-5 mt-1 h-1 w-1'> <MdPayments size={19} /></p>
                       )}
                       {convenient.title === 'safe' && (
-                        <MdHealthAndSafety size={20} className='mr-2' />
+                        <p className='mr-5 mt-1 h-1 w-1'> <MdHealthAndSafety size={19} /></p>
                       )}
                       {convenient.title === 'entertainment' && (
-                        <IoStorefrontSharp size={20} className='mr-2' />
+                        <p className='mr-5 mt-1 h-1 w-1'> <IoStorefrontSharp /></p>
                       )}
                       {convenient.content}
                     </div>
                     <div className='mt-3'>
                       {convenient.feature?.map((feature: Feature, indexFeature) => (
-                        <div key={indexFeature} className='flex items-center mt-2'>
-                          <FaCheckCircle size={14} className='mr-3 text-green-500' />
-                          {feature.title}
+                        <div key={indexFeature} className='flex mt-2'>
+                          <p className='mr-5 mt-1 h-1 w-1'><FaCheckCircle className='text-green-500' /></p>
+                          <p>{feature.title}</p>
                         </div>
                       ))}
                     </div>
@@ -244,73 +245,15 @@ export default function Facility({ params }: { params: { id: string } }) {
             />
           </div>
           <div className='col-span-2'>
-            <div className='border rounded-l py-5'>
-              <div className='text-center text-xl font-bold p-5'>Đặt lịch hẹn</div>
-              <div className='p-3'>
-                <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
-                  <label htmlFor="sport" className='mr-2.5 col-span-1 font-medium'>Chọn môn thể thao:</label>
-                  <div className='col-span-2 grid lg:grid-cols-3 grid-cols-2 gap-2'>
-                    <div className='p-1 text-sm text-center border rounded-md hover:cursor-pointer bg-[#424040] text-white'>
-                      Bóng đá
-                    </div>
-                    <div className='p-1 text-sm text-center border rounded-md hover:cursor-pointer'>
-                      Bóng chuyền
-                    </div>
-                    <div className='p-1 text-sm text-center border rounded-md hover:cursor-pointer'>
-                      Cầu lông
-                    </div>
-                    <div className='p-1 text-sm text-center border rounded-md hover:cursor-pointer'>
-                      Bóng rổ
-                    </div>
-                  </div>
-                </div>
-                <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
-                  <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn loại sân:</label>
-                  <div className='col-span-2 grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-3 gap-2'>
-                    {[...Array(5)].map((_, index) => (
-                      <div key={index} className={`py-1 px-3 text-sm w-full text-center border rounded-md hover:cursor-pointer ${(index + 1) == 1 ? 'bg-[#424040] text-white' : ''}`}>
-                        <p>{index + 1} người</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
-                  <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn sân:</label>
-                  <div className='col-span-2 grid sm:grid-cols-3 grid-cols-2 gap-2'>
-                    {[...Array(5)].map((_, index) => (
-                      <div key={index} className={`py-1 px-2 text-sm w-full text-center border rounded-md hover:cursor-pointer ${(index + 1) == 1 ? 'bg-[#424040] text-white' : ''}`}>
-                        <p>Sân {index + 1}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <InputDate handlerChange={() => { }} name='date' multiple={false} minDate={new Date()} row='mb-6 grid lg:grid-cols-3 sm:grid-cols-2' label='Chọn ngày:' labelClassName='mr-4 col-span-1 font-medium' />
-                <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
-                  <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn giờ bắt đầu:</label>
-                  <div className='col-span-2 grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 gap-2'>
-                    {times.map((_, index) => (
-                      <p key={index} className={`py-1 text-sm w-full text-center border rounded-md hover:cursor-pointer ${(index + 1) == 1 ? 'bg-[#424040] text-white' : ''}`}>
-                        {times[index]}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-                <div className='mb-6 grid lg:grid-cols-3 grid-cols-2'>
-                  <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Chọn số giờ:</label>
-                  <div className='col-span-2 grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 grid-cols-4 gap-2'>
-                    {[...Array(5)].map((_, index) => (
-                      <p key={index} className={`py-1 text-sm w-full text-center border rounded-md hover:cursor-pointer ${(index + 1) == 1 ? 'bg-[#424040] text-white' : ''}`}>
-                        {index + 1}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-                <div className='mb-8 grid lg:grid-cols-3 grid-cols-2'>
-                  <label htmlFor="date" className='mr-4 col-span-1 font-medium'>Giá  tiền:</label>
-                  <div className='text-lg font-bold'>31312</div>
-                </div>
-                <Button size='sm' href='/payment' className='mx-auto py-1 w-32 px-4 rounded-md'>Đặt lịch</Button>
+            <div className='border shadow-2xl p-4 rounded-2xl'>
+              <p className='text-lg text-center font-bold'>Giá sân</p>
+              <div className='flex items-center my-10'>
+                <p className='text-xl font-semibold'>{facility?.facilityMinPrice === facility?.facilityMaxPrice
+                  ? convertNumberToPrice(facility?.facilityMinPrice || 0)
+                  : convertNumberToPrice(facility?.facilityMinPrice || 0, facility?.facilityMaxPrice)}</p>
+                <p className='text-xl font-medium text-gray-200'>/ Giờ</p>
               </div>
+              <Button className='mt-3 w-full'>Đặt lịch ngay</Button>
             </div>
           </div>
         </div>

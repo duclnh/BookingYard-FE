@@ -92,7 +92,7 @@ export default function Contact() {
             <div className='mt-3'>
               <div className='flex items-center justify-center leading-8 font-medium'>
                 <MdOutlineEmail size={25} className='mx-2' />
-                fieldy@gmail.com
+                fieldycompany@gmail.com
               </div>
             </div>
           </div>
@@ -104,17 +104,11 @@ export default function Contact() {
             </div>
             <div className='my-5 font-bold text-xl'>Mạng xã hội</div>
             <div className='text-sm'></div>
-            <div className='mt-3 grid grid-cols-4 mx-auto'>
-              <Link href="#">
+            <div className='mt-3 flex justify-center space-x-10'>
+              <Link href="https://www.facebook.com/profile.php?id=61565940581431">
                 <Image className='mx-auto' height={30} width={30} src="/assets/images/facebook.png" alt="facebook" />
               </Link>
-              <Link href="#">
-                <Image className='mx-auto' height={30} width={30} src="/assets/images/youtube.png" alt="youtube" />
-              </Link>
-              <Link href="#">
-                <Image className='mx-auto' height={30} width={30} src="/assets/images/instagram.png" alt="instagram" />
-              </Link>
-              <Link href="#">
+              <Link href="https://www.tiktok.com/@fieldy_123">
                 <Image className='mx-auto' height={30} width={30} src="/assets/images/tiktok.png" alt="tiktok" />
               </Link>
             </div>

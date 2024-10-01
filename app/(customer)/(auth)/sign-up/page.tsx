@@ -6,10 +6,9 @@ import { FieldValues, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { register as registerAccount } from '@services/index';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+
 export default function RegisterPage() {
-    const router = useRouter();
     const [error, setError] = useState('');
     const { control, getValues, handleSubmit, formState: { isSubmitting, isValid }, register } = useForm({ mode: "onTouched", });
     async function handleSubmitForm(data: FieldValues) {
@@ -19,18 +18,17 @@ export default function RegisterPage() {
             var res = await registerAccount(data.name, data.email, data.password, data.gender, data.phone);
             console.log(res?.data)
             if (res?.status === 201) {
-                toast.success("Đăng kí thành công", { duration: 120 })
                 await signIn(
                     "credentials", {
                     username: data.email,
                     password: data.password,
                     redirect: false
-                }
-                )
-                router.push("/verify")
+                })
+                toast.success("Đăng kí thành công")
+                window.location.href = "/"
             } else {
                 if (res?.data?.errors?.Email) {
-                    setError("Email đă có người sử dụng")
+                    setError("Email đã có người sử dụng")
                 } else {
                     setError("Đăng kí thất bại. Vui lòng thử lại")
                 }

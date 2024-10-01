@@ -85,7 +85,7 @@ export default function Booking() {
         <input className='border rounded-s-lg px-3 xl:w-[600px] sm:w-96 w-80' name='search' placeholder={searchPlaceholder} />
         <button className='h-10 !rounded-e-lg bg-orange-500 hover:!bg-orange-400 focus:ring-transparent flex items-center text-white px-2'>
           <IoMdSearch className='font-bold mr-2' size={18} />
-          <span className='w-fit'>Tìm kiếm</span>
+          <span className='w-fit text-sm lg:text-base'>Tìm kiếm</span>
         </button>
       </div>
       {/* End Search */}
@@ -360,8 +360,8 @@ export default function Booking() {
       {/* Start View List */}
       <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
         {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
-          <div key={index} className='shadow-3xl rounded-2xl p-2 w-72 mx-auto'>
-            <img className='rounded-lg' height={500} width={500} src={getImage(facility.facilityImage)} alt="img" />
+          <div key={index} className='shadow-3xl rounded-2xl p-3 w-72 mx-auto'>
+            <Image className='rounded-lg h-60' height={500} width={500} src={getImage(facility.facilityImage) || ''} alt="img" />
             <div className='mx-2'>
               <div className='flex justify-between items-center py-4'>
                 <Rating>
@@ -370,25 +370,27 @@ export default function Booking() {
                 </Rating>
                 {/* <div>12km</div> */}
               </div>
-              <div className='font-bold mb-5 text-center text-xl'>{facility.facilityName}</div>
-              <div className='flex text-sm'>
-                <p className='mt-0.5'>
-                  <TiLocation className='mr-2 h-4 w-4' />
-                </p>
-                <p>
-                  {facility.facilityAddress}
-                </p>
-              </div>
-              <div className='py-5 flex justify-between items-center'>
-                <div className='text-green-500 font-bold'>
-                  {facility.facilityMinPrice === facility.facilityMaxPrice
-                    ? convertNumberToPrice(facility.facilityMinPrice)
-                    : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+              <div className='font-bold mb-5 text-center text-xl h-14'>{facility.facilityName}</div>
+              <div className='flex flex-col justify-between h-full'>
+                <div className='flex text-sm min-h-[75px]'>
+                  <p className='mt-0.5'>
+                    <TiLocation className='mr-2 h-4 w-4' />
+                  </p>
+                  <p>
+                    {facility.facilityAddress}
+                  </p>
                 </div>
-                <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
-                  Chi tiết
-                  <FaArrowRight className='ml-2 mt-0.5' size={12} />
-                </Button>
+                <div className='flex justify-between items-center'>
+                  <div className='text-green-500 font-bold'>
+                    {facility.facilityMinPrice === facility.facilityMaxPrice
+                      ? convertNumberToPrice(facility.facilityMinPrice)
+                      : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                  </div>
+                  <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
+                    Chi tiết
+                    <FaArrowRight className='ml-2 mt-0.5' size={12} />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 "use client"
-import { CardStatistic, EmptyList, Heading, Loading } from '@components/index'
+import { CardStatistic, EmptyList, Heading, Loading, LoadingData } from '@components/index'
 import { Button, Label, Modal, Pagination, Select, Table, TableCell, Textarea, TextInput } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { FaEye, FaPencil } from 'react-icons/fa6'
@@ -189,51 +189,55 @@ export default function Support() {
                                 </Table.HeadCell>
                             </Table.Head>
                             <Table.Body>
-                                {listSupports && listSupports.results.length > 0 ? <>
-                                    {listSupports?.results.map((support: SupportModel, index: number) => (
-                                        <Table.Row key={index} className='text-center'>
-                                            <Table.Cell>{++index}</Table.Cell>
-                                            <Table.Cell className='text-left text-black font-bold'>{support.name}</Table.Cell>
-                                            <Table.Cell className='text-left'>{support.phone}</Table.Cell>
-                                            <Table.Cell className='text-left'>{support.content}</Table.Cell>
-                                            <Table.Cell>
-                                                {support.typeSupport == "Contact" ?
-                                                    <p className='text-black font-bold'>
-                                                        Liên hệ
-                                                    </p>
-                                                    : <p className='text-black font-bold'>
-                                                        Tư vấn
-                                                    </p>
-                                                }
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {support.isProcessed ?
-                                                    <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
-                                                        Đã xử lí
-                                                    </p>
-                                                    : <p className='bg-yellow-200 text-yellow-700 p-1 rounded-md text-center font-bold'>
-                                                        Chưa xử lí
-                                                    </p>
-                                                }
-                                            </Table.Cell>
-                                            <Table.Cell>{support.createdAt}</Table.Cell>
-                                            <Table.Cell className='flex space-x-2'>
-                                                <Button size='xs' onClick={() => handlerViewDetail(support)}>
-                                                    <FaEye size={16} />
-                                                </Button>
-                                                {support.typeSupport == "Partner" && (
-                                                    <Button color='warning' type='submit' size='xs'>
-                                                        <FaPencil size={16} />
+                                {loading ? <TableCell colSpan={8}>
+                                    <LoadingData />
+                                </TableCell> :
+                                    listSupports && listSupports.results.length > 0 ? <>
+                                        {listSupports?.results.map((support: SupportModel, index: number) => (
+                                            <Table.Row key={index} className='text-center'>
+                                                <Table.Cell>{++index}</Table.Cell>
+                                                <Table.Cell className='text-left text-black font-bold'>{support.name}</Table.Cell>
+                                                <Table.Cell className='text-left'>{support.phone}</Table.Cell>
+                                                <Table.Cell className='text-left'>{support.content}</Table.Cell>
+                                                <Table.Cell>
+                                                    {support.typeSupport == "Contact" ?
+                                                        <p className='text-black font-bold'>
+                                                            Liên hệ
+                                                        </p>
+                                                        : <p className='text-black font-bold'>
+                                                            Tư vấn
+                                                        </p>
+                                                    }
+                                                </Table.Cell>
+                                                <Table.Cell>
+                                                    {support.isProcessed ?
+                                                        <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                                                            Đã xử lí
+                                                        </p>
+                                                        : <p className='bg-yellow-200 text-yellow-700 p-1 rounded-md text-center font-bold'>
+                                                            Chưa xử lí
+                                                        </p>
+                                                    }
+                                                </Table.Cell>
+                                                <Table.Cell>{support.createdAt}</Table.Cell>
+                                                <Table.Cell className='flex space-x-2'>
+                                                    <Button size='xs' onClick={() => handlerViewDetail(support)}>
+                                                        <FaEye size={16} />
                                                     </Button>
-                                                )}
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    ))}
-                                </> : <Table.Row>
-                                    <TableCell colSpan={8}>
-                                        <EmptyList />
-                                    </TableCell>
-                                </Table.Row>}
+                                                    {support.typeSupport == "Partner" && (
+                                                        <Button color='warning' type='submit' size='xs'>
+                                                            <FaPencil size={16} />
+                                                        </Button>
+                                                    )}
+                                                </Table.Cell>
+                                            </Table.Row>
+                                        ))}
+                                    </> : <Table.Row>
+                                        <TableCell colSpan={8}>
+                                            <EmptyList />
+                                        </TableCell>
+                                    </Table.Row>
+                                }
                             </Table.Body>
                         </Table>
                     </div>
@@ -362,9 +366,6 @@ export default function Support() {
                 </form>
             </Modal>
             {/* End Report */}
-            {loading && (
-                <Loading />
-            )}
         </>
     )
 }
