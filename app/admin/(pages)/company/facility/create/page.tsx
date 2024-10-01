@@ -179,6 +179,7 @@ export default function CreatePage() {
             formData.append("districtID", data.district);
             formData.append("provinceID", data.province);
             var res = await createFacility(formData)
+            console.log(res)
             if (res.status === 201) {
                 toast.success("Tạo mới cơ sở thành công")
             } else {
@@ -189,6 +190,7 @@ export default function CreatePage() {
                 }
             }
         } catch (error) {
+            console.log(error)
             toast.error("Lỗi hệ thống vui lòng thử lại")
         }
     }
