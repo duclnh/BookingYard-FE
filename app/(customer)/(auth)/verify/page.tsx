@@ -18,13 +18,16 @@ export default function VerifyForm() {
     const [success, setSuccess] = useState('');
     const [countDown, setCountdown] = useState(30);
     const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
+
     async function handleVerifyForm(data: FieldValues) {
         try {
             var res = await verificationAccount(session?.user.userID || '', data.verifyCode)
             if (res.status === 200) {
                 toast.success("Xác nhận tài khoản thành công")
-                await signOut();
-                router.push("/sign-in")
+
+                setTimeout(async () => {
+                    await signOut({ callbackUrl: "/sign-in" });
+                }, 500);
             } else {
                 setError("Xác nhận tài khoản thất bạn")
             }

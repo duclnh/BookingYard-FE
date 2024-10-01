@@ -1,7 +1,7 @@
 import { decode } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
 
-const protectedRoutes = ['/profile']
+const protectedRoutes = ['/profile','/verify']
 const publicRoutes = ['/', '/partner', '/contact', '/booking']
 const ownerRoutes = ['/admin/owner/dashboard',
   '/admin/owner/booking',
@@ -22,7 +22,6 @@ const adminRoutes = ['/admin/company/dashboard',
   '/admin/company/voucher']
 const authenticationRoutes = [
   '/sign-up',
-  '/verify',
   '/forget-password',
   '/admin/forget-password',]
 
@@ -44,10 +43,6 @@ export async function middleware(request: NextRequest) {
     token: sessionToken,
   })
 
-  if (currentUser && isAuthenticationRoutes && (new Date() < new Date(currentUser.expiration))) {
-    console.log("Error Here: 2")
-    return Response.redirect(new URL('/not-found', request.url));
-  }
 
   if ((currentUser == null || currentUser.role === 'Customer') && path.startsWith('/admin/authorization')) {
     console.log("Error Here: 3")
@@ -64,34 +59,39 @@ export async function middleware(request: NextRequest) {
     return Response.redirect(new URL('/sign-in', request.url));
   }
 
-  if (currentUser && currentUser.role != "CourtOwner" && isOwnerRoute) {
-    console.log("Error Here: 6")
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+  if (currentUser) {
+    if (currentUser.role != "CourtOwner" && isOwnerRoute) {
+      console.log("Error Here: 6")
+      return Response.redirect(new URL('/not-found', request.url));
+    }
 
-  if (currentUser && currentUser.role != "Admin" && isAdminRoutes) {
-    console.log("Error Here: 7")
-    return Response.redirect(new URL('/not-found', request.url));
-  }
+    if (currentUser.role != "Admin" && isAdminRoutes) {
+      console.log("Error Here: 7")
+      return Response.redirect(new URL('/not-found', request.url));
+    }
 
-  if (currentUser && currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
-    console.log("Error Here: 8")
-    return Response.redirect(new URL('/admin/authorization', request.url));
-  }
+    if (currentUser.role != "Customer" && (isProtectedRoute || isPublicRoute)) {
+      console.log("Error Here: 8")
+      return Response.redirect(new URL('/admin/authorization', request.url));
+    }
 
-  if (currentUser && !currentUser.isVerification && !path.startsWith('/verify')) {
-    console.log("Error Here: 9")
-    return Response.redirect(new URL('/verify', request.url));
-  }
+    if (!currentUser.isVerification && !path.startsWith('/verify')) {
+      console.log("Error Here: 9")
+      return Response.redirect(new URL('/verify', request.url));
+    }
 
-  if (currentUser && currentUser.isVerification && path.startsWith('/verify')) {
-    console.log("Error Here: 10")
-    return Response.redirect(new URL('/not-found', request.url));
+    if (currentUser.isVerification && path.startsWith('/verify')) {
+      console.log("Error Here: 10")
+      return Response.redirect(new URL('/not-found', request.url));
+    }
+    if (currentUser && isAuthenticationRoutes) {
+      return Response.redirect(new URL('/not-found', request.url));
+    }
   }
 
 }
 
 export const config = {
-  matcher: [...protectedRoutes, ...publicRoutes, ...authenticationRoutes, ...adminRoutes, ...ownerRoutes],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',],
 };
 

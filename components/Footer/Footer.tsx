@@ -15,20 +15,14 @@ export default function FooterComponent() {
             <Image height={100} width={100} className='mb-5 select-none' src={"/assets/images/logo.png"} alt='logo' />
             <p className='font-bold'>Quản lí lịch hẹn - giải pháp số dành cho cơ sở tập luyện và sân thể thao</p>
             <div className="flex space-x-6 mb-10 mt-4 sm:justify-start">
-              <Link href="#">
+              <Link target='_blank' href="https://www.facebook.com/profile.php?id=61565940581431">
                 <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/facebook.png" alt="facebook" />
               </Link>
-              <Link href="#">
-                <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/youtube.png" alt="youtube" />
-              </Link>
-              <Link href="#">
-                <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/instagram.png" alt="instagram" />
-              </Link>
-              <Link href="#">
+              <Link target='_blank' href="https://www.tiktok.com/@fieldy_123">
                 <Image className='mx-auto select-none' height={30} width={30} src="/assets/images/tiktok.png" alt="tiktok" />
               </Link>
             </div>
-            <div className='w-full mt-4 '>
+            {/* <div className='w-full mt-4 '>
               <a href='#' className='flex items-center rounded-lg border border-black p-1 w-4/5'>
                 <FaApple className='mx-1' size={25} />
                 <span className='font-semibold'>TẢI XUỐNG CHO IOS</span>
@@ -37,7 +31,7 @@ export default function FooterComponent() {
                 <FaGooglePlay className='mx-2' size={20} />
                 <span className='font-semibold'>TẢI XUỐNG CHO ANDROID</span>
               </a>
-            </div>
+            </div> */}
           </div>
           <div className="lg:w-[800px] grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-1">
             <div>

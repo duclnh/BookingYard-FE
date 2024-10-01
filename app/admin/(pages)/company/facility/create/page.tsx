@@ -1,6 +1,6 @@
 "use client"
 import { Address, Heading, Input, InputDate, InputImage, ModalView, NewFeature } from '@components/index'
-import { Button, Label, Select } from 'flowbite-react';
+import { Button, Label, Select, Spinner } from 'flowbite-react';
 import React, { useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import dynamic from 'next/dynamic';
@@ -182,8 +182,11 @@ export default function CreatePage() {
             if (res.status === 201) {
                 toast.success("Tạo mới cơ sở thành công")
             } else {
-                toast.error("Tạo mới thất bại")
-                console.log(res.data)
+                if (res.data.title.includes("Email already exist!")) {
+                    toast.error("Email này đã có người sử dụng")
+                } else {
+                    toast.error("Tạo mới thất bại")
+                }
             }
         } catch (error) {
             toast.error("Lỗi hệ thống vui lòng thử lại")
@@ -273,7 +276,7 @@ export default function CreatePage() {
                         />
                     </div>
                     <div>
-                        <div className='mb-3'>
+                        {/* <div className='mb-3'>
                             <Label htmlFor='package' value='Gói sân (*)' />
                             <Controller
                                 name='package'
@@ -302,7 +305,7 @@ export default function CreatePage() {
                                     </>
                                 )}
                             />
-                        </div>
+                        </div> */}
                         <Input
                             label='Họ và tên chủ sân (*)'
                             placeholder='Họ và tên chủ sân'
@@ -310,7 +313,7 @@ export default function CreatePage() {
                             name='name'
                             control={control}
                             rules={{
-                                required: "Vui lòng nhập số tiền cộng thêm ngày lễ",
+                                required: "Vui lòng nhập họ và tên chủ sân",
                             }}
                         />
                     </div>
@@ -524,7 +527,10 @@ export default function CreatePage() {
                         }}
                     />
                 </div>
-                <Button type='submit'>Tạo mới</Button>
+                <Button disabled={isSubmitting}
+                    type='submit'
+                    className='mt-4 focus:ring-transparent w-32'>
+                    {isSubmitting ? <Spinner /> : "Tạo mới"}</Button>
             </form >
             {/*Start view Map */}
             <ModalView key={'View Map'} toggle={modalMap} setToggle={setModalMap} >

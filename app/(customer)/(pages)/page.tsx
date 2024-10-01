@@ -87,7 +87,7 @@ export default function Home() {
   };
 
   const handleNextFacility = () => {
-    setCurrentIndexFacility((prevIndex) => Math.min(prevIndex + 1, feedbacks.length - 3));
+    setCurrentIndexFacility((prevIndex) => Math.min(prevIndex + 1, facilities.length));
   };
 
 
@@ -150,7 +150,7 @@ export default function Home() {
         <div className='md:mx-14 lg:mx-32 group relative'>
           <div className='flex justify-center items-center'>
             <IoIosArrowDropleft
-              onClick={handleNextVoucher}
+              onClick={handlePrevVoucher}
               className='absolute top-1/3 left-3 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-right'
               size={40}
             />
@@ -159,29 +159,37 @@ export default function Home() {
                 className='flex transition-transform duration-300'
                 style={{
                   transform: `translateX(-${(currentIndexVoucher / vouchers.length) * (100)}%)`,
-                  width: `${vouchers.length * 420}px`,
+                  width: `${vouchers.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
                 }}
               >
                 {vouchers != undefined && vouchers.map((voucher: VoucherHome, index) => (
-                  <div key={index} className='rounded-lg border mr-14 shadow-2xl'>
-                    <div className='flex justify-between items-center min-w-96 p-1.5'>
-                      <div className='h-full w-28  p-5 rounded-lg bg-gray-700 text-orange-500'>
-                        <p className='mb-2 text-lg text-center'>Fieldy</p>
-                        <TbBasketDiscount className='mx-auto' size={35} />
+                  <div key={index} className='min-w-[470px] md:min-w-[405px] h-full mx-2'>
+                    <div className='rounded-lg border shadow-2xl'>
+                      <div className='flex justify-between items-center min-w-96 p-1.5'>
+                        <div className='flex justify-between items-center'>
+                          <div className='h-full w-28  p-5 rounded-lg bg-gray-700 text-orange-500'>
+                            <p className='mb-2 text-lg text-center'>Fieldy</p>
+                            <TbBasketDiscount className='mx-auto' size={35} />
+                          </div>
+                          <div className='ml-3'>
+                            <p className='text-xl font-bold mb-2'>{`Giảm ${voucher.percentage}%`}</p>
+                            {voucher.facilityName ?
+                              <p className='max-w-44 text-sm mb-2 font-semibold'>{voucher.facilityName}</p>
+                              : <p className='max-w-44 text-sm mb-2 font-semibold'>
+                                Tất cả các sân
+                              </p>}
+                            <p className='text-sm font-semibold'>{voucher.sportName ? voucher.sportName : 'Tất cả môn thể thao'}</p>
+                          </div>
+                        </div>
+                        <button onClick={() => handlerCollectVoucher(voucher.voucherID)} className='bg-orange-400 p-1.5 rounded-md text-white font-medium text-xs hover:cursor-pointer'>Sưu tầm </button>
                       </div>
-                      <div className=''>
-                        <p className='text-xl font-bold mb-2'>{`Giảm ${voucher.percentage}%`}</p>
-                        <p className='max-w-44 text-sm mb-2 font-semibold'>{voucher.facilityName ? voucher.facilityName : 'Tất cả các sân'}</p>
-                        <p className='text-sm font-semibold'>{voucher.sportName ? voucher.sportName : 'Tất cả'}</p>
-                      </div>
-                      <button onClick={() => handlerCollectVoucher(voucher.voucherID)} className='bg-orange-400 p-1.5 rounded-md text-white font-medium text-xs hover:cursor-pointer'>Sưu tầm </button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             <IoIosArrowDropright
-              onClick={handlePrevVoucher}
+              onClick={handleNextVoucher}
               className='absolute top-1/3 right-3 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-left'
               size={40}
             />
@@ -204,11 +212,11 @@ export default function Home() {
                 className='flex transition-transform duration-300'
                 style={{
                   transform: `translateX(-${(currentIndexFacility / facilities.length) * (100)}%)`,
-                  width: `${facilities.length * 420}px`,
+                  width: `${facilities.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
                 }}
               >
                 {facilities.map((facility: FacilityHome, index) => (
-                  <div key={index} className='md:min-w-[405px] h-full mx-2'>
+                  <div key={index} className='min-w-[470px] md:min-w-[405px] h-full mx-2'>
                     <div className='border rounded-lg px-5 lg:py-6 md:py-4 py-2 hover:cursor-pointer h-full shadow-2xl'>
                       <Image
                         height={1000}
@@ -219,7 +227,7 @@ export default function Home() {
                       />
                       <div className='mt-4'>
                         <div className='flex justify-between'>
-                          <div className='text-xl font-bold max-w-72'>{facility.facilityName}</div>
+                          <div className='text-xl font-bold max-w-72 h-16'>{facility.facilityName}</div>
                           <div className='flex items-center text-lg h-full'>
                             <Rating className='mr-2'>
                               <Rating.Star className='h-6 w-6' />
@@ -227,23 +235,27 @@ export default function Home() {
                             {facility.facilityRating}
                           </div>
                         </div>
-                        <p className='flex text-sm mt-3'>
-                          <IoTimeOutline size={20} className='mr-2' />
-                          {facility.startTime} - {facility.endTime}
-                        </p>
-                        <p className='flex text-sm mt-3'>
-                          <p className='h-2 w-2 mr-5'><MdOutlineLocationOn size={20} /></p>
-                          {facility.facilityAddress}
-                        </p>
-                        <div className='font-medium text-lg mt-8 flex justify-between'>
-                          <div className='text-green-500 font-bold'>
-                            {facility.facilityMinPrice === facility.facilityMaxPrice
-                              ? convertNumberToPrice(facility.facilityMinPrice)
-                              : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                        <div className='flex flex-col min-h-[150px] justify-between'>
+                          <div>
+                            <p className='flex text-sm mt-3'>
+                              <IoTimeOutline size={20} className='mr-2' />
+                              {facility.startTime} - {facility.endTime}
+                            </p>
+                            <p className='flex text-sm mt-3'>
+                              <p className='h-2 w-2 mr-5'><MdOutlineLocationOn size={20} /></p>
+                              {facility.facilityAddress}
+                            </p>
                           </div>
-                          <Button size='sm' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
-                            Đặt lịch
-                          </Button>
+                          <div className='font-medium text-lg flex justify-between'>
+                            <div className='text-green-500 font-bold'>
+                              {facility.facilityMinPrice === facility.facilityMaxPrice
+                                ? convertNumberToPrice(facility.facilityMinPrice)
+                                : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                            </div>
+                            <Button size='sm' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
+                              Đặt lịch
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -275,11 +287,11 @@ export default function Home() {
                 className='flex transition-transform duration-300'
                 style={{
                   transform: `translateX(-${(currentIndexFeedBack / feedbacks.length) * (100)}%)`,
-                  width: `${feedbacks.length * 420}px`,
+                  width: `${feedbacks.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
                 }}
               >
                 {feedbacks.map((feedback, index) => (
-                  <div key={index} className='md:min-w-[405px] h-full mx-2'>
+                  <div key={index} className='md:min-w-[405px] min-w-[470px]  h-full mx-2'>
                     <div className='border rounded-lg px-5 lg:py-6 md:py-4 py-2 hover:cursor-pointer h-full shadow-2xl'>
                       <div className='flex justify-between items-start'>
                         <div className='flex'>
