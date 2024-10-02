@@ -154,40 +154,42 @@ export default function Home() {
               className='absolute top-1/3 left-3 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-right'
               size={40}
             />
-            <div className='flex overflow-hidden'>
-              <div
-                className='flex transition-transform duration-300'
-                style={{
-                  transform: `translateX(-${(currentIndexVoucher / vouchers.length) * (100)}%)`,
-                  width: `${vouchers.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
-                }}
-              >
-                {vouchers != undefined && vouchers.map((voucher: VoucherHome, index) => (
-                  <div key={index} className='min-w-[470px] md:min-w-[405px] h-full mx-2'>
-                    <div className='rounded-lg border shadow-2xl'>
-                      <div className='flex justify-between items-center min-w-96 p-1.5'>
-                        <div className='flex justify-between items-center'>
-                          <div className='h-full w-28  p-5 rounded-lg bg-gray-700 text-orange-500'>
-                            <p className='mb-2 text-lg text-center'>Fieldy</p>
-                            <TbBasketDiscount className='mx-auto' size={35} />
+            {vouchers !== undefined && (
+              <div className='flex overflow-hidden'>
+                <div
+                  className='flex transition-transform duration-300'
+                  style={{
+                    transform: `translateX(-${(currentIndexVoucher / vouchers.length) * (100)}%)`,
+                    width: `${vouchers.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
+                  }}
+                >
+                  {vouchers.map((voucher: VoucherHome, index) => (
+                    <div key={index} className='min-w-[470px] md:min-w-[405px] h-full mx-2'>
+                      <div className='rounded-lg border shadow-2xl'>
+                        <div className='flex justify-between items-center min-w-96 p-1.5'>
+                          <div className='flex justify-between items-center'>
+                            <div className='h-full w-28  p-5 rounded-lg bg-gray-700 text-orange-500'>
+                              <p className='mb-2 text-lg text-center'>Fieldy</p>
+                              <TbBasketDiscount className='mx-auto' size={35} />
+                            </div>
+                            <div className='ml-3'>
+                              <p className='text-xl font-bold mb-2'>{`Giảm ${voucher.percentage}%`}</p>
+                              {voucher.facilityName ?
+                                <p className='max-w-44 text-sm mb-2 font-semibold'>{voucher.facilityName}</p>
+                                : <p className='max-w-44 text-sm mb-2 font-semibold'>
+                                  Tất cả các sân
+                                </p>}
+                              <p className='text-sm font-semibold'>{voucher.sportName ? voucher.sportName : 'Tất cả môn thể thao'}</p>
+                            </div>
                           </div>
-                          <div className='ml-3'>
-                            <p className='text-xl font-bold mb-2'>{`Giảm ${voucher.percentage}%`}</p>
-                            {voucher.facilityName ?
-                              <p className='max-w-44 text-sm mb-2 font-semibold'>{voucher.facilityName}</p>
-                              : <p className='max-w-44 text-sm mb-2 font-semibold'>
-                                Tất cả các sân
-                              </p>}
-                            <p className='text-sm font-semibold'>{voucher.sportName ? voucher.sportName : 'Tất cả môn thể thao'}</p>
-                          </div>
+                          <button onClick={() => handlerCollectVoucher(voucher.voucherID)} className='bg-orange-400 p-1.5 rounded-md text-white font-medium text-xs hover:cursor-pointer'>Sưu tầm </button>
                         </div>
-                        <button onClick={() => handlerCollectVoucher(voucher.voucherID)} className='bg-orange-400 p-1.5 rounded-md text-white font-medium text-xs hover:cursor-pointer'>Sưu tầm </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <IoIosArrowDropright
               onClick={handleNextVoucher}
               className='absolute top-1/3 right-3 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-left'
@@ -207,62 +209,64 @@ export default function Home() {
               className='absolute top-1/2 left-5 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-right'
               size={40}
             />
-            <div className='flex overflow-hidden'>
-              <div
-                className='flex transition-transform duration-300'
-                style={{
-                  transform: `translateX(-${(currentIndexFacility / facilities.length) * (100)}%)`,
-                  width: `${facilities.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
-                }}
-              >
-                {facilities.map((facility: FacilityHome, index) => (
-                  <div key={index} className='min-w-[470px] md:min-w-[405px] h-full mx-2'>
-                    <div className='border rounded-lg px-5 lg:py-6 md:py-4 py-2 hover:cursor-pointer h-full shadow-2xl'>
-                      <Image
-                        height={1000}
-                        width={1000}
-                        className='h-60 w-full rounded-xl'
-                        src={getImage(facility.facilityImage) || ''}
-                        alt={facility.facilityName}
-                      />
-                      <div className='mt-4'>
-                        <div className='flex justify-between'>
-                          <div className='text-xl font-bold max-w-72 h-16'>{facility.facilityName}</div>
-                          <div className='flex items-center text-lg h-full'>
-                            <Rating className='mr-2'>
-                              <Rating.Star className='h-6 w-6' />
-                            </Rating>
-                            {facility.facilityRating}
-                          </div>
-                        </div>
-                        <div className='flex flex-col min-h-[150px] justify-between'>
-                          <div>
-                            <p className='flex text-sm mt-3'>
-                              <IoTimeOutline size={20} className='mr-2' />
-                              {facility.startTime} - {facility.endTime}
-                            </p>
-                            <p className='flex text-sm mt-3'>
-                              <p className='h-2 w-2 mr-5'><MdOutlineLocationOn size={20} /></p>
-                              {facility.facilityAddress}
-                            </p>
-                          </div>
-                          <div className='font-medium text-lg flex justify-between'>
-                            <div className='text-green-500 font-bold'>
-                              {facility.facilityMinPrice === facility.facilityMaxPrice
-                                ? convertNumberToPrice(facility.facilityMinPrice)
-                                : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+            {facilities !== undefined && (
+              <div className='flex overflow-hidden'>
+                <div
+                  className='flex transition-transform duration-300'
+                  style={{
+                    transform: `translateX(-${(currentIndexFacility / facilities.length) * (100)}%)`,
+                    width: `${facilities.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
+                  }}
+                >
+                  {facilities.map((facility: FacilityHome, index) => (
+                    <div key={index} className='min-w-[470px] md:min-w-[405px] h-full mx-2'>
+                      <div className='border rounded-lg px-5 lg:py-6 md:py-4 py-2 hover:cursor-pointer h-full shadow-2xl'>
+                        <Image
+                          height={1000}
+                          width={1000}
+                          className='h-60 w-full rounded-xl'
+                          src={getImage(facility.facilityImage) || ''}
+                          alt={facility.facilityName}
+                        />
+                        <div className='mt-4'>
+                          <div className='flex justify-between'>
+                            <div className='text-xl font-bold max-w-72 h-16'>{facility.facilityName}</div>
+                            <div className='flex items-center text-lg h-full'>
+                              <Rating className='mr-2'>
+                                <Rating.Star className='h-6 w-6' />
+                              </Rating>
+                              {facility.facilityRating}
                             </div>
-                            <Button size='sm' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
-                              Đặt lịch
-                            </Button>
+                          </div>
+                          <div className='flex flex-col min-h-[150px] justify-between'>
+                            <div>
+                              <p className='flex text-sm mt-3'>
+                                <IoTimeOutline size={20} className='mr-2' />
+                                {facility.startTime} - {facility.endTime}
+                              </p>
+                              <p className='flex text-sm mt-3'>
+                                <p className='h-2 w-2 mr-5'><MdOutlineLocationOn size={20} /></p>
+                                {facility.facilityAddress}
+                              </p>
+                            </div>
+                            <div className='font-medium text-lg flex justify-between'>
+                              <div className='text-green-500 font-bold'>
+                                {facility.facilityMinPrice === facility.facilityMaxPrice
+                                  ? convertNumberToPrice(facility.facilityMinPrice)
+                                  : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                              </div>
+                              <Button size='sm' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
+                                Đặt lịch
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <IoIosArrowDropright
               onClick={handleNextFacility}
               className='absolute top-1/2 right-5 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-left'
@@ -282,47 +286,49 @@ export default function Home() {
               className='absolute top-1/2 left-5 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-right'
               size={40}
             />
-            <div className='flex overflow-hidden'>
-              <div
-                className='flex transition-transform duration-300'
-                style={{
-                  transform: `translateX(-${(currentIndexFeedBack / feedbacks.length) * (100)}%)`,
-                  width: `${feedbacks.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
-                }}
-              >
-                {feedbacks.map((feedback, index) => (
-                  <div key={index} className='md:min-w-[405px] min-w-[470px]  h-full mx-2'>
-                    <div className='border rounded-lg px-5 lg:py-6 md:py-4 py-2 hover:cursor-pointer h-full shadow-2xl'>
-                      <div className='flex justify-between items-start'>
-                        <div className='flex'>
-                          <Image
-                            height={1000}
-                            width={1000}
-                            className='h-12 w-12 rounded-full'
-                            src={getImage(feedback.avatar) || '/assets/images/avatar-default.png'}
-                            alt='img'
-                          />
-                          <div className='ml-3'>
-                            <p className='text-lg font-medium'>{feedback.name}</p>
-                            <p className='text-sm'>{feedback.typeFeedback === 'Customer' ? 'Khách hàng' : 'Chủ sân'}</p>
+            {feedbacks !== undefined && (
+              <div className='flex overflow-hidden'>
+                <div
+                  className='flex transition-transform duration-300'
+                  style={{
+                    transform: `translateX(-${(currentIndexFeedBack / feedbacks.length) * (100)}%)`,
+                    width: `${feedbacks.length * (420 + (window.innerWidth < 501 ? 67 : 0))}px`,
+                  }}
+                >
+                  {feedbacks.map((feedback, index) => (
+                    <div key={index} className='md:min-w-[405px] min-w-[470px]  h-full mx-2'>
+                      <div className='border rounded-lg px-5 lg:py-6 md:py-4 py-2 hover:cursor-pointer h-full shadow-2xl'>
+                        <div className='flex justify-between items-start'>
+                          <div className='flex'>
+                            <Image
+                              height={1000}
+                              width={1000}
+                              className='h-12 w-12 rounded-full'
+                              src={getImage(feedback.avatar) || '/assets/images/avatar-default.png'}
+                              alt='img'
+                            />
+                            <div className='ml-3'>
+                              <p className='text-lg font-medium'>{feedback.name}</p>
+                              <p className='text-sm'>{feedback.typeFeedback === 'Customer' ? 'Khách hàng' : 'Chủ sân'}</p>
+                            </div>
                           </div>
+                          {feedback.rating && (
+                            <Rating className='mt-1'>
+                              {Array.from({ length: 5 }, (_, index) => (
+                                <Rating.Star key={index} filled={index < feedback.rating} />
+                              ))}
+                            </Rating>
+                          )}
                         </div>
-                        {feedback.rating && (
-                          <Rating className='mt-1'>
-                            {Array.from({ length: 5 }, (_, index) => (
-                              <Rating.Star key={index} filled={index < feedback.rating} />
-                            ))}
-                          </Rating>
-                        )}
+                        <p className='mt-12 font-medium'>
+                          {`"${feedback.content}"`}
+                        </p>
                       </div>
-                      <p className='mt-12 font-medium'>
-                        {`"${feedback.content}"`}
-                      </p>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <IoIosArrowDropright
               onClick={handleNextFeedback}
               className='absolute top-1/2 right-5 z-30 text-gray-600 cursor-pointer transform hidden group-hover:block animate-fade-left'

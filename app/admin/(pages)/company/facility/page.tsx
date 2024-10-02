@@ -133,7 +133,7 @@ export default function Facility() {
             <div key={index} className='shadow-sm-light border hover:cursor-pointer rounded-lg p-4 relative'>
               <div className='flex flex-col h-full justify-between'>
                 <div>
-                  <Image className='rounded-lg min-h-44' height={500} width={500} src={getImage(facility.image) || ''} alt="Sân" />
+                  <Image className='rounded-lg h-44' height={500} width={500} src={getImage(facility.image) || ''} alt="Sân" />
                   <div className='font-bold mb-5 text-center text-xl mt-3 h-20'>{facility.facilityName}</div>
                   <div className='flex text-sm'>
                     <TiUser size={18} className='mr-2 mb-1' />

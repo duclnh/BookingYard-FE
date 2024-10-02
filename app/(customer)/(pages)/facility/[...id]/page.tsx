@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Button, Carousel, Label, Modal, Rating, Textarea } from 'flowbite-react'
 import { MdHealthAndSafety, MdOutlineLocationOn, MdOutlineSportsKabaddi, MdPayments, MdReportGmailerrorred, MdZoomOutMap } from 'react-icons/md'
@@ -33,6 +33,9 @@ export default function Facility({ params }: { params: { id: string } }) {
   const [currentIndex360, setCurrentIndex360] = useState(0);
   const { control, handleSubmit, formState: { isSubmitting, isValid }, } = useForm({ mode: "onTouched", });
   const [facility, setFacility] = useState<FacilityDetail>();
+  const [isHidden, setIsHidden] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     getFacilityDetailBooking(params.id)
@@ -93,6 +96,17 @@ export default function Facility({ params }: { params: { id: string } }) {
     setCurrentIndex360((prevIndex) => (prevIndex === image360s.length - 1 ? 0 : prevIndex + 1));
   };
 
+  useEffect(() => {
+    if (containerRef.current) {
+      const height = containerRef.current.clientHeight;
+      if (height >= 320) {
+        setIsHidden(false);
+      } else {
+        setIsHidden(true);
+      }
+    }
+  }, [isExpanded]);
+
   return (
     <>
       <div className='lg:mx-20 sm:mx-10 mx-5 lg:py-20 py-10 '>
@@ -122,7 +136,7 @@ export default function Facility({ params }: { params: { id: string } }) {
               </div>
             </div>
             <div className='relative hover:cursor-pointer w-full' onClick={() => setModal360(true)}>
-              <Image height={395} width={395} className='rounded-2xl !w-[100%] h-36 sm:h-full sm:w-96' src={getImage(images[0]) || "/assets/images/slide1.png"} alt="360" />
+              <Image height={395} width={395} className='rounded-2xl !w-[100%] h-36 sm:h-56 sm:w-96' src={getImage(images[0]) || "/assets/images/slide1.png"} alt="360" />
               <div className='absolute right-0 top-0  w-full h-full bg-[#302f2f] opacity-70 rounded-2xl flex justify-center items-center'>
                 <TbView360Number size={40} className='text-white' />
               </div>
@@ -171,7 +185,7 @@ export default function Facility({ params }: { params: { id: string } }) {
                 className={`mt-5 text-gray-700 overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-full' : 'max-h-80'}`}
                 dangerouslySetInnerHTML={{ __html: facility?.description || '' }}
               />
-              <div className="py-2 font-medium hover:cursor-pointer">
+              <div ref={containerRef} className={`py-2 font-medium hover:cursor-pointer ${isHidden ? 'hidden' : ''}`}>
                 {isExpanded ? (
                   <div onClick={() => setIsExpanded(false)} className='flex items-center'>
                     Thu gọn
@@ -247,12 +261,16 @@ export default function Facility({ params }: { params: { id: string } }) {
           <div className='col-span-2'>
             <div className='border shadow-2xl p-4 rounded-2xl'>
               <p className='text-lg text-center font-bold'>Giá sân</p>
-              <div className='flex items-center my-10'>
+              <div className='flex items-center my-7 justify-center'>
                 <p className='text-xl font-semibold'>{facility?.facilityMinPrice === facility?.facilityMaxPrice
                   ? convertNumberToPrice(facility?.facilityMinPrice || 0)
                   : convertNumberToPrice(facility?.facilityMinPrice || 0, facility?.facilityMaxPrice)}</p>
-                <p className='text-xl font-medium text-gray-200'>/ Giờ</p>
+                <p className='text-xl font-medium text-gray-400'>/ Giờ</p>
               </div>
+              <p className='text-sm mb-2'>
+                (<span className='text-red-500'>*</span>) Giá có thể chênh lệch theo giờ và các ngày đặc biệt
+              </p>
+
               <Button className='mt-3 w-full'>Đặt lịch ngay</Button>
             </div>
           </div>

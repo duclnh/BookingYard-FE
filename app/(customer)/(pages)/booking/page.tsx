@@ -12,6 +12,7 @@ import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import qs from "query-string";
 import { getAllFacilityBooking, getSportCreate } from '@services/index'
+import { LoadingData } from '@components/index'
 
 export default function Booking() {
   const [indexSearch, setIndexSearch] = useState(0);
@@ -22,6 +23,7 @@ export default function Booking() {
   const [currentPage, setCurrentPage] = useState(1);
   const [value, setValue] = useState('');
   const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const url = qs.stringifyUrl({
     url: "", query: {
@@ -44,6 +46,7 @@ export default function Booking() {
       }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }, [])
   useEffect(() => {
+    setIsLoading(true)
     getAllFacilityBooking(url)
       .then(x => {
         if (x.status == 200) {
@@ -56,7 +59,7 @@ export default function Booking() {
       })
       .catch(() => {
         toast.error("Hệ thống đang lỗi vui lòng thử lại sau!", { duration: 120 })
-      });
+      }).finally(() => setIsLoading(false));
   }, [])
   useEffect(() => {
     let interval;
@@ -358,44 +361,47 @@ export default function Booking() {
       </div>
       {/* End Filter */}
       {/* Start View List */}
-      <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
-        {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
-          <div key={index} className='shadow-3xl rounded-2xl p-3 w-72 mx-auto'>
-            <Image className='rounded-lg h-60' height={500} width={500} src={getImage(facility.facilityImage) || ''} alt="img" />
-            <div className='mx-2'>
-              <div className='flex justify-between items-center py-4'>
-                <Rating>
-                  <Rating.Star />
-                  <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility.facilityRating}</p>
-                </Rating>
-                {/* <div>12km</div> */}
-              </div>
-              <div className='font-bold mb-5 text-center text-xl h-14'>{facility.facilityName}</div>
-              <div className='flex flex-col justify-between h-full'>
-                <div className='flex text-sm min-h-[75px]'>
-                  <p className='mt-0.5'>
-                    <TiLocation className='mr-2 h-4 w-4' />
-                  </p>
-                  <p>
-                    {facility.facilityAddress}
-                  </p>
+      {isLoading ? <div className='mt-5'>
+        <LoadingData />
+      </div> :
+        <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
+          {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
+            <div key={index} className='shadow-3xl rounded-2xl p-3 w-72 mx-auto'>
+              <Image className='rounded-lg h-60' height={500} width={500} src={getImage(facility.facilityImage) || ''} alt="img" />
+              <div className='mx-2'>
+                <div className='flex justify-between items-center py-4'>
+                  <Rating>
+                    <Rating.Star />
+                    <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility.facilityRating}</p>
+                  </Rating>
+                  {/* <div>12km</div> */}
                 </div>
-                <div className='flex justify-between items-center'>
-                  <div className='text-green-500 font-bold'>
-                    {facility.facilityMinPrice === facility.facilityMaxPrice
-                      ? convertNumberToPrice(facility.facilityMinPrice)
-                      : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                <div className='font-bold mb-5 text-center text-xl h-14'>{facility.facilityName}</div>
+                <div className='flex flex-col justify-between h-full'>
+                  <div className='flex text-sm min-h-[75px]'>
+                    <p className='mt-0.5'>
+                      <TiLocation className='mr-2 h-4 w-4' />
+                    </p>
+                    <p>
+                      {facility.facilityAddress}
+                    </p>
                   </div>
-                  <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
-                    Chi tiết
-                    <FaArrowRight className='ml-2 mt-0.5' size={12} />
-                  </Button>
+                  <div className='flex justify-between items-center'>
+                    <div className='text-green-500 font-bold'>
+                      {facility.facilityMinPrice === facility.facilityMaxPrice
+                        ? convertNumberToPrice(facility.facilityMinPrice)
+                        : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                    </div>
+                    <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
+                      Chi tiết
+                      <FaArrowRight className='ml-2 mt-0.5' size={12} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>}
       {/* End View List */}
     </div >
   )
