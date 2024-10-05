@@ -19,7 +19,7 @@ export default function CustomerLayout({
   const { data: session, status: status } = useSession();
   const user = useAppSelector(state => state.user.value)
   const dispatch = useAppDispatch();
-  
+
   useEffect(() => {
     if (session?.user && user == undefined) {
       getUser(session.user.userID)

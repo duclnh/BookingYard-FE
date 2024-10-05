@@ -7,7 +7,7 @@ import { BsCalendar2Week } from 'react-icons/bs'
 import { TiDownloadOutline } from 'react-icons/ti'
 import { LuClipboardEdit } from 'react-icons/lu'
 
-export default function BookingSuccess() {
+export default function BookingSuccess({ params }: { params: { id: string } }) {
     const imgRef = useRef<HTMLImageElement>(null);
     const downloadImage = () => {
         const image = imgRef.current;
@@ -53,13 +53,13 @@ export default function BookingSuccess() {
                         <LuClipboardEdit size={25} className='mr-2' /> Sao chép
                     </div>
                 </div>
-                <div className='text-center mt-2'>
+                <div className='text-center mt-2 w-[455px]'>
                     <p className='text-3xl font-bold'>Bạn đã đặt lịch hẹn thành công</p>
-                    <p className='text-lg mt-5 w-96'>
+                    <p className='text-lg mt-5 w-full'>
                         Bạn có thể sử dụng mã QR Code này hoặc sử dụng email và số điện thoại đã đặt lịch để Check In khi đến sân
                     </p>
                     <div className='grid grid-cols-2'>
-                        <Button color='success' href='/booking-detail' size='sm' className='mt-10 w-48 mx-auto'>
+                        <Button color='success' href={`/booking-detail/${params.id}`} size='sm' className='mt-10 w-48 mx-auto'>
                             <BsCalendar2Week className='mr-2 mt-0.5' size={16} />
                             <p>Xem chi tiết</p>
                         </Button>
