@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userStore';
 import managerReducer from './managerStore';
-
+import bookingReducer from './bookingStore'
 export const store = configureStore({
     reducer: {
         user: userReducer,
-        manager: managerReducer
+        manager: managerReducer,
+        booking: bookingReducer
     }
 })
 

@@ -7,25 +7,26 @@ import { TbView360Number } from 'react-icons/tb'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FaCheckCircle } from 'react-icons/fa'
 import { IoStorefrontSharp, IoTimeOutline } from 'react-icons/io5'
-import { Input, InputDate, ModalView } from '@components/index'
+import { Input, ModalView } from '@components/index'
 import View360, { EquirectProjection } from '@egjs/react-view360'
 import { SlArrowLeftCircle, SlArrowRightCircle } from 'react-icons/sl'
 import "@egjs/react-view360/css/view360.min.css";
 import { useForm } from 'react-hook-form'
 import { getFacilityDetailBooking } from '@services/facilityService'
-import { Convenience, FacilityDetail, Feature } from 'types'
+import { Convenience, FacilityDetail, Feature, SportCreate } from 'types'
 import toast from 'react-hot-toast'
 import { getImage, getImage360 } from '@utils/imageOptions'
 import { PiDoorOpenBold } from 'react-icons/pi'
 import Feedback from './feedback'
 import { convertNumberToPrice } from '@utils/index'
+import Booking from './booking'
 
 export default function Facility({ params }: { params: { id: string } }) {
   const [modal360, setModal360] = useState(false);
+  const [modalImage, setModalImage] = useState(false);
   const [image360s, setImage360s] = useState<string[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [modalMap, setModalMap] = useState(false);
-  const [modalImage, setModalImage] = useState(false);
   const [slideAuto, setSlideAuto] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false);
   const [openModalReport, setOpenModalReport] = useState(false);
@@ -35,6 +36,7 @@ export default function Facility({ params }: { params: { id: string } }) {
   const [facility, setFacility] = useState<FacilityDetail>();
   const [isHidden, setIsHidden] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [openBooking, setOpenModalBooking] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export default function Facility({ params }: { params: { id: string } }) {
 
   const projection = useMemo(() => {
     return new EquirectProjection({
-      src: image360s[currentIndex],
+      src: image360s[currentIndex360],
     });
   }, [image360s, currentIndex360])
   // const customToolTipTheme: CustomFlowbiteTheme["tooltip"] = {
@@ -146,7 +148,7 @@ export default function Facility({ params }: { params: { id: string } }) {
         {/* End slide */}
 
         <div className='grid sm:grid-cols-7 md:grid-cols-7 md:py-4 md:gap-10 sm:gap-10 mt-10 md:mt-0'>
-          <div className='sm:col-span-1 md:col-span-5'>
+          <div className='sm:col-span-4 md:col-span-5'>
             {/* Start information court */}
             <div className='flex sm:items-center justify-between'>
               <div className='xl:flex items-center'>
@@ -210,10 +212,10 @@ export default function Facility({ params }: { params: { id: string } }) {
                     Các sân thể thao
                   </div>
                   <div className='mt-3'>
-                    {facility?.sports.map((sport, index) => (
+                    {facility?.sports.map((sport: SportCreate, index) => (
                       <div key={index} className='flex mt-2'>
                         <p className='mr-5 mt-1 h-1 w-1'><FaCheckCircle className='text-green-500' /></p>
-                        <p>{sport}</p>
+                        <p>{sport.sportName}</p>
                       </div>
                     ))}
                   </div>
@@ -258,26 +260,38 @@ export default function Facility({ params }: { params: { id: string } }) {
               percentFiveStar={facility?.percentFiveStar || 0}
             />
           </div>
-          <div className='col-span-2'>
+          <div className='col-span-3 md:col-span-2'>
             <div className='border shadow-2xl p-4 rounded-2xl'>
               <p className='text-lg text-center font-bold'>Giá sân</p>
               <div className='flex items-center my-7 justify-center'>
-                <p className='text-xl font-semibold'>{facility?.facilityMinPrice === facility?.facilityMaxPrice
+                <p className=' text-xl sm:text-base lg:text-xl font-semibold'>{facility?.facilityMinPrice === facility?.facilityMaxPrice
                   ? convertNumberToPrice(facility?.facilityMinPrice || 0)
                   : convertNumberToPrice(facility?.facilityMinPrice || 0, facility?.facilityMaxPrice)}</p>
-                <p className='text-xl font-medium text-gray-400'>/ Giờ</p>
+                <p className='text-xl sm:text-base lg:text-xl font-medium text-gray-400'>/ Giờ</p>
               </div>
               <p className='text-sm mb-2'>
                 (<span className='text-red-500'>*</span>) Giá có thể chênh lệch theo giờ và các ngày đặc biệt
               </p>
 
-              <Button className='mt-3 w-full'>Đặt lịch ngay</Button>
+              <Button onClick={() => setOpenModalBooking(true)} className='mt-3 w-full'>Đặt lịch ngay</Button>
             </div>
           </div>
         </div>
-
       </div>
-
+      {/* Start Booking*/}
+      <Booking
+        facilityName={facility?.facilityName || ''}
+        facilityAddress={facility?.facilityAddress || ''}
+        facilityRating={facility?.facilityRating || 0}
+        facilityTime={facility?.openDate || ''}
+        facilityImage={facility?.facilityImages[0] || ''}
+        facilityOpen={facility?.startTime || ''}
+        facilityClose={facility?.endTime || ''}
+        sports={facility?.sports}
+        open={openBooking}
+        facilityID={facility?.facilityID || ''}
+        setOpen={setOpenModalBooking} />
+      {/* End Booking*/}
       {/*Start view 360 */}
       <ModalView key={'View 360'} toggle={modal360} setToggle={setModal360}>
         <div className='rounded-lg shadow dark:bg-gray-700 flex items-center justify-between w-[100%] h-[100%]'>
@@ -298,6 +312,7 @@ export default function Facility({ params }: { params: { id: string } }) {
             <Image
               height={600}
               width={1100}
+              quality={100}
               className='select-none w-full max-h-[775px]'
               src={getImage(images[currentIndex]) || "/assets/images/slide1.png"}
               alt='Slide'

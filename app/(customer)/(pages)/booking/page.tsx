@@ -366,7 +366,7 @@ export default function Booking() {
       </div> :
         <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
           {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
-            <div key={index} className='shadow-3xl rounded-2xl p-3 w-72 mx-auto'>
+            <div key={index} className='shadow-3xl rounded-2xl p-3 w-80 mx-auto'>
               <Image className='rounded-lg h-60' height={500} width={500} src={getImage(facility.facilityImage) || ''} alt="img" />
               <div className='mx-2'>
                 <div className='flex justify-between items-center py-4'>
@@ -394,7 +394,6 @@ export default function Booking() {
                     </div>
                     <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
                       Chi tiết
-                      <FaArrowRight className='ml-2 mt-0.5' size={12} />
                     </Button>
                   </div>
                 </div>
