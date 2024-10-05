@@ -1,11 +1,13 @@
 "use client"
 import { ModalView } from '@components/index'
+import { getBookingDetail } from '@services/bookingService'
 import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import toast from 'react-hot-toast'
 import { BiSolidDiscount } from 'react-icons/bi'
 import { BsPeople } from 'react-icons/bs'
 import { CgScan } from 'react-icons/cg'
@@ -19,40 +21,16 @@ import { IoPhonePortraitOutline, IoWalletOutline } from 'react-icons/io5'
 import { LuClipboardEdit } from 'react-icons/lu'
 import { MdOutlineDateRange, MdOutlinePriceCheck } from 'react-icons/md'
 import { PiCourtBasketballLight } from 'react-icons/pi'
+import { TbStatusChange } from 'react-icons/tb'
 import { TiDownloadOutline, TiLocation } from 'react-icons/ti'
 import { BookingDetail as BookingDetailCourt } from 'types'
 
-export default function BookingDetail() {
+export default function BookingDetail({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const [bookingDetail, setBookingDetails] = useState<BookingDetailCourt | undefined>({
-    bookingID:"",
-    facilityID: "e175daf6-b5a4-4d0e-544d-08dcd4d409d4",
-    codeBooking: "EFGH123",
-    image: "/facility/31fff3b5-663d-49af-b2b6-64fe034f1304.jpg",
-    facilityName: "Sân Cầu Lông XYZ",
-    fullAddress: "123 Đường ABC, Quận 1, TP.HCM",
-    courtName: "Sân Số 1",
-    courtImage: "https://example.com/court.jpg",
-    court360: "https://example.com/court360.jpg",
-    typeCourt: "Cầu lông",
-    bookingName: "Nguyễn Văn A",
-    bookingPhone: "0901234567",
-    paymentMethod: "Thẻ tín dụng",
-    paymentStatus: "Đã thanh toán",
-    startTime: "14:00",
-    endTime: "16:00",
-    datePlay: "2024-10-01",
-    dateBooking: "2024-09-30",
-    voucherName: "Khuyến mãi 10%",
-    percentage: 10,
-    codeVoucher: "DISCOUNT10",
-    courtPrice: 200000,
-    totalPrice: 180000,
-    isCheckIn: true,
-  })
+  const [bookingDetail, setBookingDetails] = useState<BookingDetailCourt | undefined>(undefined)
 
   const downloadImage = () => {
     const image = imgRef.current;
@@ -63,6 +41,22 @@ export default function BookingDetail() {
       link.click();
     }
   };
+
+  useEffect(() => {
+    getBookingDetail(params.id)
+      .then(x => {
+        if (x.status === 200) {
+          return x.data;
+        }
+      })
+      .then((bookingDetail: BookingDetailCourt) => {
+        setBookingDetails(bookingDetail);
+      })
+      .catch(() => {
+        toast.error("Lỗi hệ thống vui lòng thử lại sau");
+      });
+  }, []);
+
   const copyImage = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     try {
       const targetElement = event.currentTarget as HTMLDivElement;
@@ -97,12 +91,14 @@ export default function BookingDetail() {
         </div>
         <div className='p-10'>
           <div className='flex justify-between items-center'>
-            <Image className='rounded-md' height={130} width={130} src={getImage(bookingDetail?.image) || ''} alt="ảnh cơ sở" />
-            <Link href={`/facility/${bookingDetail?.facilityID}`} className='ml-5 text-2xl font-medium'>
+            {bookingDetail?.facilityLogo ?
+              <Image className='rounded-[50%]' height={100} width={100} src={getImage(bookingDetail?.facilityLogo) || ''} alt="logo cơ sở" />
+              : <Image className='rounded-md' height={100} width={100} src={getImage(bookingDetail?.facilityImage) || ''} alt="ảnh cơ sở" />}
+            <Link href={`/facility/${bookingDetail?.facilityID}`} className='ml-5 text-2xl font-medium mx-10'>
               <div className='text-center'>{bookingDetail?.facilityName}</div>
               <div className='flex text-sm mt-3'>
                 <TiLocation size={20} className='mr-1' />
-                {bookingDetail?.fullAddress}
+                <p className='text-center'>{bookingDetail?.fullAddress}</p>
               </div>
             </Link>
             <Image onClick={() => setOpenModal(true)} ref={imgRef} className='hover:cursor-pointer' height={120} width={120} src="/assets/images/QR_Code.svg" alt="qrcode" />
@@ -113,7 +109,7 @@ export default function BookingDetail() {
                 <CgScan size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Mã đặt lịch:</div>
-                  <div className='float-end font-medium'>{bookingDetail?.codeBooking}</div>
+                  <div className='float-end font-medium'>{bookingDetail?.paymentCode}</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
@@ -131,7 +127,7 @@ export default function BookingDetail() {
                 </div>
               </div>
               <div className='flex items-center mt-4'>
-                <FaRegUser size={25} className='mr-2' />
+                <FaRegUser size={20} className='ml-0.5 mr-2.5' />
                 <div className='w-full'>
                   <div className='float-start'>Người đặt:</div>
                   <div className='float-end font-medium'>{bookingDetail?.bookingName}</div>
@@ -155,7 +151,7 @@ export default function BookingDetail() {
                 <GiReceiveMoney size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Trạng thái thanh toán:</div>
-                  <div className='float-end font-medium'>{bookingDetail?.paymentStatus}</div>
+                  <div className='float-end font-medium'>{bookingDetail?.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}</div>
                 </div>
               </div>
             </div>
@@ -164,14 +160,14 @@ export default function BookingDetail() {
                 <MdOutlineDateRange size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Ngày đặt:</div>
-                  <div className='float-end font-medium'>{bookingDetail?.dateBooking}</div>
+                  <div className='float-end font-medium'>{bookingDetail?.bookingDate}</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
                 <FaPeopleRobbery size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Ngày chơi:</div>
-                  <div className='float-end font-medium'>{bookingDetail?.datePlay}</div>
+                  <div className='float-end font-medium'>{bookingDetail?.playDate}</div>
                 </div>
               </div>
               <div className='flex items-center mt-4'>
@@ -193,22 +189,34 @@ export default function BookingDetail() {
                 <div className='w-full'>
                   <div className='float-start'>Giá:</div>
                   <div className='flex justify-end'>
-                    <p className='float-end font-medium'>{`${convertNumberToPrice(bookingDetail?.courtPrice || 0)} / Giờ`}</p>
+                    <p className='float-end font-medium text-lg'>{`${convertNumberToPrice(bookingDetail?.courtPrice || 0)} / Giờ`}</p>
                   </div>
                 </div>
               </div>
-              <div className='flex items-center mt-4'>
-                <BiSolidDiscount size={25} className='mr-2' />
-                <div className='w-full'>
-                  <div className='float-start'>Mã giảm giá:</div>
-                  <div className='float-end font-medium'>{bookingDetail?.voucherName}</div>
+              {bookingDetail?.voucherID && (
+                <div className='flex items-center mt-4'>
+                  <BiSolidDiscount size={25} className='mr-2' />
+                  <div className='w-full'>
+                    <div className='float-start'>Mã giảm giá:</div>
+                    <div className='float-end font-medium'>{bookingDetail?.voucherName}</div>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className='flex items-center mt-4'>
                 <FaRegMoneyBillAlt size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Số tiền thanh toán:</div>
-                  <div className='float-end font-medium'>{convertNumberToPrice(bookingDetail?.totalPrice || 0)}</div>
+                  <div className='float-end font-medium text-lg'>{convertNumberToPrice(bookingDetail?.totalPrice || 0)}</div>
+                </div>
+              </div>
+              <div className='flex items-center mt-1'>
+                <TbStatusChange size={25} className='mr-2 mb-1' />
+                <div className='w-full'>
+                  <div className='float-start'>Trạng thái:</div>
+                  <div className='float-end font-medium'>
+                    {bookingDetail?.isDeleted ? <p className='text-md bg-red-200 p-1 px-2 rounded-md font-medium text-red-600'>Đã hủy</p> :
+                      bookingDetail?.bookingStatus ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Chờ xác nhận</p>}
+                  </div>
                 </div>
               </div>
             </div>

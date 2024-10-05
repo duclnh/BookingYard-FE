@@ -13,6 +13,7 @@ import { MyBooking as MyBookingCourt, PageResult } from 'types'
 import toast from 'react-hot-toast'
 import { getImage } from '@utils/imageOptions'
 import Link from 'next/link'
+import { convertNumberToPrice } from '@utils/moneyOptions'
 
 export default function MyBooking() {
   const user = useAppSelector(state => state.user.value)
@@ -22,48 +23,7 @@ export default function MyBooking() {
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
   const [selectedStar, setSelectedStar] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(5);
-  const [bookings, setBookings] = useState<PageResult<MyBookingCourt> | undefined>({
-    totalCount: 4,
-    pageSize: 2,
-    currentPage: 2,
-    totalPages: 2,
-    hasNext: false,
-    hasPrevious: true,
-    results: [
-      {
-        bookingID: "",
-        facilityID: "e175daf6-b5a4-4d0e-544d-08dcd4d409d4",
-        code: "EFGH123",
-        image: "/facility/31fff3b5-663d-49af-b2b6-64fe034f1304.jpg",
-        facilityName: "Tennis Court L",
-        startTime: "2:00 PM",
-        endTime: "4:00 PM",
-        datePlay: "2024-10-13",
-        dateBooking: "2024-09-27",
-        totalPrice: 500000,
-        statusBooking: true,
-        isCheckIn: true,
-        isFeedback: false,
-        isDelete: true
-      },
-      {
-        bookingID: "",
-        facilityID: "dc6d6e88-dd7a-4ebc-df13-08dce1b6b5ad",
-        code: "IJKL999",
-        image: "/facility/31fff3b5-663d-49af-b2b6-64fe034f1304.jpg",
-        facilityName: "Basketball Court M",
-        startTime: "9:00 AM",
-        endTime: "11:00 AM",
-        datePlay: "2024-10-14",
-        dateBooking: "2024-09-26",
-        totalPrice: 650000,
-        statusBooking: false,
-        isCheckIn: false,
-        isFeedback: true,
-        isDelete: false
-      }
-    ]
-  });
+  const [bookings, setBookings] = useState<PageResult<MyBookingCourt> | undefined>();
 
   const url = qs.stringifyUrl({
     url: "", query: {
@@ -74,17 +34,18 @@ export default function MyBooking() {
     }
   });
 
-  // useEffect(() => {
-  //   getMyBooking(user?.id, url)
-  //     .then(x => {
-  //       if (x.status === 200) {
-  //         return x.data
-  //       } else {
-  //         toast.error("Lỗi lấy thông tin đặt lịch")
-  //       }
-  //     }).then((myBookings: PageResult<MyBookingCourt>) => setBookings(myBookings))
-  //     .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại"))
-  // }, [url])
+  useEffect(() => {
+    getMyBooking(user?.id, url)
+      .then(x => {
+        if (x.status === 200) {
+          console.log(x.data)
+          return x.data
+        } else {
+          toast.error("Lỗi lấy thông tin đặt lịch")
+        }
+      }).then((myBookings: PageResult<MyBookingCourt>) => setBookings(myBookings))
+      .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại"))
+  }, [currentPageSize, currentSelect])
 
   const handleMouseOver = (index: any) => {
     setHoveredStar(index);
@@ -103,6 +64,37 @@ export default function MyBooking() {
     setSelectedStar(0)
     setHoveredStar(null)
   }
+
+  const handlerCheckDate = (date: string, startTime: string) => {
+    // Get the current date and time
+    const currentDate = new Date();
+
+    // Parse the date string (assumed format: DD-MM-YYYY)
+    const dateParts = date.split("-");
+    const day = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // Months are 0-indexed in JavaScript
+    const year = parseInt(dateParts[2], 10);
+
+    // Parse the start time string (assumed format: HH:mm)
+    const timeParts = startTime.split(":");
+    const hours = parseInt(timeParts[0], 10);
+    const minutes = parseInt(timeParts[1], 10);
+
+    // Combine the date and time into a single Date object
+    const inputDate = new Date(year, month, day, hours, minutes);
+
+    // Subtract 6 hours from the current date
+    const sixHoursAgo = new Date(currentDate.getTime() - 6 * 60 * 60 * 1000);
+
+    // Compare the input date and time to six hours ago
+    if (inputDate < sixHoursAgo) {
+      return true;
+    }
+
+    return false;
+  };
+
+
   const handleScroll = (e: any) => {
     const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
     if (bottom) {
@@ -138,26 +130,35 @@ export default function MyBooking() {
             <div key={index} className='w-full shadow-3xl mb-4 hover:cursor-pointer'>
               <div className='flex justify-between items-center p-4'>
                 <div className='flex'>
-                  <Image className='rounded-md' height={100} width={100} src={getImage(booking.image) || ''} alt="ảnh cơ sỏ" />
+                  {booking.facilityLogo ?
+                    <Image className='rounded-[50%]' height={100} width={100} src={getImage(booking.facilityLogo) || ''} alt="logo cơ sở" />
+                    : <Image className='rounded-md' height={100} width={100} src={getImage(booking.facilityImage) || ''} alt="ảnh cơ sở" />}
                   <div className='ml-4'>
-                    <Link target='_blank' href={`/facility/${booking.facilityID}`} className='font-bold text-lg'>{booking.facilityName}</Link>
-                    <div className='font-normal text-sm'>Mã đặt lịch: {booking.code}</div>
+                    <Link target='_blank' href={`/facility/${booking.facilityID}`} className='font-bold text-lg'>
+                      <p className='max-w-60'>{booking.facilityName}</p>
+                    </Link>
+                    <div className='font-normal text-sm'>Mã đặt lịch: {booking.paymentCode}</div>
                   </div>
                 </div>
                 <div className='font-bold'>
-                  {booking.statusBooking ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Chờ xác nhận</p>}
+                  {booking.isDeleted ? <p className='text-md bg-red-200 p-1 px-2 rounded-md font-medium text-red-600'>Đã hủy</p> :
+                    booking.bookingStatus ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Chờ xác nhận</p>}
                 </div>
                 <div className='md:flex md:justify-end space-x-3'>
-                  <Button size='xs' color='blue' href='/booking-detail' className='rounded-md'>Chi tiết</Button>
-                  <Button size='xs' color='info' className='rounded-md' onClick={() => setOpenModalFeedback(true)}>Đánh giá</Button>
-                  <Button size='xs' color='failure' className=' rounded-md px-2 mt-2 sm:mt-0' onClick={() => setOpenModalCancel(true)}>Hủy</Button>
+                  <Button size='xs' color='blue' href={`/booking-detail/${booking.bookingID}`} className='rounded-md'>Chi tiết</Button>
+                  {booking.isCheckIn && booking.isFeedback == false && (
+                    <Button size='xs' color='info' className='rounded-md' onClick={() => setOpenModalFeedback(true)}>Đánh giá</Button>
+                  )}
+                  {booking.isDeleted == false && booking.bookingStatus == false || handlerCheckDate(booking.playDate, booking.startTime) ?
+                    <Button size='xs' color='failure' className=' rounded-md px-2 mt-2 sm:mt-0' onClick={() => setOpenModalCancel(true)}>Hủy</Button>
+                    : <></>}
                 </div>
               </div>
               <div className="border-t-2">
                 <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
                     <div className="font-bold">Thời gian chơi</div>
-                    <div className='text-sm'>{booking.datePlay}</div>
+                    <div className='text-sm'>{booking.playDate}</div>
 
                   </div>
                   <div>
@@ -166,13 +167,16 @@ export default function MyBooking() {
                   </div>
                   <div className='mx-auto'>
                     <div className="font-bold">Ngày đặt lịch hẹn</div>
-                    <div>Tue 06 Aug 4:00 PM</div>
+                    <div className='text-sm'>{booking.bookingDate}</div>
                   </div>
                   <div className='md:text-center'>
                     <div className="font-bold">Giá tiền</div>
-                    <div>$100</div>
+                    <div className='font-bold text-xl'>{convertNumberToPrice(booking.totalPrice)}</div>
                   </div>
                 </div>
+                <p className='text-sm mb-2 px-1 text-center pb-3'>
+                  (<span className='text-red-500'>*</span>) Bạn có thể hủy lịch hẹn trước giờ chơi 6 giờ. Và số tiền đã thanh toán sẽ được quy đổi ra số điểm
+                </p>
               </div>
             </div>
           ))}

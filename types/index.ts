@@ -128,6 +128,15 @@ export type Court = {
     isActive: boolean
 }
 
+export type CourtBooking = {
+    courtID: number,
+    courtName: string,
+    image: string,
+    image360: string,
+    numberPlayer: number,
+    courtPrice: number,
+}
+
 export type CourtDetail = {
     courtID: number,
     courtName: string,
@@ -168,7 +177,7 @@ export type FacilityDetail = {
     facility360s: string[],
     facilityAddress: string,
     facilityRating: number,
-    sports: string[],
+    sports: SportCreate[],
     openDate: string,
     startTime: string,
     endTime: string,
@@ -263,27 +272,30 @@ export type CollectVoucher = {
 export type MyBooking = {
     bookingID: string,
     facilityID: string,
-    code: string,
-    image: string,
+    paymentCode: string,
+    facilityLogo: string,
+    facilityImage: string,
     facilityName: string,
     startTime: string,
     endTime: string,
-    datePlay: string,
-    dateBooking: string,
+    playDate: string,
+    bookingDate: string,
     totalPrice: number,
-    statusBooking: boolean,
+    bookingStatus: boolean,
     isCheckIn: boolean,
     isFeedback: boolean,
-    isDelete: boolean
+    isDeleted: boolean
 }
 
 export type BookingDetail = {
     bookingID: string,
     facilityID: string,
-    codeBooking: string,
+    paymentCode: string,
     image: string,
     facilityName: string,
     fullAddress: string,
+    facilityLogo: string,
+    facilityImage: string,
     courtName: string,
     courtImage: string,
     court360: string,
@@ -294,12 +306,35 @@ export type BookingDetail = {
     paymentStatus: string,
     startTime: string,
     endTime: string,
-    datePlay: string,
-    dateBooking: string,
+    playDate: string,
+    bookingDate: string,
+    bookingStatus: boolean,
+    voucherID: string,
     voucherName: string,
     percentage: number,
     codeVoucher: string,
     courtPrice: number,
     totalPrice: number,
     isCheckIn: boolean,
+    isDeleted: boolean,
+}
+
+export type Booking = {
+    facilityID: string,
+    facilityName: string,
+    facilityImage: string,
+    facilityTime: string,
+    facilityOpen: string,
+    facilityClose: string,
+    facilityRating: number,
+    facilityAddress: string,
+    playDate: string,
+    startTime: string,
+    endTime: string,
+    courtID: number,
+    courtName: string,
+    sportName: string | undefined,
+    numberPlayer: number,
+    courtPrice: number,
+    totalTime: number,
 }

@@ -16,3 +16,7 @@ export async function getAllCourts(id: string | undefined) {
 export async function getCourtDetail(id: string | undefined) {
     return await fetchWrapper.get(`/api/court/${id}`);
 }
+
+export async function getCourtBooking(id: string, query: string) {
+    return await fetchWrapper.get(`/api/court-booking/${id}${query}`);
+}
