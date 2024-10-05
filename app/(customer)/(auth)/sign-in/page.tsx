@@ -20,7 +20,7 @@ export default function LoginPage() {
       setError("Tài khoản đã bị khóa. Vui lòng liên hệ hệ thống để biết thêm chi tiết");
     } else if (errorParam?.includes("This email is already registered")) {
       setError("Email này đã được đăng ký bởi tài khoản khác rồi");
-    }else if(errorParam){
+    } else if (errorParam) {
       setError("Lỗi hệ thống, vui lòng thử lại");
     }
   }, []);
@@ -37,7 +37,7 @@ export default function LoginPage() {
       )
       if (!res?.error) {
         toast.success("Đăng nhập thành công")
-        router.push("/")
+        router.push("/verify")
       } else {
         if (res.error == "fetch failed") {
           setError("Lỗi hệ thống vui lòng thử lại")

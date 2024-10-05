@@ -95,13 +95,6 @@ export default function Payment() {
       .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }
 
-  const handleBackClick = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
-    }
-  };
 
   const handleScroll = (e: any) => {
     const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
@@ -378,7 +371,7 @@ export default function Payment() {
             <Image className='mx-auto' height={350} width={350} src='/assets/images/empty-booking.png' alt='Chưa có đặt lịch hẹn' />
             <div className='text-center mt-7'>
               <p className='text-3xl font-bold'>Bạn chưa có đặt lịch hẹn nào !</p>
-              <Button onClick={handleBackClick} size='sm' className='mt-10 w-48 mx-auto'>
+              <Button onClick={() => router.push("/booking")} size='sm' className='mt-10 w-48 mx-auto'>
                 <p>Quay lại đặt lịch hẹn</p>
               </Button>
             </div>

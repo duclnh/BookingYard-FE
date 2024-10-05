@@ -25,3 +25,7 @@ export async function createBooking(bookingDetails: {
 }) {
     return await fetchWrapper.post('/api/booking', bookingDetails);
 }
+
+export async function payment(query: string) {
+    return await fetchWrapper.get(`/api/vnpay/vnpay-return${query}`);
+}
