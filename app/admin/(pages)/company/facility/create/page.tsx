@@ -10,6 +10,7 @@ import { TiDelete } from 'react-icons/ti';
 import { checkValidateTime, convertToStartTimeAndEndTime } from '@utils/timeOptions';
 import toast from 'react-hot-toast';
 import { createFacility, getFullAddress } from '@services/index';
+import { useRouter } from 'next/navigation';
 
 const TextEditor = dynamic(() => import('@components/TextEditor/TextEditor'), {
     ssr: false,
@@ -20,6 +21,7 @@ const MapCustom = dynamic(() => import('@components/MapCustom/MapCustom'), {
 
 
 export default function CreatePage() {
+    const router = useRouter();
     const { control, handleSubmit, formState: { isSubmitting, isValid }, setValue, getValues, } = useForm({ mode: "onTouched", });
     const [modalMap, setModalMap] = useState(false);
     const [dates, setDates] = useState<Date[]>([])
@@ -182,6 +184,9 @@ export default function CreatePage() {
             console.log(res)
             if (res.status === 201) {
                 toast.success("Tạo mới cơ sở thành công")
+                router.push("/admin/company/facility")
+            } else if (res.status === 413) {
+                toast.success("Dung lượng file ảnh quá lớn")
             } else {
                 if (res.data.title.includes("Email already exist!")) {
                     toast.error("Email này đã có người sử dụng")

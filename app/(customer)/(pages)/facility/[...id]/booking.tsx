@@ -45,6 +45,7 @@ export default function Booking(props: Props) {
     const [image360, setImage360] = useState<string | undefined>(undefined);
     const dispatch = useAppDispatch();
     const router = useRouter()
+    
     function formatDate(date: Date | null) {
         if (!date) return '';
         const day = String(date.getDate()).padStart(2, '0');
@@ -276,7 +277,7 @@ export default function Booking(props: Props) {
                                         }}>
                                             <p className='text-xl font-bold'>{court?.courtName}</p>
                                             {selectSport?.sportName == "Bóng đá" && (
-                                                <p>7 người</p>
+                                                <p>{court.numberPlayer} người</p>
                                             )}
                                         </div>
                                         <p>{convertNumberToPrice(court?.courtPrice || 0)}</p>
@@ -307,7 +308,7 @@ export default function Booking(props: Props) {
                             )}
                         </> : <>
                         </>}
-                        {courtSelected == null && (
+                        {courtSelected == null && courts == undefined && (
                             <Button onClick={handlerLoadCourt} className='mx-auto' color={"warning"} size={"sm"}>Tìm sân</Button>
                         )}
                     </div>
