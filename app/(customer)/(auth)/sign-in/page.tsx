@@ -37,7 +37,7 @@ export default function LoginPage() {
       )
       if (!res?.error) {
         toast.success("Đăng nhập thành công")
-        router.push("/verify")
+        router.push("/")
       } else {
         if (res.error == "fetch failed") {
           setError("Lỗi hệ thống vui lòng thử lại")
