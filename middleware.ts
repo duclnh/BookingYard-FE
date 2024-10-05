@@ -75,15 +75,15 @@ export async function middleware(request: NextRequest) {
       return Response.redirect(new URL('/admin/authorization', request.url));
     }
 
-    if (!currentUser.isVerification && !path.startsWith('/verify')) {
-      console.log("Error Here: 9")
-      return Response.redirect(new URL('/verify', request.url));
-    }
+    // if (!currentUser.isVerification && !path.startsWith('/verify')) {
+    //   console.log("Error Here: 9")
+    //   return Response.redirect(new URL('/verify', request.url));
+    // }
 
-    if (currentUser.isVerification && path.startsWith('/verify')) {
-      console.log("Error Here: 10")
-      return Response.redirect(new URL('/not-found', request.url));
-    }
+    // if (currentUser.isVerification && path.startsWith('/verify')) {
+    //   console.log("Error Here: 10")
+    //   return Response.redirect(new URL('/not-found', request.url));
+    // }
     if (currentUser && isAuthenticationRoutes) {
       return Response.redirect(new URL('/not-found', request.url));
     }
