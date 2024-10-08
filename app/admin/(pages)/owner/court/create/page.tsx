@@ -10,7 +10,7 @@ import { SportCreate } from 'types';
 
 
 export default function CreatePage() {
-    const { control, handleSubmit, reset, formState: { isSubmitting, isValid } } = useForm({ mode: "onTouched", });
+    const { control, handleSubmit, reset, formState: { isSubmitting, isValid, }, setValue } = useForm({ mode: "onTouched", });
     const user = useAppSelector(state => state.manager.value);
     const [imageCourt, setImageCourt] = useState<File>()
     const [image360, setImage360] = useState<File>()
@@ -51,6 +51,7 @@ export default function CreatePage() {
             if (res.status === 201) {
                 toast.success("Tạo mới sân thành công")
                 reset()
+                setValue('sport', '')
                 setImageCourt(undefined)
                 setImage360(undefined)
             } else {

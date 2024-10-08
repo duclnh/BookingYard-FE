@@ -19,8 +19,9 @@ export async function createBooking(bookingDetails: {
     userID: string | undefined;
     bookingDate: string | undefined;
     startTime: string | undefined;
+    point: number;
     endTime: string | undefined;
-    voucherID: string | undefined;
+    collectVoucherID: string | undefined;
     paymentMethod: string;
 }) {
     return await fetchWrapper.post('/api/booking', bookingDetails);
@@ -29,3 +30,12 @@ export async function createBooking(bookingDetails: {
 export async function payment(query: string) {
     return await fetchWrapper.get(`/api/vnpay/vnpay-return${query}`);
 }
+
+
+export async function cancelBooking(cancel: {
+    bookingID: string, reason: string,
+  })
+   {
+    console.log(cancel)
+    return await fetchWrapper.post('/api/cancel-booking', cancel)
+  }

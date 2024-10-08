@@ -114,6 +114,7 @@ export type SportCreateSelect = {
 export type HistoryPoint = {
     historyPointID: string,
     point: number,
+    content: string,
     createdAt: string,
 }
 
@@ -281,7 +282,6 @@ export type MyBooking = {
     playDate: string,
     bookingDate: string,
     totalPrice: number,
-    bookingStatus: boolean,
     isCheckIn: boolean,
     isFeedback: boolean,
     isDeleted: boolean
@@ -308,7 +308,8 @@ export type BookingDetail = {
     endTime: string,
     playDate: string,
     bookingDate: string,
-    bookingStatus: boolean,
+    reason: string,
+    isFeedback: boolean,
     voucherID: string,
     voucherName: string,
     percentage: number,

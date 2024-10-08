@@ -3,6 +3,7 @@ import { ModalView } from '@components/index'
 import { getBookingDetail } from '@services/bookingService'
 import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
+import { Label, Textarea } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -21,7 +22,7 @@ import { IoPhonePortraitOutline, IoWalletOutline } from 'react-icons/io5'
 import { LuClipboardEdit } from 'react-icons/lu'
 import { MdOutlineDateRange, MdOutlinePriceCheck } from 'react-icons/md'
 import { PiCourtBasketballLight } from 'react-icons/pi'
-import { TbStatusChange } from 'react-icons/tb'
+import { TbClockCancel, TbStatusChange } from 'react-icons/tb'
 import { TiDownloadOutline, TiLocation } from 'react-icons/ti'
 import { BookingDetail as BookingDetailCourt } from 'types'
 
@@ -120,13 +121,6 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                 </div>
               </div>
               <div className='flex items-center mt-4'>
-                <BsPeople size={25} className='mr-2' />
-                <div className='w-full'>
-                  <div className='float-start'>Loại sân:</div>
-                  <div className='float-end font-medium'>Sân 7 người</div>
-                </div>
-              </div>
-              <div className='flex items-center mt-4'>
                 <FaRegUser size={20} className='ml-0.5 mr-2.5' />
                 <div className='w-full'>
                   <div className='float-start'>Người đặt:</div>
@@ -154,6 +148,15 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                   <div className='float-end font-medium'>{bookingDetail?.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}</div>
                 </div>
               </div>
+              {bookingDetail?.reason && (
+                <>
+                  <div className="mb-2 flex items-center mt-4">
+                    <TbClockCancel size={22} className='mr-2' />  
+                    <div className='float-start'>Lý do huỷ</div>
+                  </div>
+                  <Textarea readOnly className='mb-5' id="other" value={bookingDetail?.reason} rows={4} />
+                </>
+              )}
             </div>
             <div>
               <div className='flex items-center mt-4'>
@@ -209,13 +212,13 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                   <div className='float-end font-medium text-lg'>{convertNumberToPrice(bookingDetail?.totalPrice || 0)}</div>
                 </div>
               </div>
-              <div className='flex items-center mt-1'>
+              <div className='flex items-center mt-3'>
                 <TbStatusChange size={25} className='mr-2 mb-1' />
                 <div className='w-full'>
                   <div className='float-start'>Trạng thái:</div>
                   <div className='float-end font-medium'>
                     {bookingDetail?.isDeleted ? <p className='text-md bg-red-200 p-1 px-2 rounded-md font-medium text-red-600'>Đã hủy</p> :
-                      bookingDetail?.bookingStatus ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Chờ xác nhận</p>}
+                      bookingDetail?.isFeedback ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã đánh giá</p> : !bookingDetail?.isCheckIn ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Đã check in</p>}
                   </div>
                 </div>
               </div>

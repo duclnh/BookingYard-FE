@@ -12,16 +12,14 @@ export default function VNPAY() {
         payment(window.location.search)
             .then(x => {
                 if (x.status === 200) {
+                    toast.success("Thanh toán thành công")
+                    router.push(`/booking-success/${x.data}`)
                     return x.data
                 } else {
                     toast.error("Thanh toán thất bại")
                     router.push(`/payment`)
                 }
-            })
-            .then((bookingID: string) => {
-                toast.success("Thanh toán thành công")
-                router.push(`/booking-success/${bookingID}`)
-            })
+            }).catch(() => toast.error("Lỗi hệ thống"))
     }, [])
 
     return (

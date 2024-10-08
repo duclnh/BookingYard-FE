@@ -75,10 +75,11 @@ export default function Payment() {
           : 0)
         - (score ?? 0),
       userID: user?.id,
+      point: score,
       bookingDate: booking?.playDate,
       startTime: booking?.startTime,
       endTime: booking?.endTime,
-      voucherID: voucherSelected?.collectVoucherID,
+      collectVoucherID: voucherSelected?.collectVoucherID,
       paymentMethod: data.payment,
     })
       .then(x => {

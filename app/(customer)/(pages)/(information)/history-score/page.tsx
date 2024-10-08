@@ -68,13 +68,14 @@ export default function HistoryScore() {
       <div className='p-5 space-y-4 max-h-[630px] overflow-y-auto' onScroll={handleScroll}>
         {historyPoints != undefined && historyPoints?.results.length > 0 ? historyPoints?.results.map((history: HistoryPoint, index) => (
           <div key={index} className='rounded-lg border'>
-            <div className='grid grid-cols-4 place-items-center gap-2 p-2'>
+            <div className='grid grid-cols-5 place-items-center gap-2 p-2'>
               <Image height={80} width={80} src="/assets/images/logo.png" alt='img' className='col-span-1 rounded-xl' />
               <div className='col-span-2 place-self-start ml-4 py-5'>
                 <p className='text-xl font-bold mb-5'>Fieldy</p>
                 {history.point > 0 ? <p>{`Ngày tích điểm: ${history.createdAt}`}</p>
                   : <p>{`Ngày sử dụng: ${history.createdAt}`}</p>}
               </div>
+              <div className='col-span-1 text-center'>{history.content}</div>
               <div className='col-span-1'>
                 {history.point > 0 ? <p className='text-2xl font-medium text-green-600'>+ {` ${history.point}`}</p>
                   : <p className='text-2xl font-medium text-red-600'>{` ${history.point}`}</p>}

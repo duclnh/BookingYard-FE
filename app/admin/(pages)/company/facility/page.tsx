@@ -18,7 +18,7 @@ export default function Facility() {
   const [sports, setSports] = useState<SportCreate[]>([])
 
 
-  const [currentPageSize, setCurrentPageSize] = useState(5);
+  const [currentPageSize, setCurrentPageSize] = useState(8);
 
   const url = qs.stringifyUrl({
     url: "", query: {
@@ -56,11 +56,17 @@ export default function Facility() {
       }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }, [url])
 
+  const handleScroll = (e: any) => {
+    const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
+    if (bottom) {
+      setCurrentPageSize(prev => prev + 5);
+    }
+  };
 
 
   return (
     <>
-      <div className='py-5 w-full'>
+      <div className='py-5 w-full' onScroll={handleScroll}>
         <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Danh sách các cơ sở' center />
         {/* <div className='w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
           <CardStatistic
