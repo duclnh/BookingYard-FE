@@ -1,5 +1,5 @@
 "use client"
-import { Button, Label, Modal, Radio, Rating, Textarea } from 'flowbite-react'
+import { Button, Label, Modal, Radio, Rating, Spinner, Textarea } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { FaRegCalendarXmark } from 'react-icons/fa6'
 import { MdOutlineEditCalendar } from 'react-icons/md'
@@ -7,13 +7,15 @@ import { TiThSmall } from 'react-icons/ti'
 import { VscFeedback } from 'react-icons/vsc'
 import Image from 'next/image'
 import qs from "query-string";
-import { getMyBooking } from '@services/bookingService'
+import { cancelBooking, getMyBooking } from '@services/bookingService'
 import { useAppSelector } from '@hooks/hooks'
 import { MyBooking as MyBookingCourt, PageResult } from 'types'
 import toast from 'react-hot-toast'
 import { getImage } from '@utils/imageOptions'
 import Link from 'next/link'
 import { convertNumberToPrice } from '@utils/moneyOptions'
+import { FieldValues, useForm } from 'react-hook-form'
+import { EmptyList } from '@components/index'
 
 export default function MyBooking() {
   const user = useAppSelector(state => state.user.value)
@@ -24,7 +26,8 @@ export default function MyBooking() {
   const [selectedStar, setSelectedStar] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(5);
   const [bookings, setBookings] = useState<PageResult<MyBookingCourt> | undefined>();
-
+  const { reset, handleSubmit, register, formState: { isSubmitting, isValid }, setValue } = useForm({ mode: "onTouched", });
+  const [change, setChange] = useState<boolean>(false);
   const url = qs.stringifyUrl({
     url: "", query: {
       "search": "",
@@ -38,14 +41,13 @@ export default function MyBooking() {
     getMyBooking(user?.id, url)
       .then(x => {
         if (x.status === 200) {
-          console.log(x.data)
           return x.data
         } else {
           toast.error("Lỗi lấy thông tin đặt lịch")
         }
       }).then((myBookings: PageResult<MyBookingCourt>) => setBookings(myBookings))
       .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại"))
-  }, [currentPageSize, currentSelect])
+  }, [currentPageSize, currentSelect, change])
 
   const handleMouseOver = (index: any) => {
     setHoveredStar(index);
@@ -87,7 +89,11 @@ export default function MyBooking() {
     const sixHoursAgo = new Date(currentDate.getTime() - 6 * 60 * 60 * 1000);
 
     // Compare the input date and time to six hours ago
-    if (inputDate < sixHoursAgo) {
+
+    if (inputDate <= currentDate) {
+      return false;
+    }
+    else if (sixHoursAgo < inputDate) {
       return true;
     }
 
@@ -102,19 +108,37 @@ export default function MyBooking() {
     }
   };
 
+  const handlerCancelBooking = (data: FieldValues) => {
+    if (data.otherReason === '' && data.reasons === null) {
+      toast.error('Vui lòng nhập nội dung hủy')
+      return;
+    }
+    cancelBooking({
+      bookingID: data.bookingID,
+      reason: data.otherReason !== '' ? data.otherReason : data.reasons
+    })
+      .then(x => {
+        console.log(x.data)
+        if (x.status === 200) {
+          toast.success(`Huỷ đặt lịch ${data.codeBooking} thành công`)
+          setOpenModalCancel(false)
+          setChange(!change)
+        } else {
+          toast.error(`Huỷ đặt lịch ${data.codeBooking} thất bại`)
+        }
+      })
+      .catch(() => toast.error('Lỗi hệ thống vui lòng thử lại'))
+  }
+
   return (
     <>
       <div className='col-span-3'>
         <div className='text-2xl font-bold px-5 py-3 border rounded-t-2xl'>
           Đặt lịch hẹn
         </div>
-        <div className="grid grid-cols-4 border">
+        <div className="grid grid-cols-3 border">
           <div onClick={() => setSelect('all')} className={`mx-auto p-2 flex items-center justify-center hover:cursor-pointer ${currentSelect == 'all' ? 'text-blue-700 w-full border-b-2 border-b-blue-700' : ''}`}>
             <TiThSmall className='mx-2' /> Tất cả
-          </div>
-          <div onClick={() => setSelect('waiting')} className={`mx-auto p-2 flex items-center justify-center hover:cursor-pointer ${currentSelect == 'waiting' ? 'text-blue-700 w-full border-b-2 border-b-blue-700' : ''}`}>
-            <MdOutlineEditCalendar className='mx-2' />
-            Chờ xác nhận
           </div>
           <div onClick={() => setSelect('feedback')} className={`mx-auto p-2 flex items-center justify-center hover:cursor-pointer ${currentSelect == 'feedback' ? 'text-blue-700 w-full border-b-2 border-b-blue-700' : ''}`}>
             <VscFeedback className='mx-2' />
@@ -125,8 +149,8 @@ export default function MyBooking() {
             Hủy
           </div>
         </div>
-        <div className='py-3 max-h-[650px] hover:overflow-y-auto px-1'>
-          {bookings !== undefined && bookings.results.map((booking: MyBookingCourt, index) => (
+        <div className='py-3 max-h-[650px] hover:overflow-y-auto px-1' onScroll={handleScroll}>
+          {bookings !== undefined && bookings.results.length > 0 ? bookings.results.map((booking: MyBookingCourt, index) => (
             <div key={index} className='w-full shadow-3xl mb-4 hover:cursor-pointer'>
               <div className='flex justify-between items-center p-4'>
                 <div className='flex'>
@@ -141,16 +165,20 @@ export default function MyBooking() {
                   </div>
                 </div>
                 <div className='font-bold'>
-                  {booking.isDeleted ? <p className='text-md bg-red-200 p-1 px-2 rounded-md font-medium text-red-600'>Đã hủy</p> :
-                    booking.bookingStatus ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Chờ xác nhận</p>}
+                  {booking?.isDeleted ? <p className='text-md bg-red-200 p-1 px-2 rounded-md font-medium text-red-600'>Đã hủy</p> :
+                    booking?.isFeedback ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã đánh giá</p> : !booking?.isCheckIn ? <p className='text-md bg-green-200 p-1 px-2 rounded-md font-medium text-green-600'>Đã xác nhận</p> : <p className='text-md bg-yellow-200 p-1 rounded-md font-medium text-yellow-600'>Đã check in</p>}
                 </div>
                 <div className='md:flex md:justify-end space-x-3'>
                   <Button size='xs' color='blue' href={`/booking-detail/${booking.bookingID}`} className='rounded-md'>Chi tiết</Button>
                   {booking.isCheckIn && booking.isFeedback == false && (
                     <Button size='xs' color='info' className='rounded-md' onClick={() => setOpenModalFeedback(true)}>Đánh giá</Button>
                   )}
-                  {booking.isDeleted == false && booking.bookingStatus == false || handlerCheckDate(booking.playDate, booking.startTime) ?
-                    <Button size='xs' color='failure' className=' rounded-md px-2 mt-2 sm:mt-0' onClick={() => setOpenModalCancel(true)}>Hủy</Button>
+                  {booking.isDeleted == false && handlerCheckDate(booking.playDate, booking.startTime) ?
+                    <Button size='xs' color='failure' className=' rounded-md px-2 mt-2 sm:mt-0' onClick={() => {
+                      setOpenModalCancel(true)
+                      setValue("bookingID", booking.bookingID)
+                      setValue("codeBooking", booking.paymentCode)
+                    }}>Hủy</Button>
                     : <></>}
                 </div>
               </div>
@@ -179,7 +207,9 @@ export default function MyBooking() {
                 </p>
               </div>
             </div>
-          ))}
+          )) : <>
+            <EmptyList />
+          </>}
         </div>
       </div>
       <Modal key={"cancel"} show={openModalCancel} size="md" onClose={() => setOpenModalCancel(false)} popup>
@@ -187,39 +217,41 @@ export default function MyBooking() {
           <p className='text-lg'>Bạn có muốn xóa lịch này không ?</p>
         </Modal.Header>
         <Modal.Body>
-          <form className="mt-5">
+          <form method='POST' className="mt-5" onSubmit={handleSubmit(handlerCancelBooking)}>
             <fieldset className="flex max-w-md flex-col gap-4">
               <legend className="mb-8 text-center font-bold">Chọn lý do hủy</legend>
-
               <div className="flex items-center gap-2">
-                <Radio className='checked:!ring-transparent' id="reason1" name="reasons" value="Đổi giờ chơi" defaultChecked />
+                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason1" value="Đổi giờ chơi" />
                 <Label htmlFor="reason1">Đổi giờ chơi</Label>
               </div>
 
               <div className="flex items-center gap-2">
-                <Radio className='checked:!ring-transparent' id="reason2" name="reasons" value="Bận không đi được" />
+                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason2" value="Bận không đi được" />
                 <Label htmlFor="reason2">Bận không đi được</Label>
               </div>
 
               <div className="flex items-center gap-2">
-                <Radio className='checked:!ring-transparent' id="reason3" name="reasons" value="Lý do cá nhân" />
+                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason3" value="Lý do cá nhân" />
                 <Label htmlFor="reason3">Lý do cá nhân</Label>
               </div>
 
               <div className="flex items-center gap-2">
-                <Radio className='checked:!ring-transparent' id="reason4" name="reasons" value="Thời tiết xấu" />
+                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason4" value="Thời tiết xấu" />
                 <Label htmlFor="reason4">Thời tiết xấu</Label>
               </div>
             </fieldset>
             <div className="mb-2 block mt-3">
               <Label htmlFor="other" value="Lý do khác" />
             </div>
-            <Textarea className='mb-5' id="other" placeholder="Nội dung..." rows={4} />
+            <Textarea onInput={() => setValue("reasons", '')} {...register("otherReason")} className='mb-5' id="other" placeholder="Nội dung..." rows={4} />
             <div className="flex justify-center gap-4">
-              <Button size='md' color="failure" onClick={() => setOpenModalCancel(false)}>
-                {"Có"}
+              <Button disabled={isSubmitting} size='md' type='submit' color="failure">
+                {isSubmitting ? <Spinner /> : "Có"}
               </Button>
-              <Button size='md' color="gray" onClick={() => setOpenModalCancel(false)}>
+              <Button size='md' color="gray" onClick={() => {
+                setOpenModalCancel(false)
+                reset()
+              }}>
                 Không
               </Button>
             </div>
