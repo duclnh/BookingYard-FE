@@ -1,7 +1,7 @@
 'use client'
 import { Input } from '@components/index'
 import { useAppSelector } from '@hooks/hooks'
-import { getCollectVoucher } from '@services/voucherService'
+import { getCollectVoucher, getVoucher } from '@services/voucherService'
 import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import { Button, Label, Modal, Radio, Rating, TextInput } from 'flowbite-react'
@@ -31,6 +31,7 @@ export default function Payment() {
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [voucherSelected, setVoucherSelected] = useState<CollectVoucher | null>(null);
   const [score, setScore] = useState<number>(0)
+  const [code, setCode] = useState<string>('')
   const [totalPrice, setTotalPrice] = useState<number>(() => {
     if (booking?.totalTime && booking?.courtPrice) {
       return booking.totalTime * booking.courtPrice;
@@ -124,6 +125,30 @@ export default function Payment() {
 
   const handlerChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
+  }
+
+  const handlerChangCode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCode(e.target.value)
+  }
+
+  const handlerFindCode = () => {
+    getVoucher(user?.id, code)
+      .then(x => {
+        if (x.status === 200) {
+          return x.data
+        } else if (x.status === 404) {
+          toast.error("Không tìm thấy mã giảm giá")
+          return undefined;
+        } else {
+          toast.error("Lỗi tìm mã giảm giá")
+          return undefined;
+        }
+      }).then((collectVoucher: CollectVoucher) => {
+        if (collectVoucher !== undefined) {
+          setVoucherSelected(collectVoucher)
+        }
+      })
+      .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }
 
   const handlerUseScore = () => {
@@ -287,11 +312,11 @@ export default function Payment() {
                       <div className='absolute -top-1 -right-1.5 text-xs w-4 leading-4 text-center text-white bg-red-600 rounded-full'>{collectVouchers?.results.length}</div>
                     </div>
                   </div>
-                  <p className='mb-2 font-medium'>Nhập mã giảm giá</p>
+                  {/* <p className='mb-2 font-medium'>Nhập mã giảm giá</p>
                   <div className='flex'>
-                    <TextInput className='mr-2 w-60' placeholder='Mã giảm giá' type="text" />
-                    <Button size='sm' className='mr-2' type='button'>Áp dụng</Button>
-                  </div>
+                    <TextInput onChange={handlerChangCode} className='mr-2 w-60' placeholder='Mã giảm giá' type="text" />
+                    <Button onClick={handlerFindCode} size='sm' className='mr-2' type='button'>Áp dụng</Button>
+                  </div> */}
                 </div>
               </div>
               <div className='rounded-2xl border'>

@@ -46,10 +46,11 @@ export default function DashBoard() {
         <div className='grid lg:grid-cols-4 gap-5'>
           <LineChart className='lg:col-span-3 h-full w-full xl:border-r-2 pr-6' label='Doanh thu' />
           <PieChart orderBy={
-            <select className='h-9 text-xs rounded-md'>
-              <option>Đặt lịch</option>
-              <option>Đã hủy</option>
-            </select>
+            // <select className='h-9 text-xs rounded-md'>
+            //   <option>Đặt lịch</option>
+            //   <option>Đã hủy</option>
+            // </select>
+            <></>
           }
             className='lg:col-span-1 w-full'
             label='Thể thao'

@@ -2,7 +2,7 @@
 import { EmptyList, InputDate, LoadingData, ModalView } from '@components/index'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import { Accordion, Button, Modal } from 'flowbite-react'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { FaImage } from 'react-icons/fa'
 import { TbView360Number } from 'react-icons/tb'
 import { CourtBooking, SportCreate } from 'types'
@@ -12,7 +12,7 @@ import toast from 'react-hot-toast'
 import Image from 'next/image'
 import View360, { EquirectProjection } from '@egjs/react-view360'
 import { getImage, getImage360 } from '@utils/index'
-import { useAppDispatch, useAppSelector } from '@hooks/hooks'
+import { useAppDispatch } from '@hooks/hooks'
 import { setBooking } from '@hooks/bookingStore'
 import { useRouter } from 'next/navigation'
 
@@ -45,7 +45,7 @@ export default function Booking(props: Props) {
     const [image360, setImage360] = useState<string | undefined>(undefined);
     const dispatch = useAppDispatch();
     const router = useRouter()
-    
+
     function formatDate(date: Date | null) {
         if (!date) return '';
         const day = String(date.getDate()).padStart(2, '0');
@@ -284,11 +284,9 @@ export default function Booking(props: Props) {
                                         <div className='flex justify-center mx-auto space-x-5 mt-3'>
                                             <FaImage onClick={() => {
                                                 setModalImage(true)
-
                                                 setImage(court?.image)
                                             }} size={18} />
                                             <TbView360Number onClick={() => {
-
                                                 setModal360(true)
                                                 setImage360(court?.image360)
                                             }} size={18} />

@@ -63,7 +63,7 @@ export default function BookingSuccess({ params }: { params: { id: string } }) {
                             <BsCalendar2Week className='mr-2 mt-0.5' size={16} />
                             <p>Xem chi tiết</p>
                         </Button>
-                        <Button href='/booking' size='sm' className='mt-10 w-48 mx-auto'>
+                        <Button href='/' size='sm' className='mt-10 w-48 mx-auto'>
                             <AiOutlineHome className='mr-2 mt-0.5' size={16} />
                             <p>Quay lại trang chủ</p>
                         </Button>

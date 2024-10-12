@@ -1,18 +1,19 @@
 "use client"
 import { ModalView } from '@components/index'
+import View360, { EquirectProjection } from '@egjs/react-view360'
 import { getBookingDetail } from '@services/bookingService'
-import { getImage } from '@utils/imageOptions'
+import { getImage, getImage360 } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
-import { Label, Textarea } from 'flowbite-react'
+import { Popover, Textarea } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { BiSolidDiscount } from 'react-icons/bi'
 import { BsPeople } from 'react-icons/bs'
 import { CgScan } from 'react-icons/cg'
-import { FaRegMoneyBillAlt, FaRegUser } from 'react-icons/fa'
+import { FaImage, FaRegMoneyBillAlt, FaRegUser } from 'react-icons/fa'
 import { FaPeopleRobbery } from 'react-icons/fa6'
 import { FiUserCheck } from 'react-icons/fi'
 import { GiReceiveMoney } from 'react-icons/gi'
@@ -22,7 +23,8 @@ import { IoPhonePortraitOutline, IoWalletOutline } from 'react-icons/io5'
 import { LuClipboardEdit } from 'react-icons/lu'
 import { MdOutlineDateRange, MdOutlinePriceCheck } from 'react-icons/md'
 import { PiCourtBasketballLight } from 'react-icons/pi'
-import { TbClockCancel, TbStatusChange } from 'react-icons/tb'
+import { SiSecurityscorecard } from 'react-icons/si'
+import { TbBasketDiscount, TbClockCancel, TbStatusChange, TbView360Number } from 'react-icons/tb'
 import { TiDownloadOutline, TiLocation } from 'react-icons/ti'
 import { BookingDetail as BookingDetailCourt } from 'types'
 
@@ -30,6 +32,10 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  const [modal360, setModal360] = useState(false);
+  const [modalImage, setModalImage] = useState(false);
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [image360, setImage360] = useState<string | undefined>(undefined);
 
   const [bookingDetail, setBookingDetails] = useState<BookingDetailCourt | undefined>(undefined)
 
@@ -51,6 +57,8 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
         }
       })
       .then((bookingDetail: BookingDetailCourt) => {
+        setImage360(bookingDetail?.court360)
+        setImage(bookingDetail?.courtImage)
         setBookingDetails(bookingDetail);
       })
       .catch(() => {
@@ -81,6 +89,13 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
       console.error('Error copying image: ', error);
     }
   };
+
+  const projection = useMemo(() => {
+    return new EquirectProjection({
+      src: getImage360(image360 || ''),
+    });
+  }, [image360])
+
   return (
     <>
       <div className='col-span-3 rounded-2xl border'>
@@ -113,13 +128,35 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                   <div className='float-end font-medium'>{bookingDetail?.paymentCode}</div>
                 </div>
               </div>
-              <div className='flex items-center mt-4'>
+              <div className='flex items-center mt-4 hover:cursor-pointer'>
                 <PiCourtBasketballLight size={25} className='mr-2' />
                 <div className='w-full'>
                   <div className='float-start'>Sân:</div>
-                  <div className='float-end font-medium'>{bookingDetail?.courtName}</div>
+
+                  <Popover
+                    aria-labelledby="image-popover"
+                    trigger='hover'
+                    content={<>
+                      <div className='flex justify-center mx-auto space-x-5 mt-3 p-3'>
+                        <FaImage onClick={() => setModalImage(true)
+                        } size={18} />
+                        {/* <TbView360Number onClick={() => setModal360(true)
+                        } size={18} /> */}
+                      </div>
+                    </>} >
+                    <div className='float-end font-medium'>{bookingDetail?.courtName}</div>
+                  </Popover>
                 </div>
               </div>
+              {bookingDetail?.sportName === 'Bóng đá' && (
+                <div className='flex items-center mt-4'>
+                  <BsPeople size={25} className='mr-2' />
+                  <div className='w-full'>
+                    <div className='float-start'>Loại sân:</div>
+                    <div className='float-end font-medium'>Sân {bookingDetail.numberPlayer} người</div>
+                  </div>
+                </div>
+              )}
               <div className='flex items-center mt-4'>
                 <FaRegUser size={20} className='ml-0.5 mr-2.5' />
                 <div className='w-full'>
@@ -151,7 +188,7 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
               {bookingDetail?.reason && (
                 <>
                   <div className="mb-2 flex items-center mt-4">
-                    <TbClockCancel size={22} className='mr-2' />  
+                    <TbClockCancel size={22} className='mr-2' />
                     <div className='float-start'>Lý do huỷ</div>
                   </div>
                   <Textarea readOnly className='mb-5' id="other" value={bookingDetail?.reason} rows={4} />
@@ -196,12 +233,47 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                   </div>
                 </div>
               </div>
+
+              {bookingDetail?.usedPoint !== undefined && (
+                <div className='flex items-center mt-4'>
+                  <SiSecurityscorecard size={23} className='mr-2' />
+                  <div className='w-full'>
+                    <div className='float-start'>Điểm đã sử dụng:</div>
+                    <div className='flex justify-end'>
+                      <div className='float-end font-medium'>{bookingDetail?.usedPoint} điểm</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {bookingDetail?.voucherID && (
                 <div className='flex items-center mt-4'>
                   <BiSolidDiscount size={25} className='mr-2' />
                   <div className='w-full'>
                     <div className='float-start'>Mã giảm giá:</div>
-                    <div className='float-end font-medium'>{bookingDetail?.voucherName}</div>
+                    <Popover
+                      aria-labelledby="voucher-popover"
+                      trigger='hover'
+                      content={
+                        <div className='rounded-lg border'>
+                          <div className='grid grid-cols-3 place-items-center gap-2 p-2'>
+                            <div className='col-span-0.5 p-5 w-full rounded-lg bg-gray-700 text-orange-500'>
+                              <p className='mb-2 text-lg text-center'>Fieldy</p>
+                              <TbBasketDiscount className='mx-auto' size={35} />
+                            </div>
+                            <div className='col-span-2 place-self-start ml-4'>
+                              <p className='text-xl font-bold mb-2'>{`Giảm ${bookingDetail.percentage}% ${bookingDetail.voucherName}`}</p>
+                              {bookingDetail.facilityName !== null ? <p className='font-semibold'>{bookingDetail.facilityName}</p> : <p className='font-semibold'>Tất cả các sân</p>}
+                              <p className='font-semibold'>{bookingDetail.sportName ? bookingDetail.sportName : 'Tất cả môn thể thao'}</p>
+                              <p>Ngày bắt đầu: {bookingDetail.voucherStartDate}</p>
+                              <p>Ngày hết hạn {bookingDetail.voucherEndDate}</p>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    >
+                      <div className='float-end font-medium hover:cursor-pointer'>{bookingDetail?.voucherCode} {`Giảm ${bookingDetail.percentage}%`}</div>
+                    </Popover>
                   </div>
                 </div>
               )}
@@ -239,6 +311,35 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
           </div>
         </div>
       </ModalView>
+
+      {/*Start view Image */}
+      <ModalView key={'View Images'} toggle={modalImage} setToggle={setModalImage}>
+        <div className='rounded-lg shadow dark:bg-gray-700 w-[100%] h-[100%]'>
+          {image !== undefined && (
+            <div className='mb-5'>
+              <Image
+                height={600}
+                width={1100}
+                quality={100}
+                className='select-none w-full max-h-[775px]'
+                src={getImage(image) || "/assets/images/slide1.png"}
+                alt='Slide'
+              />
+            </div>
+          )}
+        </div>
+      </ModalView>
+      {/*End view Image */}
+
+      {/*Start view 360 */}
+      <ModalView key={'View 360'} toggle={modal360} setToggle={setModal360}>
+        <div className='rounded-lg shadow dark:bg-gray-700 w-[100%] h-[100%]'>
+          {image360 !== undefined && image360.length > 0 && (
+            <View360 className="is-16by9 h-full w-full" projection={projection} />
+          )}
+        </div>
+      </ModalView>
+      {/*End view 360 */}
     </>
   )
 }

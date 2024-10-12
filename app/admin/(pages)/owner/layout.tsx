@@ -85,11 +85,11 @@ export default function ManagementLayout({
             </Sidebar.Item>
             <Sidebar.Collapse icon={GrSchedules} label="Đặt lịch">
               <Sidebar.Item href="/admin/owner/booking">Danh sách</Sidebar.Item>
-              <Sidebar.Item href="/admin/owner/booking/create">Tạo mới</Sidebar.Item>
+              {/* <Sidebar.Item href="/admin/owner/booking/create">Tạo mới</Sidebar.Item> */}
             </Sidebar.Collapse>
-            <Sidebar.Item href="/admin/owner/schedule" icon={RiCalendarScheduleLine}>
+            {/* <Sidebar.Item href="/admin/owner/schedule" icon={RiCalendarScheduleLine}>
               Lịch trình
-            </Sidebar.Item>
+            </Sidebar.Item> */}
             <Sidebar.Item href="/admin/owner/check-in" icon={BsQrCodeScan}>
               Kiểm tra
             </Sidebar.Item>
@@ -97,10 +97,10 @@ export default function ManagementLayout({
               <Sidebar.Item href="/admin/owner/court">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/owner/court/create">Tạo mới</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
+            {/* <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
               <Sidebar.Item href="/admin/owner/staff">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/owner/staff/create">Tạo mới</Sidebar.Item>
-            </Sidebar.Collapse>
+            </Sidebar.Collapse> */}
             <Sidebar.Collapse icon={TbBasketDiscount} label="Voucher">
               <Sidebar.Item href="/admin/owner/voucher">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/owner/voucher/create">Tạo mới</Sidebar.Item>
@@ -130,7 +130,7 @@ export default function ManagementLayout({
             </div>
             <Navbar className=''>
               <div className="flex flex-row items-center gap-4 md:order-2">
-                <Popover
+                {/* <Popover
                   placement='bottom-start'
                   aria-labelledby="profile-popover"
                   trigger='hover'
@@ -160,7 +160,7 @@ export default function ManagementLayout({
                     <IoMdNotificationsOutline size={25} />
                     <div className='absolute -top-1 -right-1.5 text-xs w-5 leading-5 text-center text-white bg-red-600 rounded-full'>5</div>
                   </div>
-                </Popover>
+                </Popover> */}
                 <Dropdown
                   aria-haspopup="menu"
                   trigger='hover'
