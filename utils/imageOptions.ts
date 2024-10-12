@@ -7,7 +7,7 @@ export function getImage(image: string | undefined) {
     if (image === undefined || image === null) {
         return undefined
     }
-    if (image?.startsWith("https")) {
+    if (image?.startsWith("https")) {   
         return image
     }
     return `${API_URL}${image}`

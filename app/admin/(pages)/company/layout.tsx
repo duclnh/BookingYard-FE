@@ -82,9 +82,9 @@ export default function ManagementLayout({
             <Sidebar.Item href="/admin/company/booking" icon={GrSchedules}>
               Đặt lịch
             </Sidebar.Item>
-            <Sidebar.Item href="/admin/company/schedule" icon={RiCalendarScheduleLine}>
+            {/* <Sidebar.Item href="/admin/company/schedule" icon={RiCalendarScheduleLine}>
               Lịch trình
-            </Sidebar.Item>
+            </Sidebar.Item> */}
             <Sidebar.Collapse icon={PiBuildingOfficeBold} label="Cơ sở">
               <Sidebar.Item href="/admin/company/facility">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/facility/create">Tạo mới</Sidebar.Item>
@@ -96,19 +96,19 @@ export default function ManagementLayout({
             <Sidebar.Item href="/admin/company/customer" icon={PiUsersBold}>
               Khách hàng
             </Sidebar.Item>
-            <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
+            {/* <Sidebar.Collapse icon={PiUsersThreeBold} label="Nhân viên">
               <Sidebar.Item href="/admin/company/staff">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/staff/create">Tạo mới</Sidebar.Item>
-            </Sidebar.Collapse>
-            <Sidebar.Collapse icon={TbPackage} label="Gói sân">
+            </Sidebar.Collapse> */}
+            {/* <Sidebar.Collapse icon={TbPackage} label="Gói sân">
               <Sidebar.Item href="/admin/company/package">Danh sách gói</Sidebar.Item>
               <Sidebar.Item href="/admin/company/package/register">Danh sách đăng kí</Sidebar.Item>
               <Sidebar.Item href="/admin/company/package/create">Tạo mới</Sidebar.Item>
-            </Sidebar.Collapse>
-            <Sidebar.Collapse icon={MdSportsKabaddi} label="Thể thao">
+            </Sidebar.Collapse> */}
+            {/* <Sidebar.Collapse icon={MdSportsKabaddi} label="Thể thao">
               <Sidebar.Item href="/admin/company/sport">Danh sách</Sidebar.Item>
               <Sidebar.Item href="/admin/company/sport/create">Tạo mới</Sidebar.Item>
-            </Sidebar.Collapse>
+            </Sidebar.Collapse> */}
             <Sidebar.Item href="/admin/company/support" icon={PiHeadCircuitBold}>
               Hỗ trợ
             </Sidebar.Item>

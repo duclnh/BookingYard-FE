@@ -9,6 +9,10 @@ export async function getBookingDetail(id: string | undefined) {
     return await fetchWrapper.get(`/api/booking/detail/${id}`);
 }
 
+export async function getBookingFacility(id: string | undefined, url: string) {
+    return await fetchWrapper.get(`/api/booking/facility/${id}${url}`);
+}
+
 export async function createBooking(bookingDetails: {
     fullName: string;
     phone: string;
@@ -34,8 +38,7 @@ export async function payment(query: string) {
 
 export async function cancelBooking(cancel: {
     bookingID: string, reason: string,
-  })
-   {
+}) {
     console.log(cancel)
     return await fetchWrapper.post('/api/cancel-booking', cancel)
-  }
+}
