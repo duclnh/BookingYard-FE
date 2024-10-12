@@ -29,6 +29,7 @@ export default function LineChart({ className, label }: { className: string, lab
             }
         ],  
     };
+    console.log(data)
     return (
         <div className={className}>
             <div className='flex justify-between'>

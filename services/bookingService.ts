@@ -10,6 +10,7 @@ export async function getBookingDetail(id: string | undefined) {
 }
 
 export async function getBookingFacility(id: string | undefined, url: string) {
+    console.log(`/api/booking/facility/${id}${url}`)
     return await fetchWrapper.get(`/api/booking/facility/${id}${url}`);
 }
 
