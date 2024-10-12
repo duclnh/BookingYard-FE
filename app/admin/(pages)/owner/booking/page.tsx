@@ -1,7 +1,7 @@
 "use client"
-import { CardStatistic, Heading, ModalView } from '@components/index'
+import { CardStatistic, EmptyList, Heading, ModalView } from '@components/index'
 import { useAppSelector } from '@hooks/hooks'
-import { cancelBooking, getBookingFacility } from '@services/index'
+import { cancelBooking, getBookingFacility, getSportCreate } from '@services/index'
 import { Button, Label, Modal, Pagination, Popover, Radio, Select, Spinner, Table, Textarea } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form'
@@ -11,7 +11,7 @@ import { IoIosTimer, IoMdSearch } from 'react-icons/io';
 import { RiDeleteBinLine } from 'react-icons/ri'
 import qs from "query-string";
 import toast from 'react-hot-toast'
-import { BookingDetail, PageResult } from 'types'
+import { BookingDetail, PageResult, SportCreate } from 'types'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import { CgScan } from 'react-icons/cg'
 import { PiCourtBasketballLight } from 'react-icons/pi'
@@ -31,20 +31,39 @@ export default function Booking() {
     const onPageChange = (page: number) => setCurrentPage(page);
     const [openModalCancel, setOpenModalCancel] = useState(false);
     const [openModalDetail, setOpenModalDetail] = useState(false);
-    const { control, handleSubmit, reset, formState: { isSubmitting, isValid }, setValue, register } = useForm({ mode: "onTouched", });
+    const { handleSubmit, reset, formState: { isSubmitting }, setValue, register } = useForm({ mode: "onTouched", });
     const [bookings, setBookings] = useState<PageResult<BookingDetail> | undefined>(undefined)
     const [change, setChange] = useState<boolean>(false);
     const [bookingDetail, setBookingDetail] = useState<BookingDetail | undefined>(undefined)
     const [modalImage, setModalImage] = useState(false);
     const [image, setImage] = useState<string | undefined>(undefined);
+    const [sports, setSports] = useState<SportCreate[]>([]);
+    const [textSearch, setTextSearch] = useState<string>('');
+    const [search, setSearch] = useState<string>('');
+    const [sportID, setSportID] = useState<string>('');
+    const [status, setStatus] = useState<string>('');
+
     const url = qs.stringifyUrl({
         url: "", query: {
-            "search": "",
-            "currentPage": currentPage,
-            "pageSize": 10,
+            search: search,
+            currentPage: currentPage,
+            sportID: sportID,
+            status: status,
+            pageSize: 10,
         }
     });
-
+    useEffect(() => {
+        getSportCreate()
+            .then(x => {
+                if (x.status === 200) {
+                    return x.data
+                } else {
+                    toast.error("Lỗi lấy thông tin thể thao")
+                }
+            }).then((sport: SportCreate[]) => {
+                setSports(sport)
+            }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+    }, [])
     useEffect(() => {
         getBookingFacility(user?.facilityID, url)
             .then(x => {
@@ -56,7 +75,7 @@ export default function Booking() {
             })
             .then((bookings: PageResult<BookingDetail>) => setBookings(bookings))
             .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
-    }, [change])
+    }, [change, url, search])
 
     const handlerCancelBooking = (data: FieldValues) => {
         if (data.otherReason === '' && data.reasons === null) {
@@ -83,125 +102,121 @@ export default function Booking() {
             <div className='py-5 w-full'>
                 <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Danh sách đặt lịch' center />
                 <div className='flex justify-center'>
-                    <input className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên sân, người đặt'} />
+                    <input onChange={(e: any) => setTextSearch(e.target.value)} className='border rounded-md px-3 sm:w-96 w-80' name='search' placeholder={'Tìm tên sân, người đặt'} />
                     <Button className='p-1'>
-                        <IoMdSearch className='font-bold' size={18} />
+                        <IoMdSearch className='font-bold' size={18} onClick={() => setSearch(textSearch)} />
                     </Button>
                 </div>
                 <div className='mt-20'>
                     <div className='mt-10 flex justify-between mb-3'>
-                        <div className='grid grid-cols-2 space-x-2'>
-                            <Controller
-                                name='sport'
-                                control={control}
-                                render={({ field, fieldState }) => (
-                                    <>
-                                        <Select
-                                            {...field}
-                                            className='focus:ring-transparent'
-                                            id="sport"
-                                        >
-                                            <option value="">Môn thể thao</option>
-                                            <option value="">Bóng đá</option>
-                                            <option value="">Bóng chuyền</option>
-                                        </Select>
-                                        {fieldState.error && (
-                                            <div className="text-red-500 text-sm mt-2">
-                                                {fieldState.error.message}
-                                            </div>
-                                        )}
-                                    </>
-                                )}
-                            />
-                        </div>
-                        <Select className=''>
-                            <option value="">Tất cả</option>
-                            <option value="">Chưa thanh toán</option>
-                            <option value="">Đã hủy</option>
-                        </Select>
+                        <select
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSportID(e.target.value)}
+                            className='focus:ring-transparent rounded-lg'
+                            id="sport"
+                        >
+                            <option value="">Tất cả môn thể thao</option>
+                            {sports !== undefined && sports.map((sport: SportCreate) =>
+                                <option key={sport.sportID} value={sport.sportID}>{sport.sportName}</option>)}
+                        </select>
+
+                        <select
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatus(e.target.value)}
+                            className='focus:ring-transparent rounded-lg'
+                            id="status"
+                        >
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="checked">Chưa check in</option>
+                            <option value="paid">Đã thanh toán</option>
+                            <option value="notPayment">Chưa thanh toán</option>
+                            <option value="cancel">Đã hủy</option>
+
+                        </select>
                     </div>
-                    <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
-                        <Table hoverable bgcolor='white'>
-                            <Table.Head className='text-center'>
-                                <Table.HeadCell>Mã đặt lịch</Table.HeadCell>
-                                <Table.HeadCell className='min-w-40'>Tên người đặt</Table.HeadCell>
-                                {/* <Table.HeadCell className='min-w-32'>Email</Table.HeadCell>
-                                <Table.HeadCell className='min-w-40'>Số điện thoại</Table.HeadCell> */}
-                                <Table.HeadCell className='min-w-32'>Sân</Table.HeadCell>
-                                {/* <Table.HeadCell className='min-w-40'>Môn thể thao</Table.HeadCell> */}
-                                <Table.HeadCell className='min-w-32'>Giờ chơi</Table.HeadCell>
-                                {/* <Table.HeadCell className='min-w-32'>Mã giảm giá</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>Số điểm</Table.HeadCell> */}
-                                <Table.HeadCell className='min-w-32'>Ngày chơi</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>Giá tiền</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
-                                {/* <Table.HeadCell className='min-w-32'>Thanh toán</Table.HeadCell>
-                                <Table.HeadCell className='min-w-32'>Lý do hủy</Table.HeadCell> */}
-                                {/* <Table.HeadCell className='min-w-32'>Ngày đặt</Table.HeadCell> */}
-                                <Table.HeadCell className='min-w-32'>
-                                </Table.HeadCell>
-                            </Table.Head>
-                            <Table.Body>
-                                {bookings !== undefined && bookings.results.map((item: BookingDetail, index) => (
-                                    <Table.Row className='text-center' key={item.bookingID}>
-                                        <Table.Cell>{item.paymentCode}</Table.Cell>
-                                        <Table.Cell className='font-bold text-left'>{item.bookingName}</Table.Cell>
-                                        {/* <Table.Cell>{item.email}</Table.Cell>
-                                        <Table.Cell>{item.phone}</Table.Cell> */}
-                                        <Table.Cell>{item.courtName}</Table.Cell>
-                                        {/* <Table.Cell>{item.sport}</Table.Cell> */}
-                                        <Table.Cell>{item.startTime}-{item.endTime}</Table.Cell>
-                                        {/* <Table.Cell>{item.discountCode}</Table.Cell>
-                                        <Table.Cell>{item.points}</Table.Cell> */}
-                                        <Table.Cell>{item.playDate}</Table.Cell>
-                                        <Table.Cell className='font-bold'>{convertNumberToPrice(item.ownerPrice)}</Table.Cell>
-                                        <Table.Cell>
-                                            {item.isDeleted ? <p className='bg-red-200 text-red-500 p-1 rounded-md text-center font-bold'>
-                                                Đã hủy
-                                            </p> : item.paymentStatus ? <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
-                                                Đã thanh toán
-                                            </p> : <p className='bg-yellow-200 text-yellow  -500 p-1 rounded-md text-center font-bold'>
-                                                Chưa thanh toán
-                                            </p>}
-                                        </Table.Cell>
-                                        {/* <Table.Cell>VNPAY</Table.Cell>
-                                        <Table.Cell>{item.reason}</Table.Cell> */}
-                                        {/* <Table.Cell>{item.bookingDate}</Table.Cell> */}
-                                        <Table.Cell className='flex space-x-2'>
-                                            <Button onClick={() => {
-                                                setImage(item.courtImage)
-                                                setBookingDetail(item)
-                                                setOpenModalDetail(true)
-                                            }} size='xs'>
-                                                <FaEye size={16} />
-                                            </Button>
-                                            {!item.isDeleted && (
-                                                <Button onClick={() => {
-                                                    setValue("bookingID", item.bookingID)
-                                                    setValue("codeBooking", item.paymentCode)
-                                                    setOpenModalCancel(true)
-                                                }
-                                                } color='failure' type='submit' size='xs'>
-                                                    <RiDeleteBinLine size={16} />
-                                                </Button>
-                                            )}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table>
-                    </div>
-                    <div className="flex justify-end">
-                        <Pagination
-                            layout="pagination"
-                            currentPage={currentPage}
-                            totalPages={bookings?.totalPages || 0}
-                            onPageChange={onPageChange}
-                            previousLabel=""
-                            nextLabel=""
-                            showIcons
-                        />
-                    </div>
+                    {bookings !== undefined && bookings.results.length > 0 ?
+                        <>
+                            <div className="border rounded-lg min-w-full max-w-[390px] overflow-x-auto">
+                                <Table hoverable bgcolor='white'>
+                                    <Table.Head className='text-center'>
+                                        <Table.HeadCell>Mã đặt lịch</Table.HeadCell>
+                                        <Table.HeadCell className='min-w-40'>Tên người đặt</Table.HeadCell>
+                                        {/* <Table.HeadCell className='min-w-32'>Email</Table.HeadCell>
+                            <Table.HeadCell className='min-w-40'>Số điện thoại</Table.HeadCell> */}
+                                        <Table.HeadCell className='min-w-32'>Sân</Table.HeadCell>
+                                        {/* <Table.HeadCell className='min-w-40'>Môn thể thao</Table.HeadCell> */}
+                                        <Table.HeadCell className='min-w-32'>Giờ chơi</Table.HeadCell>
+                                        {/* <Table.HeadCell className='min-w-32'>Mã giảm giá</Table.HeadCell>
+                            <Table.HeadCell className='min-w-32'>Số điểm</Table.HeadCell> */}
+                                        <Table.HeadCell className='min-w-32'>Ngày chơi</Table.HeadCell>
+                                        <Table.HeadCell className='min-w-32'>Giá tiền</Table.HeadCell>
+                                        <Table.HeadCell className='min-w-32'>Trạng thái</Table.HeadCell>
+                                        {/* <Table.HeadCell className='min-w-32'>Thanh toán</Table.HeadCell>
+                            <Table.HeadCell className='min-w-32'>Lý do hủy</Table.HeadCell> */}
+                                        {/* <Table.HeadCell className='min-w-32'>Ngày đặt</Table.HeadCell> */}
+                                        <Table.HeadCell className='min-w-32'>
+                                        </Table.HeadCell>
+                                    </Table.Head>
+                                    <Table.Body>
+                                        {bookings !== undefined && bookings.results.map((item: BookingDetail, index) => (
+                                            <Table.Row className='text-center' key={item.bookingID}>
+                                                <Table.Cell>{item.paymentCode}</Table.Cell>
+                                                <Table.Cell className='font-bold text-left'>{item.bookingName}</Table.Cell>
+                                                {/* <Table.Cell>{item.email}</Table.Cell>
+                                    <Table.Cell>{item.phone}</Table.Cell> */}
+                                                <Table.Cell>{item.courtName}</Table.Cell>
+                                                {/* <Table.Cell>{item.sport}</Table.Cell> */}
+                                                <Table.Cell>{item.startTime}-{item.endTime}</Table.Cell>
+                                                {/* <Table.Cell>{item.discountCode}</Table.Cell>
+                                    <Table.Cell>{item.points}</Table.Cell> */}
+                                                <Table.Cell>{item.playDate}</Table.Cell>
+                                                <Table.Cell className='font-bold'>{convertNumberToPrice(item.ownerPrice)}</Table.Cell>
+                                                <Table.Cell>
+                                                    {item.isDeleted ? <p className='bg-red-200 text-red-500 p-1 rounded-md text-center font-bold'>
+                                                        Đã hủy
+                                                    </p> : item.paymentStatus ? <p className='bg-green-200 text-green-500 p-1 rounded-md text-center font-bold'>
+                                                        Đã thanh toán
+                                                    </p> : <p className='bg-yellow-200 text-yellow  -500 p-1 rounded-md text-center font-bold'>
+                                                        Chưa thanh toán
+                                                    </p>}
+                                                </Table.Cell>
+                                                {/* <Table.Cell>VNPAY</Table.Cell>
+                                    <Table.Cell>{item.reason}</Table.Cell> */}
+                                                {/* <Table.Cell>{item.bookingDate}</Table.Cell> */}
+                                                <Table.Cell className='flex space-x-2'>
+                                                    <Button onClick={() => {
+                                                        setImage(item.courtImage)
+                                                        setBookingDetail(item)
+                                                        setOpenModalDetail(true)
+                                                    }} size='xs'>
+                                                        <FaEye size={16} />
+                                                    </Button>
+                                                    {!item.isDeleted && (
+                                                        <Button onClick={() => {
+                                                            setValue("bookingID", item.bookingID)
+                                                            setValue("codeBooking", item.paymentCode)
+                                                            setOpenModalCancel(true)
+                                                        }
+                                                        } color='failure' type='submit' size='xs'>
+                                                            <RiDeleteBinLine size={16} />
+                                                        </Button>
+                                                    )}
+                                                </Table.Cell>
+                                            </Table.Row>
+                                        ))}
+                                    </Table.Body>
+                                </Table>
+                            </div>
+                            <div className="flex justify-end">
+                                <Pagination
+                                    layout="pagination"
+                                    currentPage={currentPage}
+                                    totalPages={bookings?.totalPages || 0}
+                                    onPageChange={onPageChange}
+                                    previousLabel=""
+                                    nextLabel=""
+                                    showIcons
+                                />
+                            </div>
+                        </> : <EmptyList />}
                 </div>
             </div>
             <Modal className='z-10' key={"detail"} show={openModalDetail} size="3xl" onClose={() => setOpenModalDetail(false)} popup>

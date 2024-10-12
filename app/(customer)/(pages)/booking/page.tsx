@@ -6,12 +6,12 @@ import { IoMdSearch } from 'react-icons/io'
 import { TiDelete, TiLocation } from 'react-icons/ti'
 import Image from 'next/image'
 import { PiFunnelThin } from 'react-icons/pi'
-import { Facility, PageResult, SportCreate } from 'types'
+import { AddressVN, Facility, PageResult, SportCreate } from 'types'
 import toast from 'react-hot-toast'
 import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import qs from "query-string";
-import { getAllFacilityBooking, getSportCreate } from '@services/index'
+import { getAllFacilityBooking, getDistrict, getProvince, getSportCreate } from '@services/index'
 import { LoadingData } from '@components/index'
 
 export default function Booking() {
@@ -21,22 +21,44 @@ export default function Booking() {
   const [facilities, setFacilities] = useState<PageResult<Facility> | undefined>(undefined)
   const [sports, setSports] = useState<SportCreate[]>([])
   const [currentPage, setCurrentPage] = useState(1);
-  const [value, setValue] = useState('');
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [provinces, setProvinces] = useState<AddressVN[] | undefined>(undefined)
+  const [districts, setDistricts] = useState<AddressVN[] | undefined>(undefined)
+  const [selectedSport, setSelectedSport] = useState<string>('');
+  const [selectedProvince, setSelectProvince] = useState<string>('');
+  const [selectedDistrict, setSelectDistrict] = useState<string>('');
+  const [distance, setDistance] = useState<string>('');
+  const [change, setChange] = useState<boolean>(false)
+  const [position, setPosition] = useState<[number, number] | undefined>();
+  const [selectedOrderBy, setSelectOrderBy] = useState<string | null>(null);
+  const [price, setPrice] = useState<string>("")
 
   const url = qs.stringifyUrl({
     url: "", query: {
       "search": search,
       "currentPage": currentPage,
+      "sportID": selectedSport,
+      "provinceID": selectedProvince,
+      "districtID": selectedDistrict,
+      "longitude": position !== undefined ? position[1] : null,
+      "latitude": position !== undefined ? position[0] : null,
+      "distance": distance,
+      "orderBy": selectedOrderBy,
+      "price": price,
       "pageSize": 10,
     }
   });
+
   useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setPosition([position.coords.latitude, position.coords.longitude])
+      });
+    }
     getSportCreate()
       .then(x => {
         if (x.status === 200) {
-          console.log(x.data)
           return x.data
         } else {
           toast.error("Lỗi lấy thông tin thể thao")
@@ -44,13 +66,26 @@ export default function Booking() {
       }).then((sport: SportCreate[]) => {
         setSports(sport)
       }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+    getProvince()
+      .then(x => {
+        if (x.status == 200) {
+          return x.data
+        } else {
+          toast.error("Lỗi lấy dữ liệu tỉnh thành")
+        }
+      })
+      .then((province: AddressVN[]) => {
+        setProvinces(province)
+      })
+      .catch(() => {
+        toast.error("Lỗi lấy dữ liệu tỉnh thành")
+      })
   }, [])
   useEffect(() => {
     setIsLoading(true)
     getAllFacilityBooking(url)
       .then(x => {
         if (x.status == 200) {
-          console.log(x.data)
           return x.data
         }
       })
@@ -60,7 +95,7 @@ export default function Booking() {
       .catch(() => {
         toast.error("Hệ thống đang lỗi vui lòng thử lại sau!", { duration: 120 })
       }).finally(() => setIsLoading(false));
-  }, [])
+  }, [change, selectedProvince, selectedDistrict, selectedSport, selectedOrderBy])
   useEffect(() => {
     let interval;
     if (searchPlaceholder.length < textPlaceholder.length) {
@@ -80,13 +115,39 @@ export default function Booking() {
       clearTimeout(interval);
     };
   }, [searchPlaceholder, indexSearch]);
+
+  useEffect(() => {
+    getDistrict(selectedProvince)
+      .then(x => {
+        if (x.status == 200) {
+          return x.data
+        } else {
+          toast.error("Lỗi lấy dữ liệu quận / huyện")
+        }
+      })
+      .then((wards: AddressVN[]) => {
+        setDistricts(wards)
+      })
+      .catch(() => {
+        toast.error("Lỗi lấy dữ liệu quận / huyện")
+      });
+  }, [selectedProvince])
+
+  const handleChangeProvince = (event: any) => {
+    setSelectProvince(event.target.value)
+    setDistricts([])
+    setSelectDistrict('');
+  };
+
   return (
     <div className='mt-10 mx-5 md:mx-20 mb-20'>
       {/* Start Search */}
       <Image height={1000} width={1000} className='h-[500px] w-full rounded-2xl' src='/assets/images/slide2.png' alt='banner' />
       <div className='mt-10 flex justify-center'>
-        <input className='border rounded-s-lg px-3 xl:w-[600px] sm:w-96 w-80' name='search' placeholder={searchPlaceholder} />
-        <button className='h-10 !rounded-e-lg bg-orange-500 hover:!bg-orange-400 focus:ring-transparent flex items-center text-white px-2'>
+        <input className='border rounded-s-lg px-3 xl:w-[600px] sm:w-96 w-80'
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
+          placeholder={searchPlaceholder} />
+        <button onClick={() => setChange(!change)} className='h-10 !rounded-e-lg bg-orange-500 hover:!bg-orange-400 focus:ring-transparent flex items-center text-white px-2'>
           <IoMdSearch className='font-bold mr-2' size={18} />
           <span className='w-fit text-sm lg:text-base'>Tìm kiếm</span>
         </button>
@@ -108,25 +169,25 @@ export default function Booking() {
       <div className='grid xl:grid-cols-6 lg:grid-cols-5 grid-cols-2 sm:gap-20 gap-5'>
         <div className='hidden lg:block xl:col-span-5 lg:col-span-4'>
           <div className='grid xl:grid-cols-6 lg:grid-cols-6 sm:grid-cols-2 xl:gap-5 lg:gap-1'>
-            <Select className='focus:ring-transparent' id="type" required>
+            <Select onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setSelectedSport(event.target.value)} className='focus:ring-transparent' id="type" required>
               <option value=''>Môn thể thao</option>
               {sports.map((sport: SportCreate, index) => (
                 <option key={index} value={sport.sportID}>{sport.sportName}</option>
               ))}
             </Select>
 
-            <Select className='focus:ring-transparent' id="province" required>
+            <Select onChange={handleChangeProvince} className='focus:ring-transparent' id="province" required>
               <option value=''>Thành Phố / Tỉnh Thành</option>
-              <option value="Canada">Canada</option>
-              <option value="France">France</option>
-              <option value="Germany">Germany</option>
+              {provinces?.map((province: AddressVN) => (
+                <option key={province.id} value={province.id}>{province.name}</option>
+              ))}
             </Select>
 
-            <Select className='focus:ring-transparent' id="district" required>
+            <Select onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectDistrict(e.target.value)} className='focus:ring-transparent' id="district" required>
               <option value=''>Quận / Huyện</option>
-              <option value="Canada">Canada</option>
-              <option value="France">France</option>
-              <option value="Germany">Germany</option>
+              {districts?.map((district: AddressVN) => (
+                <option key={district.id} value={district.id}>{district.name}</option>
+              ))}
             </Select>
 
             <Popover
@@ -137,12 +198,15 @@ export default function Booking() {
                   <Label htmlFor="default-distance" value="Khoảng cách" />
                   <div className='flex justify-center'>
                     <p>1 km</p>
-                    <RangeSlider className='mx-3' min={1} max={50} id="default-distance" />
+                    <RangeSlider onChange={(e: any) => setDistance(e.target.value)} className='mx-3' min={1} max={50} id="default-distance" />
                     <p>50 km</p>
                   </div>
                   <div className='flex'>
-                    <Button className='mt-3 focus:ring-transparent mx-auto' size='xs'>14 kết quả</Button>
-                    <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs'>Hủy</Button>
+                    <Button className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => setChange(!change)}>Xem kết quả</Button>
+                    <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => {
+                      setDistance('')
+                      setChange(!change)
+                    }}>Hủy</Button>
                   </div>
                 </div>
               }
@@ -158,12 +222,15 @@ export default function Booking() {
                   <Label htmlFor="default-price" value="Giá tiền" />
                   <div className='flex justify-center'>
                     <p>{'10.000 VND'}</p>
-                    <RangeSlider className='mx-3' min={10000} max={500000} id="default-price" />
+                    <RangeSlider onChange={(event: any) => setPrice(event.target.value)} className='mx-3' min={10000} max={500000} id="default-price" />
                     <p>{'500.000 VND'}</p>
                   </div>
                   <div className='flex'>
-                    <Button className='mt-3 focus:ring-transparent mx-auto' size='xs'>14 kết quả</Button>
-                    <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs'>Hủy</Button>
+                    <Button className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => setChange(!change)}>Xem kết quả</Button>
+                    <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => {
+                      setDistance('')
+                      setChange(!change)
+                    }}>Hủy</Button>
                   </div>
                 </div>
               }
@@ -215,7 +282,7 @@ export default function Booking() {
                     </Rating>
                   </div>
                   <div className='flex'>
-                    <Button className='mt-3 focus:ring-transparent mx-auto' size='xs'>14 kết quả</Button>
+                    <Button className='mt-3 focus:ring-transparent mx-auto' size='xs'>Xem kết quả</Button>
                     <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs'>Hủy</Button>
                   </div>
                 </div>
@@ -239,11 +306,11 @@ export default function Booking() {
                   <div className="mb-1 block">
                     <Label htmlFor="type" value="Môn thể thao" />
                   </div>
-                  <Select className='focus:ring-transparent' id="type" required>
+                  <Select onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setSelectedSport(event.target.value)} className='focus:ring-transparent' id="type" required>
                     <option value=''>Môn thể thao</option>
-                    <option value="Canada">Canada</option>
-                    <option value="France">France</option>
-                    <option value="Germany">Germany</option>
+                    {sports.map((sport: SportCreate, index) => (
+                      <option key={index} value={sport.sportID}>{sport.sportName}</option>
+                    ))}
                   </Select>
                 </div>
 
@@ -251,22 +318,22 @@ export default function Booking() {
                   <div className="mb-1 block">
                     <Label htmlFor="province" value="Thành Phố / Tỉnh Thành" />
                   </div>
-                  <Select className='focus:ring-transparent' id="province" required>
+                  <Select onChange={handleChangeProvince} className='focus:ring-transparent' id="province" required>
                     <option value=''>Thành Phố / Tỉnh Thành</option>
-                    <option value="Canada">Canada</option>
-                    <option value="France">France</option>
-                    <option value="Germany">Germany</option>
+                    {provinces?.map((province: AddressVN) => (
+                      <option key={province.id} value={province.id}>{province.name}</option>
+                    ))}
                   </Select>
                 </div>
                 <div>
                   <div className="mb-1 block">
                     <Label htmlFor="province" value="Quận / Huyện" />
                   </div>
-                  <Select className='focus:ring-transparent' id="district" required>
+                  <Select onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectDistrict(e.target.value)} className='focus:ring-transparent' id="district" required>
                     <option value=''>Quận / Huyện</option>
-                    <option value="Canada">Canada</option>
-                    <option value="France">France</option>
-                    <option value="Germany">Germany</option>
+                    {districts?.map((district: AddressVN) => (
+                      <option key={district.id} value={district.id}>{district.name}</option>
+                    ))}
                   </Select>
                 </div>
               </div>
@@ -277,7 +344,7 @@ export default function Booking() {
                   </div>
                   <div className='flex justify-center'>
                     <p>1 km</p>
-                    <RangeSlider className='mx-3' min={1} max={50} id="default-distance" />
+                    <RangeSlider onChange={(e: any) => console.log(e.target.value)} className='mx-3' min={1} max={50} id="default-distance" />
                     <p>50 km</p>
                   </div>
                 </div>
@@ -335,7 +402,7 @@ export default function Booking() {
                 </div>
               </div>
               <div className='flex'>
-                <Button className='mt-3 focus:ring-transparent mx-auto' size='md'>Lọc</Button>
+                <Button className='mt-3 focus:ring-transparent mx-auto' size='md' onClick={() => setChange(!change)} >Lọc</Button>
                 <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='md'>Hủy</Button>
               </div>
             </div>
@@ -348,14 +415,12 @@ export default function Booking() {
         </Popover>
 
         <div className='xl:col-span-1 place-items-end'>
-          <Select className='focus:ring-transparent xl:col-start-4 lg:col-start-3 sm:col-start-2 col-start-1'>
+          <Select value={selectedOrderBy || ""} onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setSelectOrderBy(event.target.value)} className='focus:ring-transparent xl:col-start-4 lg:col-start-3 sm:col-start-2 col-start-1'>
             <option value="">Sắp xếp</option>
-            <option value="">Sắp xếp theo giá tăng dần</option>
-            <option value="">Sắp xếp theo giá giảm dần</option>
-            <option value="">Sắp xếp theo giảm giá tăng dần</option>
-            <option value="">Sắp xếp theo giảm giá giảm dần</option>
-            <option value="">Sắp xếp theo khoảng cánh tăng dần</option>
-            <option value="">Sắp xếp theo khoảng cách giảm dần</option>
+            <option value="priceAsc">Sắp xếp theo giá tăng dần</option>
+            <option value="priceDesc">Sắp xếp theo giá giảm dần</option>
+            <option value="distanceAsc">Sắp xếp theo khoảng cánh tăng dần</option>
+            <option value="distanceDesc">Sắp xếp theo khoảng cách giảm dần</option>
           </Select>
         </div>
       </div>
