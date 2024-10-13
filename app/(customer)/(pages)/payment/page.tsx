@@ -64,17 +64,24 @@ export default function Payment() {
   }, [user])
 
   async function handleSubmitForm(data: FieldValues) {
+    let total: number = (totalPrice ?? 0) -
+      (voucherSelected
+        ? (voucherSelected?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
+        : 0)
+      - (score ?? 0)
+
+    if (total < 20000) {
+      toast.error("Vui lòng thanh toán qua VNPAY với số tiền tối thiểu là 20.000 VND.");
+      return;
+    }
+
     createBooking({
       fullName: data.name,
       phone: data.phone,
       email: data.email,
       courtID: booking?.courtID,
       courtPrice: booking?.courtPrice,
-      totalPrice: (totalPrice ?? 0) -
-        (voucherSelected
-          ? (voucherSelected?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
-          : 0)
-        - (score ?? 0),
+      totalPrice: total,
       userID: user?.id,
       point: score,
       bookingDate: booking?.playDate,
@@ -167,6 +174,16 @@ export default function Payment() {
       toast.error("Vui lòng nhập số không lớn hơn số điểm của bạn")
       return;
     }
+    let total: number = (totalPrice ?? 0) -
+      (voucherSelected
+        ? (voucherSelected?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
+        : 0)
+
+    if ((total - number) < 20000) {
+      toast.error("Số điểm còn lại sau thanh toán không được dưới 20.000 VND.");
+      return;
+    }
+
     setScore(number);
   }
 
@@ -312,11 +329,11 @@ export default function Payment() {
                       <div className='absolute -top-1 -right-1.5 text-xs w-4 leading-4 text-center text-white bg-red-600 rounded-full'>{collectVouchers?.results.length}</div>
                     </div>
                   </div>
-                  {/* <p className='mb-2 font-medium'>Nhập mã giảm giá</p>
+                  <p className='mb-2 font-medium'>Nhập mã giảm giá</p>
                   <div className='flex'>
                     <TextInput onChange={handlerChangCode} className='mr-2 w-60' placeholder='Mã giảm giá' type="text" />
                     <Button onClick={handlerFindCode} size='sm' className='mr-2' type='button'>Áp dụng</Button>
-                  </div> */}
+                  </div>
                 </div>
               </div>
               <div className='rounded-2xl border'>

@@ -1,6 +1,6 @@
 "use client"
 import { CardStatistic, Heading } from '@components/index'
-import { Button, Label, Popover } from 'flowbite-react'
+import { Button, Label, Pagination, Popover } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { BsBuilding, BsBuildingCheck, BsBuildingFillX } from 'react-icons/bs'
 import { IoMdSearch } from 'react-icons/io'
@@ -16,15 +16,14 @@ import { getImage } from '@utils/imageOptions'
 export default function Facility() {
   const [facilities, setFacilities] = useState<PageResult<FacilityAdmin> | undefined>(undefined)
   const [sports, setSports] = useState<SportCreate[]>([])
-
-
-  const [currentPageSize, setCurrentPageSize] = useState(8);
+  const [currentPage, setCurrentPage] = useState(1);
+  const onPageChange = (page: number) => setCurrentPage(page);
 
   const url = qs.stringifyUrl({
     url: "", query: {
       "search": "",
-      "currentPage": 1,
-      "pageSize": currentPageSize,
+      "currentPage": currentPage,
+      "pageSize": 8,
     }
   });
 
@@ -56,17 +55,9 @@ export default function Facility() {
       }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }, [url])
 
-  const handleScroll = (e: any) => {
-    const bottom = Math.floor(e.target.scrollHeight - e.target.scrollTop) === e.target.clientHeight;
-    if (bottom) {
-      setCurrentPageSize(prev => prev + 5);
-    }
-  };
-
-
   return (
     <>
-      <div className='py-5 w-full' onScroll={handleScroll}>
+      <div className='py-5 w-full h-max-[1000px]'>
         <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Danh sách các cơ sở' center />
         {/* <div className='w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
           <CardStatistic
@@ -156,6 +147,17 @@ export default function Facility() {
                 'bg-yellow-700'}`}></div>
             </div>
           ))}
+        </div>
+        <div className="flex justify-end">
+          <Pagination
+            layout="pagination"
+            currentPage={currentPage}
+            totalPages={facilities?.totalPages || 0}
+            onPageChange={onPageChange}
+            previousLabel=""
+            nextLabel=""
+            showIcons
+          />
         </div>
       </div>
     </>

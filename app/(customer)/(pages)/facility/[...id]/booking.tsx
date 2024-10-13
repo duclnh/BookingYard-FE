@@ -2,7 +2,7 @@
 import { EmptyList, InputDate, LoadingData, ModalView } from '@components/index'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import { Accordion, Button, Modal } from 'flowbite-react'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FaImage } from 'react-icons/fa'
 import { TbView360Number } from 'react-icons/tb'
 import { CourtBooking, SportCreate } from 'types'
@@ -63,6 +63,12 @@ export default function Booking(props: Props) {
         }
     });
 
+    useEffect(() => {
+        setDatePlay(null);
+        setSelectedStartHour(null);
+        setSelectedEndHour(null);
+    },[selectSport])
+
     const startHour: number = props.facilityOpen
         ? parseInt(props.facilityOpen.split(':')[0], 10)
         : 0;
@@ -70,9 +76,12 @@ export default function Booking(props: Props) {
     const endHour: number = props.facilityClose
         ? parseInt(props.facilityClose.split(':')[0], 10)
         : 0;
+
     const handleDateChange = (dates: Date | Date[]) => {
         if (!Array.isArray(dates)) {
             setDatePlay(dates);
+            setSelectedStartHour(null);
+            setSelectedEndHour(null);
         }
     };
 
@@ -216,13 +225,13 @@ export default function Booking(props: Props) {
                         <Accordion.Panel>
                             <Accordion.Title className='!p-3'>2. Chọn ngày chơi</Accordion.Title>
                             <Accordion.Content>
-                                <InputDate row='flex justify-center' minDate={new Date()} multiple={false} handlerChange={handleDateChange} name='date' />
+                                <InputDate row='flex justify-center' minDate={new Date(new Date().setDate(new Date().getDate() - 1))} multiple={false} handlerChange={handleDateChange} name='date' />
                             </Accordion.Content>
                         </Accordion.Panel>
                         <Accordion.Panel>
                             <Accordion.Title className='!p-3'>3. Chọn thời gian chơi</Accordion.Title>
                             <Accordion.Content>
-                                {startHour !== undefined && endHour !== undefined && (
+                                {datePlay !== null && startHour !== undefined && endHour !== undefined && (
                                     <div className="grid grid-cols-4 sm:grid-cols-5 gap-5 place-items-center mt-5">
                                         {[...Array(endHour - startHour + 1)].map((_, index) => {
                                             const hour = startHour + index;
@@ -242,21 +251,27 @@ export default function Booking(props: Props) {
                                                 hour >= selectedStartHour &&
                                                 hour <= selectedEndHour;
 
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    onClick={() => handleTimeClick(hour)}
-                                                    onMouseEnter={() => handleTimeHover(hour)}
-                                                    onMouseLeave={handleMouseLeave} // Clear hover when mouse leaves
-                                                    className={`border w-20 leading-10 text-center rounded-xl hover:cursor-pointer 
+                                            if (datePlay !== null &&
+                                                datePlay.toDateString() === new Date().toDateString()
+                                                && hour < datePlay.getUTCHours()) {
+                                                return <></>;
+                                            } else {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        onClick={() => handleTimeClick(hour)}
+                                                        onMouseEnter={() => handleTimeHover(hour)}
+                                                        onMouseLeave={handleMouseLeave} // Clear hover when mouse leaves
+                                                        className={`border w-20 leading-10 text-center rounded-xl hover:cursor-pointer 
                                                     ${isInHoverRange || isInSelectedRange ? 'bg-black text-white' : 'hover:bg-black hover:text-white'}`}
-                                                    style={{
-                                                        transition: 'background-color 0.3s, color 0.3s', // Smooth transition
-                                                    }}
-                                                >
-                                                    {`${hour}:00`}
-                                                </div>
-                                            );
+                                                        style={{
+                                                            transition: 'background-color 0.3s, color 0.3s', // Smooth transition
+                                                        }}
+                                                    >
+                                                        {`${hour}:00`}
+                                                    </div>
+                                                );
+                                            }
                                         })}
                                     </div>
                                 )}

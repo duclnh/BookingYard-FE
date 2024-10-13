@@ -12,7 +12,7 @@ import { getImage } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import qs from "query-string";
 import { getAllFacilityBooking, getDistrict, getProvince, getSportCreate } from '@services/index'
-import { LoadingData } from '@components/index'
+import { EmptyList, LoadingData } from '@components/index'
 
 export default function Booking() {
   const [indexSearch, setIndexSearch] = useState(0);
@@ -30,30 +30,22 @@ export default function Booking() {
   const [selectedDistrict, setSelectDistrict] = useState<string>('');
   const [distance, setDistance] = useState<string>('');
   const [change, setChange] = useState<boolean>(false)
-  const [position, setPosition] = useState<[number, number] | undefined>();
   const [selectedOrderBy, setSelectOrderBy] = useState<string | null>(null);
   const [price, setPrice] = useState<string>("")
 
-  const url = qs.stringifyUrl({
-    url: "", query: {
-      "search": search,
-      "currentPage": currentPage,
-      "sportID": selectedSport,
-      "provinceID": selectedProvince,
-      "districtID": selectedDistrict,
-      "longitude": position !== undefined ? position[1] : null,
-      "latitude": position !== undefined ? position[0] : null,
-      "distance": distance,
-      "orderBy": selectedOrderBy,
-      "price": price,
-      "pageSize": 10,
-    }
+  const [position, setPosition] = useState<{ latitude: number | null; longitude: number | null }>({
+    latitude: null,
+    longitude: null,
   });
+
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setPosition([position.coords.latitude, position.coords.longitude])
+        setPosition({
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude
+        })
       });
     }
     getSportCreate()
@@ -81,6 +73,23 @@ export default function Booking() {
         toast.error("Lỗi lấy dữ liệu tỉnh thành")
       })
   }, [])
+
+  const url = qs.stringifyUrl({
+    url: "", query: {
+      "search": search,
+      "currentPage": currentPage,
+      "sportID": selectedSport,
+      "provinceID": selectedProvince,
+      "districtID": selectedDistrict,
+      "longitude": position.longitude,
+      "latitude": position.latitude,
+      "distance": distance,
+      "orderBy": selectedOrderBy,
+      "price": price,
+      "pageSize": 100,
+    }
+  });
+
   useEffect(() => {
     setIsLoading(true)
     getAllFacilityBooking(url)
@@ -95,7 +104,7 @@ export default function Booking() {
       .catch(() => {
         toast.error("Hệ thống đang lỗi vui lòng thử lại sau!", { duration: 120 })
       }).finally(() => setIsLoading(false));
-  }, [change, selectedProvince, selectedDistrict, selectedSport, selectedOrderBy])
+  }, [change, selectedProvince, selectedDistrict, selectedSport, selectedOrderBy, position])
   useEffect(() => {
     let interval;
     if (searchPlaceholder.length < textPlaceholder.length) {
@@ -198,7 +207,7 @@ export default function Booking() {
                   <Label htmlFor="default-distance" value="Khoảng cách" />
                   <div className='flex justify-center'>
                     <p>1 km</p>
-                    <RangeSlider onChange={(e: any) => setDistance(e.target.value)} className='mx-3' min={1} max={50} id="default-distance" />
+                    <RangeSlider  value={distance} onChange={(e: any) => setDistance(e.target.value)} className='mx-3' min={1} max={50} id="default-distance" />
                     <p>50 km</p>
                   </div>
                   <div className='flex'>
@@ -222,7 +231,7 @@ export default function Booking() {
                   <Label htmlFor="default-price" value="Giá tiền" />
                   <div className='flex justify-center'>
                     <p>{'10.000 VND'}</p>
-                    <RangeSlider onChange={(event: any) => setPrice(event.target.value)} className='mx-3' min={10000} max={500000} id="default-price" />
+                    <RangeSlider value={price} onChange={(event: any) => setPrice(event.target.value)} className='mx-3' min={10000} max={500000} id="default-price" />
                     <p>{'500.000 VND'}</p>
                   </div>
                   <div className='flex'>
@@ -419,8 +428,12 @@ export default function Booking() {
             <option value="">Sắp xếp</option>
             <option value="priceAsc">Sắp xếp theo giá tăng dần</option>
             <option value="priceDesc">Sắp xếp theo giá giảm dần</option>
-            <option value="distanceAsc">Sắp xếp theo khoảng cánh tăng dần</option>
-            <option value="distanceDesc">Sắp xếp theo khoảng cách giảm dần</option>
+            {position.latitude != null && position.longitude != null && position.latitude > 0 && position.longitude > 0 && (
+              <>
+                <option value="distanceAsc">Sắp xếp theo khoảng cánh tăng dần</option>
+                <option value="distanceDesc">Sắp xếp theo khoảng cách giảm dần</option>
+              </>
+            )}
           </Select>
         </div>
       </div>
@@ -429,43 +442,52 @@ export default function Booking() {
       {isLoading ? <div className='mt-5'>
         <LoadingData />
       </div> :
-        <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
-          {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
-            <div key={index} className='shadow-3xl rounded-2xl p-3 w-80 mx-auto'>
-              <Image className='rounded-lg h-60' height={500} width={500} src={getImage(facility.facilityImage) || ''} alt="img" />
-              <div className='mx-2'>
-                <div className='flex justify-between items-center py-4'>
-                  <Rating>
-                    <Rating.Star />
-                    <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility.facilityRating}</p>
-                  </Rating>
-                  {/* <div>12km</div> */}
-                </div>
-                <div className='font-bold mb-5 text-center text-xl h-14'>{facility.facilityName}</div>
-                <div className='flex flex-col justify-between h-full'>
-                  <div className='flex text-sm min-h-[75px]'>
-                    <p className='mt-0.5'>
-                      <TiLocation className='mr-2 h-4 w-4' />
-                    </p>
-                    <p>
-                      {facility.facilityAddress}
-                    </p>
-                  </div>
-                  <div className='flex justify-between items-center'>
-                    <div className='text-green-500 font-bold'>
-                      {facility.facilityMinPrice === facility.facilityMaxPrice
-                        ? convertNumberToPrice(facility.facilityMinPrice)
-                        : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+        facilities !== undefined && facilities.results.length > 0 ?
+          <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16'>
+            {facilities !== undefined && facilities.results?.map((facility: Facility, index) => (
+              <div key={index} className='shadow-3xl rounded-2xl p-3 w-80 mx-auto'>
+                <Image className='rounded-lg h-60' height={500} width={500} src={getImage(facility.facilityImage) || ''} alt="img" />
+                <div className='mx-2'>
+                  <div className='flex justify-between items-center py-4'>
+                    <Rating>
+                      <Rating.Star />
+                      <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">{facility.facilityRating}</p>
+                    </Rating>
+                    <div className='font-bold'>
+                      {facility.facilityDistance !== undefined && facility.facilityDistance > 0 && (
+                        facility.facilityDistance < 1 ? (
+                          <div>{Math.round(facility.facilityDistance * 1000)} m</div>
+                        ) : (
+                          <div>{(facility.facilityDistance).toFixed(2)} km</div>
+                        )
+                      )}
                     </div>
-                    <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
-                      Chi tiết
-                    </Button>
+                  </div>
+                  <div className='font-bold mb-5 text-center text-xl h-14'>{facility.facilityName}</div>
+                  <div className='flex flex-col justify-between h-full'>
+                    <div className='flex text-sm min-h-[75px]'>
+                      <p className='mt-0.5'>
+                        <TiLocation className='mr-2 h-4 w-4' />
+                      </p>
+                      <p>
+                        {facility.facilityAddress}
+                      </p>
+                    </div>
+                    <div className='flex justify-between items-center'>
+                      <div className='text-green-500 font-bold'>
+                        {facility.facilityMinPrice === facility.facilityMaxPrice
+                          ? convertNumberToPrice(facility.facilityMinPrice)
+                          : convertNumberToPrice(facility.facilityMinPrice, facility.facilityMaxPrice)}
+                      </div>
+                      <Button size='xs' href={`/facility/${facility.facilityID}`} className='text-sm px-3'>
+                        Chi tiết
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>}
+            ))}
+          </div> : <EmptyList />}
       {/* End View List */}
     </div >
   )
