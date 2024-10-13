@@ -1,14 +1,27 @@
 'use client'
 import { Button } from 'flowbite-react'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineHome } from 'react-icons/ai'
 import Image from 'next/image'
 import { BsCalendar2Week } from 'react-icons/bs'
 import { TiDownloadOutline } from 'react-icons/ti'
 import { LuClipboardEdit } from 'react-icons/lu'
+import { getQrCode } from '@services/bookingService'
+import toast from 'react-hot-toast'
 
 export default function BookingSuccess({ params }: { params: { id: string } }) {
+    const [image, setImage] = useState<string>()
     const imgRef = useRef<HTMLImageElement>(null);
+    useEffect(() => {
+        getQrCode(params.id)
+            .then(x => {
+                if (x.status === 200) {
+                    setImage(x.data)
+                } else {
+                    toast.error("Lỗi lấy QR Code")
+                }
+            }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+    }, [])
     const downloadImage = () => {
         const image = imgRef.current;
         if (image) {
@@ -44,7 +57,7 @@ export default function BookingSuccess({ params }: { params: { id: string } }) {
     return (
         <div className='grid grid-flow-col py-14'>
             <div className='mx-auto'>
-                <Image ref={imgRef} className='mx-auto' height={350} width={350} src='/assets/images/QR_Code.svg' alt='Chia có đặt lịch hẹn' />
+                <Image ref={imgRef} className='mx-auto' height={350} width={350} src={image || ""} alt='Chia có đặt lịch hẹn' />
                 <div className="flex justify-center background-danger pb-5">
                     <div className="mx-2 flex items-center text-xl mr-5 hover:cursor-pointer" onClick={() => downloadImage()}>
                         <TiDownloadOutline size={25} className='mr-2' /> Tải xuống

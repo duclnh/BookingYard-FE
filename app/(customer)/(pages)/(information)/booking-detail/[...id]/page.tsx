@@ -1,7 +1,7 @@
 "use client"
 import { ModalView } from '@components/index'
 import View360, { EquirectProjection } from '@egjs/react-view360'
-import { getBookingDetail } from '@services/bookingService'
+import { getBookingDetail, getQrCode } from '@services/bookingService'
 import { getImage, getImage360 } from '@utils/imageOptions'
 import { convertNumberToPrice } from '@utils/moneyOptions'
 import { Popover, Textarea } from 'flowbite-react'
@@ -31,6 +31,7 @@ import { BookingDetail as BookingDetailCourt } from 'types'
 export default function BookingDetail({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
+  const [qrImage, setQrImage] = useState<string>('')
   const imgRef = useRef<HTMLImageElement>(null);
   const [modal360, setModal360] = useState(false);
   const [modalImage, setModalImage] = useState(false);
@@ -64,7 +65,16 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
       .catch(() => {
         toast.error("Lỗi hệ thống vui lòng thử lại sau");
       });
+    getQrCode(params.id)
+      .then(x => {
+        if (x.status === 200) {
+          setQrImage(x.data)
+        } else {
+          toast.error("Lỗi lấy QR Code")
+        }
+      }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }, []);
+
 
   const copyImage = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     try {
@@ -117,7 +127,7 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                 <p className='text-center'>{bookingDetail?.fullAddress}</p>
               </div>
             </Link>
-            <Image onClick={() => setOpenModal(true)} ref={imgRef} className='hover:cursor-pointer' height={120} width={120} src="/assets/images/QR_Code.svg" alt="qrcode" />
+            <Image onClick={() => setOpenModal(true)} ref={imgRef} className='hover:cursor-pointer' height={120} width={120} src={qrImage} alt="qrcode" />
           </div>
           <div className='mt-10 grid lg:grid-cols-2 lg:gap-16'>
             <div>

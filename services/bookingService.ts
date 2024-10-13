@@ -38,8 +38,13 @@ export async function payment(query: string) {
 
 
 export async function cancelBooking(cancel: {
-    bookingID: string, reason: string,
+    bookingID?: string,
+    reason: string,
+    paymentCode?: string,
 }) {
-    console.log(cancel)
     return await fetchWrapper.post('/api/cancel-booking', cancel)
+}
+
+export async function getQrCode(id: string) {
+    return await fetchWrapper.get(`/api/qrcode-booking/${id}`)
 }

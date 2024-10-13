@@ -149,7 +149,7 @@ export default function MyBooking() {
             Hủy
           </div>
         </div>
-        <div className='py-3 max-h-[650px] hover:overflow-y-auto px-1' onScroll={handleScroll}>
+        <div className='py-3 max-h-[650px] overflow-hidden hover:overflow-y-auto px-1' onScroll={handleScroll}>
           {bookings !== undefined && bookings.results.length > 0 ? bookings.results.map((booking: MyBookingCourt, index) => (
             <div key={index} className='w-full shadow-3xl mb-4 hover:cursor-pointer'>
               <div className='flex justify-between items-center p-4'>
