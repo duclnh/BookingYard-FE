@@ -207,9 +207,12 @@ export default function Booking() {
                   <Label htmlFor="default-distance" value="Khoảng cách" />
                   <div className='flex justify-center'>
                     <p>1 km</p>
-                    <RangeSlider  value={distance} onChange={(e: any) => setDistance(e.target.value)} className='mx-3' min={1} max={50} id="default-distance" />
+                    <RangeSlider value={distance} onChange={(e: any) => setDistance(e.target.value)} className='mx-3' min={1} max={50} id="default-distance" />
                     <p>50 km</p>
                   </div>
+                  {distance && (
+                    <p className='mt-3 text-center font-bold'>{distance} km</p>
+                  )}
                   <div className='flex'>
                     <Button className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => setChange(!change)}>Xem kết quả</Button>
                     <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => {
@@ -234,10 +237,13 @@ export default function Booking() {
                     <RangeSlider value={price} onChange={(event: any) => setPrice(event.target.value)} className='mx-3' min={10000} max={500000} id="default-price" />
                     <p>{'500.000 VND'}</p>
                   </div>
+                  {price && (
+                    <p className='mt-3 text-center font-bold'>{convertNumberToPrice(Number.parseInt(price), undefined)}</p>
+                  )}
                   <div className='flex'>
                     <Button className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => setChange(!change)}>Xem kết quả</Button>
                     <Button color='failure' className='mt-3 focus:ring-transparent mx-auto' size='xs' onClick={() => {
-                      setDistance('')
+                      setPrice('')
                       setChange(!change)
                     }}>Hủy</Button>
                   </div>

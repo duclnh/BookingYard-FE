@@ -6,6 +6,7 @@ export async function createFacility(formData: FormData) {
 }
 
 export async function getAllFacilityBooking(query: string) {
+  console.log(query)
   return await fetchWrapper.get(`/api/facility-booking${query}`);
 }
 

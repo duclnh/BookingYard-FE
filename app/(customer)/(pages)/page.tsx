@@ -108,7 +108,7 @@ export default function Home() {
           if (x.status == 201) {
             toast.success("Lấy mã giảm giá thành công")
           } else if (x.status == 409) {
-            toast.error("Bạn đã có mã giảm giá này rồi")
+            toast.error("Bạn đã có mã  giảm giá này rồi")
           } else if (x.status == 404) {
             toast.error("Mã giảm giá này không tồn tại")
           }

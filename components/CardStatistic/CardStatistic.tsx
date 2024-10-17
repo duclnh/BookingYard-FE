@@ -3,7 +3,7 @@ import { IconType } from 'react-icons';
 
 type Props = {
   title: string;
-  amount: number;
+  amount: number | string;
   gradientFrom: string;
   gradientTo: string;
   iconColor: string;

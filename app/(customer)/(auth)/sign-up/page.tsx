@@ -14,9 +14,7 @@ export default function RegisterPage() {
     async function handleSubmitForm(data: FieldValues) {
         setError("")
         try {
-            console.log(data.name, data.email, data.password, data.gender, data.phone)
             var res = await registerAccount(data.name, data.email, data.password, data.gender, data.phone);
-            console.log(res?.data)
             if (res?.status === 201) {
                 await signIn(
                     "credentials", {

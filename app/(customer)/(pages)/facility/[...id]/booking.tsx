@@ -67,7 +67,7 @@ export default function Booking(props: Props) {
         setDatePlay(null);
         setSelectedStartHour(null);
         setSelectedEndHour(null);
-    },[selectSport])
+    }, [selectSport])
 
     const startHour: number = props.facilityOpen
         ? parseInt(props.facilityOpen.split(':')[0], 10)
@@ -251,9 +251,13 @@ export default function Booking(props: Props) {
                                                 hour >= selectedStartHour &&
                                                 hour <= selectedEndHour;
 
+                                            const now = new Date();
+                                            const currentTime = now.getHours() * 60 + now.getMinutes();
+                                            const timeBeforeOneAndHalfHours = currentTime - 30;
+                                            const hourInMinutes = (hour - 1) * 60;
                                             if (datePlay !== null &&
                                                 datePlay.toDateString() === new Date().toDateString()
-                                                && hour < datePlay.getUTCHours()) {
+                                                && hourInMinutes < timeBeforeOneAndHalfHours) {
                                                 return <></>;
                                             } else {
                                                 return (

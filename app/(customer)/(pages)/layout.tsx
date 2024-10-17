@@ -22,11 +22,15 @@ export default function CustomerLayout({
 
   useEffect(() => {
     if (session?.user && user == undefined) {
+      if (session?.user.isVerification) {
+        window.location.href = "/verify"
+      }
       getUser(session.user.userID)
         .then(x => {
           if (x.status === 200) {
             return x.data
           } else if (x.status === 401) {
+            toast.error("Đã hết phiên đăng nhập")
             signOut({ callbackUrl: "/sign-in" });
           } else {
             toast.error("Lỗi lấy thông tin người dùng")

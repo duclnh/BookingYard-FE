@@ -17,7 +17,7 @@ import { MdOutlineLocationOn } from 'react-icons/md'
 import { PiDoorOpenBold } from 'react-icons/pi'
 import { TbBasketDiscount } from 'react-icons/tb'
 import { TiDelete } from 'react-icons/ti'
-import { CollectVoucher, PageResult } from 'types'
+import { CollectVoucher, PageResult, VoucherBooking } from 'types'
 import qs from "query-string"
 import { createBooking } from '@services/bookingService'
 
@@ -30,6 +30,7 @@ export default function Payment() {
   const [collectVouchers, setCollectVouchers] = useState<PageResult<CollectVoucher> | undefined>(undefined);
   const [currentPageSize, setCurrentPageSize] = useState<number>(5);
   const [voucherSelected, setVoucherSelected] = useState<CollectVoucher | null>(null);
+  const [voucherBooking, setVoucherBooking] = useState<VoucherBooking | null>(null);
   const [score, setScore] = useState<number>(0)
   const [code, setCode] = useState<string>('')
   const [totalPrice, setTotalPrice] = useState<number>(() => {
@@ -67,8 +68,11 @@ export default function Payment() {
     let total: number = (totalPrice ?? 0) -
       (voucherSelected
         ? (voucherSelected?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
-        : 0)
+        : voucherBooking
+          ? (voucherBooking?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
+          : 0)
       - (score ?? 0)
+
 
     if (total < 20000) {
       toast.error("Vui lòng thanh toán qua VNPAY với số tiền tối thiểu là 20.000 VND.");
@@ -88,6 +92,7 @@ export default function Payment() {
       startTime: booking?.startTime,
       endTime: booking?.endTime,
       collectVoucherID: voucherSelected?.collectVoucherID,
+      voucherID: voucherBooking?.voucherID,
       paymentMethod: data.payment,
     })
       .then(x => {
@@ -96,7 +101,17 @@ export default function Payment() {
         } else if (x.status === 409) {
           toast.error("Đã có người đặt lịch này rồi. Vui lòng đặt lịch khác")
         } else if (x.status === 400) {
-          toast.error("Thanh toán thất bại")
+          if (x.data.title.includes("Voucher expired")) {
+            toast.error("Mã giảm giá hết hạn")
+          } else if (x.data.title.includes("Voucher quantity outStock")) {
+            toast.error("Mã giảm giá đã hết số lượng")
+          } else if (x.data.title.includes("Voucher not start")) {
+            toast.error("Mã giảm giá chưa bắt đầu")
+          } else if (x.data.title.includes("You used this voucher")) {
+            toast.error("Bạn đã sử dụng mã giảm giá này rồi")
+          } else {
+            toast.error("Thanh toán thất bại")
+          }
         } else {
           toast.error("Lỗi đặt lịch")
         }
@@ -126,6 +141,7 @@ export default function Payment() {
       toast.error("Mã giảm giá đã hết hạn")
       return;
     }
+    setVoucherBooking(null);
     setVoucherSelected(voucher)
     setOpenModal(false);
   }
@@ -139,23 +155,28 @@ export default function Payment() {
   }
 
   const handlerFindCode = () => {
-    getVoucher(user?.id, code)
+    getVoucher(code)
       .then(x => {
         if (x.status === 200) {
-          return x.data
+          setVoucherSelected(null);
+          setVoucherBooking(x.data);
         } else if (x.status === 404) {
           toast.error("Không tìm thấy mã giảm giá")
-          return undefined;
-        } else {
+        } else if (x.status === 400) {
+          if (x.data.title.includes("Voucher expired")) {
+            toast.error("Mã giảm giá hết hạn")
+          } else if (x.data.title.includes("Voucher quantity outStock")) {
+            toast.error("Mã giảm giá đã hết số lượng")
+          } else if (x.data.title.includes("Voucher not start")) {
+            toast.error("Mã giảm giá chưa bắt đầu")
+          } else if (x.data.title.includes("You used this voucher")) {
+            toast.error("Bạn đã sử dụng mã giảm giá này rồi")
+          }
+        }
+        else {
           toast.error("Lỗi tìm mã giảm giá")
-          return undefined;
         }
-      }).then((collectVoucher: CollectVoucher) => {
-        if (collectVoucher !== undefined) {
-          setVoucherSelected(collectVoucher)
-        }
-      })
-      .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+      }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
   }
 
   const handlerUseScore = () => {
@@ -302,6 +323,26 @@ export default function Payment() {
                   <p className='text-xl font-black'>Mã giảm giá</p>
                 </div>
                 <div className='p-4'>
+                  {voucherBooking !== null && (
+                    <div className='mb-4 relative group hover:cursor-pointer'>
+                      <div className='rounded-lg border'>
+                        <div className='grid grid-cols-3 place-items-center gap-2 p-2'>
+                          <div className='col-span-1 p-5 w-full rounded-lg bg-gray-700 text-orange-500'>
+                            <p className='mb-2 text-base text-center'>Fieldy</p>
+                            <TbBasketDiscount className='mx-auto' size={30} />
+                          </div>
+                          <div className='col-span-2 place-self-start ml-4'>
+                            <p className='text-xl font-bold mb-3'>Giảm {voucherBooking.percentage}% {voucherBooking.voucherName.toLocaleLowerCase()}</p>
+                            <p className='font-bold mb-2'>{voucherBooking.facilityName ? voucherBooking.facilityName : 'Tất cả các sân'}</p>
+                            <p className='font-bold mb-2'>{voucherBooking.sportName ? voucherBooking.sportName : 'Tất cả các môn thể thao'}</p>
+                            <p className='text-sm'>Ngày bắt đầu: {voucherBooking.registerDate}</p>
+                            <p className='text-sm'>Ngày hết hạn: {voucherBooking.expiredDate}</p>
+                          </div>
+                        </div>
+                        <TiDelete onClick={() => setVoucherBooking(null)} size={25} className='text-red-500 absolute -top-1.5 -right-1.5 hidden group-hover:block' />
+                      </div>
+                    </div>
+                  )}
                   {voucherSelected && (
                     <div className='mb-4 relative group hover:cursor-pointer'>
                       <div className='rounded-lg border'>
@@ -311,7 +352,7 @@ export default function Payment() {
                             <TbBasketDiscount className='mx-auto' size={30} />
                           </div>
                           <div className='col-span-2 place-self-start ml-4'>
-                            <p className='text-xl font-bold mb-5'>Giảm {voucherSelected.percentage}%</p>
+                            <p className='text-xl font-bold mb-5'>Giảm {voucherSelected.percentage}% {voucherSelected.voucherName.toLocaleLowerCase()}</p>
                             <p className='font-bold mb-2'>{voucherSelected.facilityID ? voucherSelected.facilityName : 'Tất cả các sân'}</p>
                             <p className='font-bold mb-2'>{voucherSelected.sportName ? voucherSelected.sportName : 'Tất cả các môn thể thao'}</p>
                             <p className='text-sm'>Ngày bắt đầu: {voucherSelected.startDate}</p>
@@ -364,7 +405,9 @@ export default function Payment() {
                     <p className='mr-2 font-medium'>Mã giảm giá:</p>
                     {voucherSelected ?
                       <p className='text-red-500'>- {convertNumberToPrice((voucherSelected?.percentage / 100) * (booking.courtPrice * booking.totalTime))}</p>
-                      : <>0</>}
+                      : voucherBooking ?
+                        <p className='text-red-500'>- {convertNumberToPrice((voucherBooking?.percentage / 100) * (booking.courtPrice * booking.totalTime))}</p>
+                        : <>0</>}
                   </div>
                   <div className='flex justify-between items-center'>
                     <p className='mr-2 font-medium'>Điểm:</p>
@@ -380,7 +423,9 @@ export default function Payment() {
                       (totalPrice ?? 0) -
                       (voucherSelected
                         ? (voucherSelected?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
-                        : 0)
+                        : voucherBooking
+                          ? (voucherBooking?.percentage / 100) * ((booking?.courtPrice ?? 0) * (booking?.totalTime ?? 0))
+                          : 0)
                       - (score ?? 0)
                     )}
                   </p>

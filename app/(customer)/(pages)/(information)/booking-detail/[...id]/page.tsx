@@ -273,7 +273,7 @@ export default function BookingDetail({ params }: { params: { id: string } }) {
                             </div>
                             <div className='col-span-2 place-self-start ml-4'>
                               <p className='text-xl font-bold mb-2'>{`Giảm ${bookingDetail.percentage}% ${bookingDetail.voucherName}`}</p>
-                              {bookingDetail.facilityName !== null ? <p className='font-semibold'>{bookingDetail.facilityName}</p> : <p className='font-semibold'>Tất cả các sân</p>}
+                              {bookingDetail.facilityName === null && (<p className='font-semibold'>Công ty  Fieldy</p>)}
                               <p className='font-semibold'>{bookingDetail.sportName ? bookingDetail.sportName : 'Tất cả môn thể thao'}</p>
                               <p>Ngày bắt đầu: {bookingDetail.voucherStartDate}</p>
                               <p>Ngày hết hạn {bookingDetail.voucherEndDate}</p>

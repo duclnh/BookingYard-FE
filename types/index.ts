@@ -59,6 +59,20 @@ export type User = {
     role: string,
 }
 
+export type UserAdmin = {
+    address: string;
+    createDate: string;
+    email: string;
+    gender: string;
+    id: string;
+    imageUrl: string | null;
+    name: string;
+    phone: string;
+    point: number;
+    role: string;
+    wardID: string | null;
+}
+
 export type Manager = {
     id: string,
     name: string,
@@ -244,6 +258,17 @@ export type VoucherHome = {
     sportName: string,
 }
 
+export type VoucherBooking = {
+    voucherID: string,
+    voucherName: string,
+    facilityName: string,
+    percentage: number,
+    sportName: string,
+    registerDate: string,
+    expiredDate: string,
+    image: string,
+}
+
 export type VoucherManagement = {
     voucherID: string,
     voucherName: string,
@@ -291,7 +316,7 @@ export type BookingDetail = {
     bookingID: string,
     facilityID: string,
     paymentCode: string,
-    image: string,  
+    image: string,
     facilityName: string,
     fullAddress: string,
     facilityLogo: string,
@@ -346,4 +371,42 @@ export type Booking = {
     numberPlayer: number,
     courtPrice: number,
     totalTime: number,
+}
+
+
+export type DashBoard = {
+    revenue: number,
+    totalBookings: number,
+    totalBookingsCancel: number,
+    detailsRevenue: DetailsRevenue,
+    countBookings: CourtBookings[]
+}
+
+export type DetailsRevenue = {
+    hourlyDetails: HourlyRevenue[],
+    dayOfWeekDetails: DayOfWeekRevenue[],
+    dailyDetails: DailyRevenue[],
+    monthlyDetails: MonthlyRevenue[]
+}
+
+export type CourtBookings = {
+    sportName: string,
+    count: number,
+}
+
+export type HourlyRevenue = {
+    hour: any,
+    amount: number,
+}
+export type DayOfWeekRevenue = {
+    day: string,
+    amount: number,
+}
+export type DailyRevenue = {
+    day: any,
+    amount: number,
+}
+export type MonthlyRevenue = {
+    month: number,
+    amount: number,
 }

@@ -417,12 +417,12 @@ export default function Booking() {
                             </div>
 
                             <div className="flex items-center gap-2">
-                                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason2" value="Bận không đi được" />
+                                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason2" value="Trùng lịch" />
                                 <Label htmlFor="reason2">Trùng lịch</Label>
                             </div>
 
                             <div className="flex items-center gap-2">
-                                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason3" value="Lý do cá nhân" />
+                                <Radio onInput={() => setValue('otherReason', '')} {...register("reasons")} className='checked:!ring-transparent' id="reason3" value="Sân đóng cửa<" />
                                 <Label htmlFor="reason3">Sân đóng cửa</Label>
                             </div>
                         </fieldset>
