@@ -16,6 +16,18 @@ export async function getDistrict(id: string) {
     return await handleResponse(result)
 }
 
+export async function getDistrictPosition(id: number) {
+
+    const result = await fetch(url + `/2/${id}.htm`)
+
+    const data = await result.json();
+    const res = {
+        status: result.status,
+        data: result.status === 200 ? data : {},
+    }
+    return res;
+}
+
 export async function getWard(id: string) {
 
     const result = await fetch(url + `/3/${id}.htm`)
@@ -23,7 +35,7 @@ export async function getWard(id: string) {
     return await handleResponse(result)
 }
 
-export async function getFullAddress(id: string){
+export async function getFullAddress(id: string) {
 
     const result = await fetch(url + `/5/${id}.htm`)
 

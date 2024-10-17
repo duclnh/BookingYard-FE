@@ -21,3 +21,10 @@ export async function getFacilityHome() {
 export async function getFacilityAdmin(query: string) {
   return await fetchWrapper.get(`/api/facility${query}`);
 }
+
+export async function getFacilityProvince() {
+  return await fetchWrapper.get("/api/facility-province");
+}
+export async function getFacilityPosition() {
+  return await fetchWrapper.get("/api/facility-position");
+}
