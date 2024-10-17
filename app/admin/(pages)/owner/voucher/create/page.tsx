@@ -48,8 +48,7 @@ export default function CreateStaff() {
       var res = await createVoucher(formData)
       if (res.status === 201) {
         toast.success("Tạo mới mã giảm giá thành công")
-        reset()
-        setImage(undefined)
+        window.location.href = "/admin/owner/voucher"
       } else if (res.status === 409) {
         toast.error("Mã code này đã có")
       } else {

@@ -38,6 +38,7 @@ export default function ManagementLayout({
           if (x.status === 200) {
             return x.data
           } else if (x.status === 401) {
+            toast.error("Đã hết phiên đăng nhập")
             signOut({ callbackUrl: "/admin/sign-in" });
           } else {
             toast.error("Lỗi lấy thông tin người dùng")

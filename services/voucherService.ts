@@ -26,6 +26,6 @@ export async function getCollectVoucher(id: string | undefined, query: string) {
     return await fetchWrapper.get(`/api/collect-voucher/${id}${query}`)
 }
 
-export async function getVoucher(id: string | undefined, query: string) {
-    return await fetchWrapper.get(`/api/collect-voucher-code/${id}${query}`)
+export async function getVoucher(id: string | undefined) {
+    return await fetchWrapper.get(`/api/voucher-code/${id}`)
 }

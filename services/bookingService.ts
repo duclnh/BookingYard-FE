@@ -1,6 +1,10 @@
 "use server"
 import { fetchWrapper } from "@utils/index";
 
+export async function getBookings(query: string) {
+    return await fetchWrapper.get(`/api/booking${query}`);
+}
+
 export async function getMyBooking(id: string | undefined, query: string) {
     return await fetchWrapper.get(`/api/booking/${id}${query}`);
 }
@@ -27,6 +31,7 @@ export async function createBooking(bookingDetails: {
     point: number;
     endTime: string | undefined;
     collectVoucherID: string | undefined;
+    voucherID: string | undefined;
     paymentMethod: string;
 }) {
     return await fetchWrapper.post('/api/booking', bookingDetails);
