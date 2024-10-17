@@ -26,7 +26,7 @@ export default function LineChart({ className, label, setChangeType, detailsReve
             if (detailsRevenue.dailyDetails !== null) {
                 return detailsRevenue.dailyDetails.map((dailyRevenue: DailyRevenue) => dailyRevenue.day.split('-').reverse().join('-'))
             } else if (detailsRevenue.dayOfWeekDetails !== null) {
-                return detailsRevenue.dayOfWeekDetails.map((dateOfWeekRevenue: DayOfWeekRevenue) =>  daysOfWeek[dateOfWeekRevenue.day as Days])
+                return detailsRevenue.dayOfWeekDetails.map((dateOfWeekRevenue: DayOfWeekRevenue) => daysOfWeek[dateOfWeekRevenue.day as Days])
             } else if (detailsRevenue.monthlyDetails) {
                 return detailsRevenue.monthlyDetails.map((monthRevenue: MonthlyRevenue) => `Tháng ${monthRevenue.month}`)
             } else if (detailsRevenue.hourlyDetails) {

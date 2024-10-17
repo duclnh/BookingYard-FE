@@ -410,3 +410,17 @@ export type MonthlyRevenue = {
     month: number,
     amount: number,
 }
+
+export type Position = {
+    name: string, 
+    latitude: number, 
+    longitude: number
+}
+
+export type PositionFacility = {
+    id: string,
+    name: string, 
+    image: string,
+    latitude: number, 
+    longitude: number
+}

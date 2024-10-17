@@ -133,11 +133,11 @@ export default function ManagementLayout({
         <header id='top' className='border-b-2'>
           <div className='flex justify-between items-center mx-5'>
             <div>
-              <Breadcrumb aria-label="Default breadcrumb example">
+              {/* <Breadcrumb aria-label="Default breadcrumb example">
                 <Breadcrumb.Item href="#" icon={HiHome}>
                   Home
                 </Breadcrumb.Item>
-              </Breadcrumb>
+              </Breadcrumb> */}
             </div>
             <Navbar className=''>
               <div className="flex flex-row items-center gap-4 md:order-2">
