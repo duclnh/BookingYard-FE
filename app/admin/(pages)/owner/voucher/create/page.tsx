@@ -8,7 +8,7 @@ import { Controller, FieldValues, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { SportCreate } from 'types';
 
-export default function CreateStaff() {
+export default function CreateVoucher() {
   const { control, handleSubmit, reset, formState: { isSubmitting, isValid } } = useForm({ mode: "onTouched", });
   const [error, setError] = useState<string | undefined>()
   const [image, setImage] = useState<File>()
@@ -43,7 +43,10 @@ export default function CreateStaff() {
       if (user?.facilityID) {
         formData.append("FacilityID", user?.facilityID);
       }
-      formData.append("SportID", data.sport);
+
+      if (data.sport) {
+        formData.append("SportID", data.sport);
+      }
 
       var res = await createVoucher(formData)
       if (res.status === 201) {
@@ -71,7 +74,7 @@ export default function CreateStaff() {
               name='name'
               control={control}
               rules={{
-                required: "Vui lòng nhập tên nhân viên",
+                required: "Vui lòng nhập tên giảm giá",
               }}
             />
             <div className='mt-3'>
@@ -82,6 +85,14 @@ export default function CreateStaff() {
                 control={control}
                 rules={{
                   required: "Vui lòng nhập phần trăm giảm",
+                  min: {
+                    value: 0,
+                    message: "Vui lòng nhập phần trăm giảm lớn hơn 0"
+                  },
+                  max: {
+                    value: 100,
+                    message: "Vui lòng nhập phần trăm giảm nhỏ hơn 100"
+                  }
                 }}
               />
             </div>
@@ -104,6 +115,10 @@ export default function CreateStaff() {
                 control={control}
                 rules={{
                   required: "Vui lòng nhập số lượng",
+                  min: {
+                    value: 1,
+                    message: "Vui lòng nhập số lượng tối thiểu 1"
+                  },
                 }}
               />
             </div>
@@ -135,7 +150,7 @@ export default function CreateStaff() {
                         fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
                       }
                     >
-                      <option value='0'>Tất cả</option>
+                      <option value=''>Tất cả</option>
                       {sports.map((sport: SportCreate, index) => (
                         <option key={index} value={sport.sportID}>{sport.sportName}</option>
                       ))}

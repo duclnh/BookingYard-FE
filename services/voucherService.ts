@@ -6,12 +6,21 @@ export async function createVoucher(data: FormData) {
     return await fetchWrapper.post("/api/voucher", {}, data)
 }
 
+export async function updateVoucher(data: FormData) {
+    return await fetchWrapper.put("/api/voucher", {}, data)
+}
+
+
 export async function getVoucherHome() {
     return await fetchWrapper.get("/api/voucher-home")
 }
 
 export async function getVoucherFacility(id: string | undefined, query: string) {
     return await fetchWrapper.get(`/api/voucher-facility/${id}${query}`)
+}
+
+export async function getVoucherAdmin(query: string) {
+    return await fetchWrapper.get(`/api/voucher${query}`)
 }
 
 export async function collectVoucher(userID: string | undefined, voucherID: string) {
@@ -28,4 +37,10 @@ export async function getCollectVoucher(id: string | undefined, query: string) {
 
 export async function getVoucher(id: string | undefined) {
     return await fetchWrapper.get(`/api/voucher-code/${id}`)
+}
+
+export async function deleteVoucher(voucherID: string | undefined) {
+    return await fetchWrapper.del("/api/voucher", {
+        voucherID
+    })
 }

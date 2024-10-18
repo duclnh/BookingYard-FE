@@ -1,17 +1,67 @@
 "use client"
 import { Heading, Input, InputImage } from '@components/index'
-import { Button, Label, Select } from 'flowbite-react';
-import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form';
+import { useAppSelector } from '@hooks/hooks';
+import { createVoucher, getSportCreate } from '@services/index';
+import { Button, Label, Select, Spinner } from 'flowbite-react';
+import React, { useEffect, useState } from 'react'
+import { Controller, FieldValues, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { SportCreate } from 'types';
 
-export default function CreateStaff() {
-  const { control, handleSubmit, formState: { isSubmitting, isValid }, getFieldState } = useForm({ mode: "onTouched", });
+export default function CreateVoucher() {
+  const { control, handleSubmit, reset, formState: { isSubmitting, isValid } } = useForm({ mode: "onTouched", });
   const [error, setError] = useState<string | undefined>()
   const [image, setImage] = useState<File>()
+  const [sports, setSports] = useState<SportCreate[]>([])
+
+  useEffect(() => {
+    getSportCreate()
+      .then(x => {
+        if (x.status === 200) {
+          return x.data
+        } else {
+          toast.error("Lỗi lấy thông tin thể thao")
+        }
+      }).then((sport: SportCreate[]) => {
+        setSports(sport)
+      }).catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
+  }, [])
+
+  const handlerCreateVoucher = async (data: FieldValues) => {
+    try {
+      var formData = new FormData();
+      formData.append("VoucherName", data.name);
+      formData.append("Code", data.code);
+      if (image) {
+        formData.append("Image", image);
+      }
+      formData.append("Percentage", data.discount);
+      formData.append("Quantity", data.quantity);
+      formData.append("RegisterDate", data.start);
+      formData.append("ExpiredDate", data.end);
+
+      if (data.sport) {
+        formData.append("SportID", data.sport);
+      }
+
+      var res = await createVoucher(formData)
+      if (res.status === 201) {
+        toast.success("Tạo mới mã giảm giá thành công")
+        window.location.href = "/admin/company/voucher"
+      } else if (res.status === 409) {
+        toast.error("Mã code này đã có")
+      } else {
+        toast.error("Tạo mới mã giảm giá thất bại")
+      }
+    } catch (error) {
+      toast.error("Lỗi hệ thống vui lòng thử lại")
+    }
+  }
+
   return (
     <div className='py-5 w-full'>
       <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Tạo mã giảm giá' center />
-      <form method='POST' className='mt-20'>
+      <form method='POST' className='mt-20' onSubmit={handleSubmit(handlerCreateVoucher)}>
         <div className='grid sm:grid-cols-2 gap-10'>
           <div>
             <Input
@@ -20,7 +70,7 @@ export default function CreateStaff() {
               name='name'
               control={control}
               rules={{
-                required: "Vui lòng nhập tên nhân viên",
+                required: "Vui lòng nhập tên giảm giá",
               }}
             />
             <div className='mt-3'>
@@ -31,6 +81,14 @@ export default function CreateStaff() {
                 control={control}
                 rules={{
                   required: "Vui lòng nhập phần trăm giảm",
+                  min: {
+                    value: 0,
+                    message: "Vui lòng nhập phần trăm giảm lớn hơn 0"
+                  },
+                  max: {
+                    value: 100,
+                    message: "Vui lòng nhập phần trăm giảm nhỏ hơn 100"
+                  }
                 }}
               />
             </div>
@@ -42,6 +100,10 @@ export default function CreateStaff() {
                 control={control}
                 rules={{
                   required: "Vui lòng nhập số lượng",
+                  min: {
+                    value: 1,
+                    message: "Vui lòng nhập số lượng tối thiểu 1"
+                  },
                 }}
               />
             </div>
@@ -74,7 +136,6 @@ export default function CreateStaff() {
               <Controller
                 name='sport'
                 control={control}
-                rules={{ required: 'Vui lòng chọn môn thể thao' }}
                 render={({ field, fieldState }) => (
                   <>
                     <Select
@@ -85,10 +146,10 @@ export default function CreateStaff() {
                         fieldState.error ? 'failure' : fieldState.isDirty ? 'success' : ''
                       }
                     >
-                      <option value='all'>Tất cả</option>
-                      <option value="Canada">Miễn phí</option>
-                      <option value="France">Tháng</option>
-                      <option value="Germany">Năm</option>
+                      <option value=''>Tất cả</option>
+                      {sports.map((sport: SportCreate, index) => (
+                        <option key={index} value={sport.sportID}>{sport.sportName}</option>
+                      ))}
                     </Select>
                     {fieldState.error && (
                       <div className="text-red-500 text-sm mt-2">
@@ -100,17 +161,27 @@ export default function CreateStaff() {
               />
             </div>
             <div>
-              <InputImage
-                label='Ảnh mã giảm giá (*)'
+              {/* <InputImage
+                label='Ảnh mã giảm giá'
                 name='image'
                 value={image}
                 setFile={setImage}
-                required="Vui lòng chọn ảnh mã giảm giá"
-              />
+              />  */}
+              <div className='mt-3'>
+                <Input
+                  label='Mã giảm giá'
+                  type='text'
+                  name='code'
+                  control={control}
+                />
+              </div>
             </div>
+
           </div>
         </div>
-        <Button className='mt-4' type='submit' size='sm'>Tạo mới</Button>
+        <Button disabled={isSubmitting} className='mt-4 w-28' type='submit' size='sm'>
+          {isSubmitting ? <Spinner /> : "Tạo mới"}
+        </Button>
       </form>
     </div>
   )
