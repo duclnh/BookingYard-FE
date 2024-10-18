@@ -50,10 +50,11 @@ async function put(url: string, body: {}, formData?: FormData) {
     return await handleResponse(response);
 }
 
-async function del(url: string) {
+async function del(url: string, body: {}) {
     const requestOptions = {
         method: 'DELETE',
         headers: await getHeader(),
+        body: JSON.stringify(body),
     }
     const response = await fetch(baseUrl + url, requestOptions);
     return await handleResponse(response);

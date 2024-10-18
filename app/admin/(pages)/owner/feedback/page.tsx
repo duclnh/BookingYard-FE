@@ -60,7 +60,7 @@ export default function Feedback() {
     return (
         <>
             <div className='py-5 w-full'>
-                <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Đánh giá từ chủ sân' center />
+                <Heading className='lg:px-20 mt-4 mb-24 text-4xl' title='Đánh giá từ khách hàng' center />
                 {/* <div className='sm:my-24 w-full grid lg:grid-cols-3 sm:grid-cols-2 gap-10  place-items-center'>
                     <CardStatistic
                         title='5 sao'
@@ -108,7 +108,7 @@ export default function Feedback() {
                 <div className='mt-36 bg-white'>
                     <div className='mt-10 sm:flex justify-between mb-3'>
                         <div className='flex'>
-                            <input className='border rounded-md w-full px-3 sm:w-96' name='search' placeholder={'Tìm kiếm theo tên sân'} />
+                            <input className='border rounded-md w-full px-3 sm:w-96' name='search' placeholder={'Tìm kiếm theo tên khách hàng'} />
                             <Button className='p-1'>
                                 <IoMdSearch className='font-bold' size={18} />
                             </Button>

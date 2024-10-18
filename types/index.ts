@@ -278,8 +278,14 @@ export type VoucherManagement = {
     voucherDescription: string,
     registerDate: string,
     expiredDate: string,
+    createDate: string,
     reason: string,
     status: boolean
+    code: string,
+    sportID: number,
+    isDeleted: boolean,
+    isStarted: boolean,
+    isEnded: boolean,
 }
 
 export type CollectVoucher = {
@@ -412,15 +418,15 @@ export type MonthlyRevenue = {
 }
 
 export type Position = {
-    name: string, 
-    latitude: number, 
+    name: string,
+    latitude: number,
     longitude: number
 }
 
 export type PositionFacility = {
     id: string,
-    name: string, 
+    name: string,
     image: string,
-    latitude: number, 
+    latitude: number,
     longitude: number
 }
