@@ -6,6 +6,11 @@ export async function createVoucher(data: FormData) {
     return await fetchWrapper.post("/api/voucher", {}, data)
 }
 
+export async function updateVoucher(data: FormData) {
+    return await fetchWrapper.put("/api/voucher", {}, data)
+}
+
+
 export async function getVoucherHome() {
     return await fetchWrapper.get("/api/voucher-home")
 }

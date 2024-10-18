@@ -1,7 +1,7 @@
 "use client"
 import { CardStatistic, EmptyList, Heading, Input, LoadingData } from '@components/index'
 import { useAppSelector } from '@hooks/hooks'
-import { deleteVoucher, getVoucherAdmin, getVoucherFacility } from '@services/voucherService'
+import { deleteVoucher, getVoucherAdmin, getVoucherFacility, updateVoucher } from '@services/voucherService'
 import { Button, Label, Modal, Pagination, Select, Spinner, Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -69,8 +69,35 @@ export default function Voucher() {
 
   }, [change, url])
 
-  const handlerUpdateVoucher = (data: FieldValues) => {
-    console.log(data)
+  const handlerUpdateVoucher = async (data: FieldValues) => {
+    try {
+      var formData = new FormData();
+      formData.append("VoucherID", data.voucherID);
+      formData.append("VoucherName", data.voucherName);
+      formData.append("Code", data.code);
+      formData.append("Percentage", data.percentage);
+      formData.append("Quantity", data.quantity);
+      formData.append("RegisterDate", data.registerDateUpdate);
+      formData.append("ExpiredDate", data.expiredDateUpdate);
+
+      if (data.sportID) {
+        formData.append("SportID", data.sportID);
+      }
+
+      var res = await updateVoucher(formData)
+      console.log(res.data)
+      if (res.status === 200) {
+        toast.success("Cập nhật mã giảm giá thành công")
+        setChange(!change)
+        setOpenModalUpdate(false)
+      } else if (res.status === 409) {
+        toast.error("Mã code này đã có")
+      } else {
+        toast.error("Cập nhật mã giảm giá thất bại")
+      }
+    } catch (error) {
+      toast.error("Lỗi hệ thống vui lòng thử lại")
+    }
   }
 
   const handlerSelectVoucher = (voucher: VoucherManagement, handlerModal: Function) => {
@@ -107,6 +134,7 @@ export default function Voucher() {
       .catch(() => toast.error("Lỗi hệ thống vui lòng thử lại sau"))
       .finally(() => setIsDelete(false))
   }
+
   return (
     <>
       <div className='py-5 w-full'>
@@ -243,7 +271,7 @@ export default function Voucher() {
         reset()
       }} popup>
         <Modal.Header className='border-b-2'>
-          <p className='text-lg ml-4'>Cập nhật thông tin voucher</p>
+          <p className='text-lg ml-4'>Cập nhật thông tin mã giảm giá</p>
         </Modal.Header>
         <form method='PUT' className="mt-5" onSubmit={handleSubmit(handlerUpdateVoucher)}>
           <Modal.Body>
@@ -267,6 +295,14 @@ export default function Voucher() {
                     control={control}
                     rules={{
                       required: "Vui lòng nhập phần trăm giảm",
+                      min: {
+                        value: 0,
+                        message: "Vui lòng nhập phần trăm giảm lớn hơn 0"
+                      },
+                      max: {
+                        value: 100,
+                        message: "Vui lòng nhập phần trăm giảm nhỏ hơn 100"
+                      }
                     }}
                   />
                 </div>
@@ -321,10 +357,13 @@ export default function Voucher() {
                     label='Số lượng (*)'
                     type='number'
                     name='quantity'
-
                     control={control}
                     rules={{
                       required: "Vui lòng nhập số lượng",
+                      min: {
+                        value: 1,
+                        message: "Vui lòng nhập số lượng tối thiểu 1"
+                      },
                     }}
                   />
                 </div>

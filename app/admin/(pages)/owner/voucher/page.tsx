@@ -1,7 +1,7 @@
 "use client"
 import { CardStatistic, EmptyList, Heading, Input, LoadingData } from '@components/index'
 import { useAppSelector } from '@hooks/hooks'
-import { deleteVoucher, getVoucherFacility } from '@services/voucherService'
+import { deleteVoucher, getVoucherFacility, updateVoucher } from '@services/voucherService'
 import { Button, Label, Modal, Pagination, Select, Spinner, Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -69,8 +69,34 @@ export default function Voucher() {
 
   }, [change, url])
 
-  const handlerUpdateVoucher = (data: FieldValues) => {
-    console.log(data)
+  const handlerUpdateVoucher = async (data: FieldValues) => {
+    try {
+      var formData = new FormData();
+      formData.append("VoucherID", data.voucherID);
+      formData.append("VoucherName", data.voucherName);
+      formData.append("Code", data.code);
+      formData.append("Percentage", data.percentage);
+      formData.append("Quantity", data.quantity);
+      formData.append("RegisterDate", data.registerDateUpdate);
+      formData.append("ExpiredDate", data.expiredDateUpdate);
+
+      if (data.sportID) {
+        formData.append("SportID", data.sportID);
+      }
+
+      var res = await updateVoucher(formData)
+      if (res.status === 200) {
+        toast.success("Cập nhật mã giảm giá thành công")
+        setChange(!change);
+        setOpenModalUpdate(false)
+      } else if (res.status === 409) {
+        toast.error("Mã code này đã có")
+      } else {
+        toast.error("Cập nhật mã giảm giá thất bại")
+      }
+    } catch (error) {
+      toast.error("Lỗi hệ thống vui lòng thử lại")
+    }
   }
 
   const handlerSelectVoucher = (voucher: VoucherManagement, handlerModal: Function) => {
@@ -243,7 +269,7 @@ export default function Voucher() {
         reset()
       }} popup>
         <Modal.Header className='border-b-2'>
-          <p className='text-lg ml-4'>Cập nhật thông tin voucher</p>
+          <p className='text-lg ml-4'>Cập nhật thông tin mã giảm giá</p>
         </Modal.Header>
         <form method='PUT' className="mt-5" onSubmit={handleSubmit(handlerUpdateVoucher)}>
           <Modal.Body>
